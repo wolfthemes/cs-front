@@ -30,7 +30,14 @@
 .wordpress {
 	font-family: var(--font-eb-garamond), serif;
 	font-weight: 400;
-	color: var(--wpe--color--accent);
+
+	// color: var(--wpe--color--accent);
+}
+
+.wolfthemes {
+	font-family: Sickamore, var(--font-eb-garamond), serif;
+	font-weight: 400;
+	font-size: 1.2em;
 }
 
 .line {

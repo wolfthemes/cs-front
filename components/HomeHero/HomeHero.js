@@ -7,7 +7,7 @@ let cx = className.bind(styles);
 // Explicit line breaks so the copy animates line by line (each is its own
 // block with a staggered fade-in-up).
 const LINES = [
-	"For over 14 years, I've been building commercial",
+	"Founder of WolfThemes, I've been building commercial",
 	'WordPress products used by more than 36,000',
 	'customers worldwide. Today, I focus on engineering',
 	'modern, scalable web applications designed for',
@@ -98,17 +98,26 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 	);
 }
 
-// Render a line, setting the word "WordPress" in EB Garamond via `.wordpress`.
+// Render a line, styling brand words: "WordPress" in EB Garamond (`.wordpress`)
+// and "WolfThemes" in the self-hosted Sickamore font (`.wolfthemes`).
 function renderLine(line) {
-	return line.split(/(WordPress)/).map((part, i) =>
-		part === 'WordPress' ? (
-			<span key={i} className={cx('wordpress')}>
-				{part}
-			</span>
-		) : (
-			part
-		)
-	);
+	return line.split(/(WordPress|WolfThemes)/).map((part, i) => {
+		if (part === 'WordPress') {
+			return (
+				<span key={i} className={cx('wordpress')}>
+					{part}
+				</span>
+			);
+		}
+		if (part === 'WolfThemes') {
+			return (
+				<span key={i} className={cx('wolfthemes')}>
+					{part}
+				</span>
+			);
+		}
+		return part;
+	});
 }
 
 export default function HomeHero() {
