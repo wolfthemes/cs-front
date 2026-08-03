@@ -122,7 +122,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 	}
 }
 
-@media (max-width: 48rem) {
+@media (width <= 48rem) {
 	.columns {
 		grid-template-columns: 1fr;
 		gap: clamp(2.5rem, 8vw, 3.5rem);
