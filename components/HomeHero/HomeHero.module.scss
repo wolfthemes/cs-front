@@ -87,6 +87,34 @@
 	letter-spacing: 0.01em;
 }
 
+.cta {
+	margin-top: 3rem;
+	opacity: 0;
+	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+	// Appear last, just after the stats have settled.
+	animation-delay: 1.05s;
+}
+
+// White pill matching the nav CTA.
+.cta-button {
+	display: inline-block;
+	padding: 0.7rem 1.6rem;
+	border-radius: 100px;
+	background-color: var(--wpe--color--white);
+	color: var(--wpe--color--black);
+	font-weight: var(--wpe--font-weight--medium);
+	letter-spacing: -0.01em;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: opacity 0.2s ease-out;
+
+	&:hover,
+	&:focus {
+		opacity: 0.85;
+	}
+}
+
 @keyframes fade-in-up {
 	from {
 		opacity: 0;
@@ -102,7 +130,8 @@
 @media (prefers-reduced-motion: reduce) {
 	.title,
 	.line,
-	.stats {
+	.stats,
+	.cta {
 		animation: none;
 		opacity: 1;
 	}
