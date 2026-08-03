@@ -26,6 +26,44 @@
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2.5rem 3.5rem;
+	margin-top: 3rem;
+	opacity: 0;
+	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	// Appear after the last statement line has faded in.
+	animation-delay: 0.85s;
+}
+
+.stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.stat-value {
+	font-size: clamp(2rem, 3vw, 2.75rem);
+	font-weight: var(--wpe--font-weight--bold);
+	line-height: 1;
+	letter-spacing: -0.02em;
+	color: var(--wpe--color--white);
+	// Tabular figures so the width doesn't jitter while counting.
+	font-feature-settings: 'tnum';
+	font-variant-numeric: tabular-nums;
+}
+
+.stat-suffix {
+	color: var(--wpe--color--accent);
+}
+
+.stat-label {
+	font-size: var(--wpe--font-size--sm);
+	color: rgba(255, 255, 255, 0.5);
+	letter-spacing: 0.01em;
+}
+
 @keyframes fade-in-up {
 	from {
 		opacity: 0;
@@ -39,7 +77,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.line {
+	.line,
+	.stats {
 		animation: none;
 		opacity: 1;
 	}
