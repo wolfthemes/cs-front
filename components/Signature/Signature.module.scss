@@ -1,0 +1,26 @@
+@import 'styles/breakpoints';
+
+.component {
+	display: flex;
+	justify-content: center;
+
+	svg {
+		width: 240px;
+		height: auto;
+		display: block;
+		color: var(--wpe--color--white);
+		overflow: visible;
+
+		@media (min-width: $breakpoint-small) {
+			width: 300px;
+		}
+	}
+
+	svg path {
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: 8px; // SVG user units
+	}
+}
