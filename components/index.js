@@ -4,6 +4,7 @@ export { EntryHeader } from './EntryHeader';
 export { FeaturedImage } from './FeaturedImage';
 export { Footer } from './Footer';
 export { FormatDate } from './FormatDate';
+export { GalleryBanner } from './GalleryBanner';
 export { Header } from './Header';
 export { Heading } from './Heading';
 export { Main } from './Main';

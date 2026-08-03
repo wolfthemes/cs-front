@@ -7,6 +7,7 @@ import {
   Main,
   NavigationMenu,
   HomeHero,
+  GalleryBanner,
   SEO,
 } from '../components';
 
@@ -30,6 +31,7 @@ export default function Component() {
       />
       <Main>
         <HomeHero />
+        <GalleryBanner />
       </Main>
       <Footer title={siteTitle} menuItems={footerMenu} />
     </>

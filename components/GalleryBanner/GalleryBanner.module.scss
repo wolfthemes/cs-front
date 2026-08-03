@@ -1,0 +1,67 @@
+.gallery-banner {
+	height: 100vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding-top: 20px;
+}
+
+.marquee-row {
+	flex: 1; // three rows split the viewport height evenly
+	min-height: 0;
+	overflow: hidden;
+}
+
+.marquee-track {
+	display: flex;
+	gap: 20px;
+	height: 100%;
+	width: max-content; // track is as wide as its content
+	animation: marquee-right var(--marquee-duration, 200s) linear infinite;
+}
+
+// Even rows scroll the other way at a matched speed (same physical distance).
+.marquee-row--left .marquee-track {
+	animation-name: marquee-left;
+}
+
+@keyframes marquee-left {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes marquee-right {
+	from {
+		transform: translateX(-50%);
+	}
+
+	to {
+		transform: translateX(0);
+	}
+}
+
+.marquee-item {
+	flex-shrink: 0;
+	height: 100%; // images sized by row height; width follows aspect ratio
+	margin: 0;
+	background: #1a1a1a; // placeholder chip colour while the image loads
+
+	img {
+		display: block;
+		height: 100%;
+		width: auto;
+	}
+}
+
+// Accessibility: respect reduced-motion.
+@media (prefers-reduced-motion: reduce) {
+	.marquee-track {
+		animation-play-state: paused;
+	}
+}
