@@ -1,0 +1,163 @@
+// Closing contact CTA. Terminal-styled label + prompt echo the header brand;
+// the big statement and availability copy sit left-aligned like the reference.
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.component {
+	padding: clamp(5rem, 12vh, 9rem) 0 clamp(6rem, 14vh, 10rem);
+}
+
+.inner {
+	max-width: var(--wpe--container--max-width);
+	margin: 0 auto;
+	padding: 0 $edge;
+}
+
+.topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: clamp(2rem, 5vw, 3.5rem);
+	font-family: var(--font-geist-mono), monospace;
+	font-size: var(--wpe--font-size--sm);
+}
+
+.label {
+	padding: 0.35rem 0.7rem;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: 6px;
+	color: rgba(255, 255, 255, 0.75);
+	white-space: nowrap;
+}
+
+.label-accent {
+	color: var(--wpe--color--accent);
+}
+
+.prompt {
+	color: rgba(255, 255, 255, 0.6);
+	white-space: nowrap;
+}
+
+.prompt-accent {
+	color: var(--wpe--color--accent);
+}
+
+.title {
+	margin: 0;
+	max-width: 16ch;
+	font-size: clamp(2.5rem, 7vw, 5.5rem);
+	line-height: 1.02;
+	letter-spacing: -0.03em;
+	font-weight: var(--wpe--font-weight--bold);
+	color: var(--wpe--color--white);
+}
+
+.lead {
+	margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+	max-width: 46ch;
+	font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1.25rem 1.75rem;
+	margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.primary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.9rem 1.6rem;
+	border-radius: 8px;
+	background-color: var(--wpe--color--purple);
+	color: var(--wpe--color--white);
+	font-weight: var(--wpe--font-weight--medium);
+	letter-spacing: -0.01em;
+	text-decoration: none;
+	transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		background-color: color-mix(in srgb, var(--wpe--color--purple) 85%, #fff);
+		transform: translateY(-2px);
+	}
+}
+
+.secondary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--wpe--color--white);
+	font-weight: var(--wpe--font-weight--medium);
+	text-decoration: none;
+	text-underline-offset: 4px;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration: underline;
+	}
+
+	.arrow {
+		transition: transform 0.2s ease-out;
+	}
+
+	&:hover .arrow,
+	&:focus-visible .arrow {
+		transform: translateX(3px);
+	}
+}
+
+// Reveal on scroll: each block fades up, staggered. Base state.
+.topbar,
+.title,
+.lead,
+.actions {
+	opacity: 0;
+	transform: translateY(0.6em);
+	transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+		transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.is-visible {
+	.topbar {
+		opacity: 1;
+		transform: none;
+		transition-delay: 0s;
+	}
+
+	.title {
+		opacity: 1;
+		transform: none;
+		transition-delay: 0.1s;
+	}
+
+	.lead {
+		opacity: 1;
+		transform: none;
+		transition-delay: 0.2s;
+	}
+
+	.actions {
+		opacity: 1;
+		transform: none;
+		transition-delay: 0.3s;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.topbar,
+	.title,
+	.lead,
+	.actions {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}

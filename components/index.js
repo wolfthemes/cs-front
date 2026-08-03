@@ -1,5 +1,6 @@
 export { BrandIcon } from './BrandIcon';
 export { CaseStudies } from './CaseStudies';
+export { Contact } from './Contact';
 export { Container } from './Container';
 export { ContentWrapper } from './ContentWrapper';
 export { EntryHeader } from './EntryHeader';
