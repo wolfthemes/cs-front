@@ -90,7 +90,14 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 	return (
 		<div className={cx('stat')}>
 			<span className={cx('stat-value')}>
-				{display}
+				{/* Reserve the final value's width so the digit count growing
+				    (e.g. 0 -> 14) can't shift the suffix during the count-up. */}
+				<span
+					className={cx('stat-num')}
+					style={{ minWidth: `${value.toFixed(decimals).length}ch` }}
+				>
+					{display}
+				</span>
 				<span className={cx('stat-suffix')}>{suffix}</span>
 			</span>
 			<span className={cx('stat-label')}>{label}</span>
@@ -98,10 +105,11 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 	);
 }
 
-// Render a line, styling brand words: "WordPress" in EB Garamond (`.wordpress`)
-// and "WolfThemes" in the self-hosted Sickamore font (`.wolfthemes`).
+// Render a line, styling key words: "WordPress" in EB Garamond (`.wordpress`),
+// "WolfThemes" in the self-hosted Sickamore font (`.wolfthemes`), and
+// "engineering" in Geist Pixel (`.engineering`).
 function renderLine(line) {
-	return line.split(/(WordPress|WolfThemes)/).map((part, i) => {
+	return line.split(/(WordPress|WolfThemes|engineering)/).map((part, i) => {
 		if (part === 'WordPress') {
 			return (
 				<span key={i} className={cx('wordpress')}>
@@ -112,6 +120,13 @@ function renderLine(line) {
 		if (part === 'WolfThemes') {
 			return (
 				<span key={i} className={cx('wolfthemes')}>
+					{part}
+				</span>
+			);
+		}
+		if (part === 'engineering') {
+			return (
+				<span key={i} className={cx('engineering')}>
 					{part}
 				</span>
 			);

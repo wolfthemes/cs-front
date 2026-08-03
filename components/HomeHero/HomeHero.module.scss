@@ -40,6 +40,11 @@
 	font-size: 1.2em;
 }
 
+.engineering {
+	font-family: var(--font-geist-pixel-square), var(--font-geist-mono), monospace;
+	font-weight: var(--wpe--font-weight--medium);
+}
+
 .line {
 	display: block;
 	opacity: 0;
@@ -74,6 +79,13 @@
 	// Tabular figures so the width doesn't jitter while counting.
 	font-feature-settings: 'tnum';
 	font-variant-numeric: tabular-nums;
+}
+
+.stat-num {
+	// Fixed width (set inline per stat) + right alignment so the number grows
+	// into reserved space instead of pushing the suffix as digits are added.
+	display: inline-block;
+	text-align: right;
 }
 
 .stat-suffix {

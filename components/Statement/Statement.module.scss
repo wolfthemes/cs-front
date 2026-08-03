@@ -1,0 +1,62 @@
+.component {
+	padding: 12rem 1rem;
+	margin: 0 auto;
+	max-width: var(--wpe--container--max-width);
+	text-align: left;
+}
+
+.headline {
+	margin: 0;
+	max-width: 20ch;
+	// Display line — the reveal happens per word.
+	font-size: clamp(1.75rem, 3.5vw, 3rem);
+	line-height: 1.18;
+	letter-spacing: -0.02em;
+	font-weight: var(--wpe--font-weight--medium);
+	color: var(--wpe--color--white);
+}
+
+.word {
+	display: inline-block;
+	// Scroll-driven reveal writes opacity/filter/transform here; hint the
+	// compositor so blur + skew stay smooth.
+	will-change: opacity, filter, transform;
+	transform-origin: left bottom;
+}
+
+.body {
+	// Offset the paragraph block toward the right, under the headline.
+	margin-top: 6rem;
+	margin-left: auto;
+	max-width: 42rem;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.lead {
+	margin: 0;
+	font-size: clamp(1.25rem, 2vw, 1.75rem);
+	line-height: 1.35;
+	letter-spacing: -0.01em;
+	font-weight: var(--wpe--font-weight--medium);
+	color: var(--wpe--color--white);
+}
+
+.support {
+	margin: 0;
+	font-size: var(--wpe--font-size--base);
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 48rem) {
+	.component {
+		padding: 7rem 1rem;
+	}
+
+	.body {
+		margin-top: 3.5rem;
+		margin-left: 0;
+	}
+}
