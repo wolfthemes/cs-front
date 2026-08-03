@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
+import EngineerCircle from './EngineerCircle';
 
 let cx = className.bind(styles);
 
@@ -144,17 +145,7 @@ export default function HomeHero() {
 				Senior Web{' '}
 				<span className={cx('engineer')}>
 					Engineer
-					<svg
-						className={cx('engineer-circle')}
-						viewBox="0 0 300 100"
-						preserveAspectRatio="none"
-						aria-hidden="true"
-						focusable="false"
-					>
-						{/* Hand-drawn marker loop that overshoots and crosses at the
-						    start, echoing the circled "connect" reference. */}
-						<path d="M40 62C16 44 55 16 150 14C252 12 296 34 284 56C273 76 205 90 122 87C48 84 6 70 24 46C31 37 47 30 66 25" />
-					</svg>
+					<EngineerCircle />
 				</span>
 			</h1>
 			<p className={cx('intro')}>

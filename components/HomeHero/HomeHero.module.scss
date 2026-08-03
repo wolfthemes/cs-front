@@ -26,40 +26,36 @@
 	white-space: nowrap;
 }
 
-// Marker loop drawn around "Engineer". Overshoots the word's box on every
-// side so it reads as a rough hand circle rather than a tidy outline.
+// Hand-drawn marker loop (rough textured circle) drawn around "Engineer".
+// Stretched to overshoot the word's box on every side so it frames the word.
+// The source is a filled shape, so it's revealed with a left-to-right wipe
+// (like the mark being drawn) rather than a stroke-dash draw.
 .engineer-circle {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 122%;
-	height: 150%;
+	width: 128%;
+	height: 165%;
 	transform: translate(-50%, -50%);
 	overflow: visible;
 	pointer-events: none;
 	z-index: -1;
 
+	// Wipe in from the left, echoing the hand drawing the circle.
+	clip-path: inset(0 100% 0 0);
+	animation: wipe-circle 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+
+	// Begin just after the title has faded in (title delay 0.1s + ~0.7s).
+	animation-delay: 0.85s;
+
 	path {
-		fill: none;
-		stroke: var(--wpe--color--accent, #b6ff3a);
-		stroke-width: 3;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-
-		// Draw-on: the dash length must exceed the path length so the whole
-		// stroke can be hidden then revealed.
-		stroke-dasharray: 900;
-		stroke-dashoffset: 900;
-		animation: draw-circle 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
-
-		// Begin just after the title has faded in (title delay 0.1s + ~0.7s).
-		animation-delay: 0.85s;
+		fill: var(--wpe--color--accent, #b6ff3a);
 	}
 }
 
-@keyframes draw-circle {
+@keyframes wipe-circle {
 	to {
-		stroke-dashoffset: 0;
+		clip-path: inset(0 0 0 0);
 	}
 }
 
@@ -194,8 +190,8 @@
 		opacity: 1;
 	}
 
-	.engineer-circle path {
+	.engineer-circle {
 		animation: none;
-		stroke-dashoffset: 0;
+		clip-path: none;
 	}
 }
