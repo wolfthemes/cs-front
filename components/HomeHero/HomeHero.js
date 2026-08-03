@@ -7,10 +7,10 @@ let cx = className.bind(styles);
 // Explicit line breaks so the copy animates line by line (each is its own
 // block with a staggered fade-in-up).
 const LINES = [
-  'I architect and scale WordPress products:',
-  'Awwwards-nominated premium themes, custom plugins,',
-  'WooCommerce solutions, and complete systems',
-  'for creators, small businesses, and enterprises.',
+  'From scaling modern infrastructures to engineering',
+  'smooth interactive experiences, I build modern',
+  'WordPress products designed for longevity',
+  'and performance.',
 ];
 
 const LINE_BASE_DELAY = 0.2; // seconds
