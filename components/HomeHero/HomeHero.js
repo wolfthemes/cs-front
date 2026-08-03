@@ -7,10 +7,11 @@ let cx = className.bind(styles);
 // Explicit line breaks so the copy animates line by line (each is its own
 // block with a staggered fade-in-up).
 const LINES = [
-	'From scaling modern infrastructures to engineering',
-	'smooth interactive experiences, I build modern',
-	'WordPress products designed for longevity',
-	'and performance.',
+	"For over 14 years, I've been building commercial",
+	'WordPress products used by more than 36,000',
+	'customers worldwide. Today, I focus on engineering',
+	'modern, scalable web applications designed for',
+	'performance and longevity.',
 ];
 
 const LINE_BASE_DELAY = 0.45; // seconds — start after the main heading
