@@ -10,27 +10,34 @@
 .navbar {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 	flex-wrap: wrap;
-	padding: 3rem 0;
+	padding: 1.5rem 0;
 	gap: 1rem;
 }
 
 .brand {
-	font-weight: var(--wpe--font-weight--bold);
-	font-size: 1.6rem;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	align-items: center;
 }
 
 .title {
+	position: relative;
+	font-family: var(--font-geist-mono), source-code-pro, Menlo, monospace;
+	font-size: 1rem;
+	font-weight: var(--wpe--font-weight--medium);
+	letter-spacing: -0.01em;
+	text-transform: lowercase;
 	text-decoration: none;
-}
+	color: var(--wpe--header--color);
 
-.description {
-	margin: .3rem 0 0 0;
-	font-size: 0.8rem;
-	opacity: 0.9;
+	// Terminal-style prefix, kept out of the DOM content so the link text stays
+	// just the name.
+	&::before {
+		content: '~/';
+		color: var(--wpe--color--accent);
+		margin-right: 0.1rem;
+	}
 }
 
 .nav-toggle {

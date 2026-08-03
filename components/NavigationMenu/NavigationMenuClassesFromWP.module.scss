@@ -3,23 +3,26 @@
 
 @import 'styles/breakpoints';
 
+// The "Get It" CTA — add the `button` CSS class to the last menu item in
+// wp-admin (Appearance --> Menus --> CSS Classes). Rendered as a white pill.
 .button {
-	a {
-		@media (min-width: $breakpoint-small) {
-			background-color: var(--wpe--color--accent);
-			border-radius: 100px;
-			border: var(--wpe--border--light);
-			color: var(--wpe--color--white);
-			font-size: 92%;
-			padding: 0.5rem 1rem;
-			text-decoration: none;
-			white-space: nowrap;
+	@media (min-width: $breakpoint-small) {
+		margin-left: 0.4rem;
+	}
 
-			&:hover,
-			&:focus {
-				background-color: var(--wpe--color--accent--dark);
-				color: var(--wpe--color--white);
-			}
+	a {
+		background-color: var(--wpe--color--white);
+		border-radius: 100px;
+		color: var(--wpe--color--black);
+		padding: 0.45rem 1.1rem;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&:hover,
+		&:focus {
+			background-color: var(--wpe--color--white);
+			color: var(--wpe--color--black);
+			opacity: 0.85;
 		}
 	}
 }

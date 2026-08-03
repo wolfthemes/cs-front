@@ -8,7 +8,6 @@ let cx = classNames.bind(styles);
 
 export default function Header({
   title = 'Headless by WP Engine',
-  description,
   menuItems
 }) {
   const [isNavShown, setIsNavShown] = useState(false);
@@ -22,7 +21,6 @@ export default function Header({
               <Link legacyBehavior href="/">
                 <a className={cx('title')}>{title}</a>
               </Link>
-              {description && <p className={cx('description')}>{description}</p>}
             </div>
             <button
               type="button"
