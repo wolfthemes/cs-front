@@ -7,16 +7,21 @@
 
 .headline {
 	margin: 0;
-	max-width: 20ch;
-	// Display line — the reveal happens per word.
-	font-size: clamp(1.75rem, 3.5vw, 3rem);
+	max-width: 35ch;
+	// Display line — the reveal happens per letter.
+	font-size: clamp(2.25rem, 4.5vw, 3.75rem);
 	line-height: 1.18;
 	letter-spacing: -0.02em;
 	font-weight: var(--wpe--font-weight--medium);
 	color: var(--wpe--color--white);
 }
 
+// Keeps each word intact so letters never wrap mid-word.
 .word {
+	display: inline-block;
+}
+
+.char {
 	display: inline-block;
 	// Scroll-driven reveal writes opacity/filter/transform here; hint the
 	// compositor so blur + skew stay smooth.

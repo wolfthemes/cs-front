@@ -30,16 +30,21 @@ const easeExpoOut = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
 // position instead of tracking it frame-for-frame).
 const SCRUB_SMOOTH = 0.085;
 
+// Fraction of the sweep that is mid-transition at once. Wider than a single
+// character, so the reveal edge is a soft gradient across several letters
+// rather than a hard on/off — this is what keeps it from feeling brutal.
+const FEATHER = 0.16;
+
 export default function Statement() {
   const headlineRef = useRef(null);
-  const wordsRef = useRef([]);
+  const charsRef = useRef([]);
 
   useEffect(() => {
-    const words = wordsRef.current.filter(Boolean);
-    if (!words.length) return undefined;
+    const chars = charsRef.current.filter(Boolean);
+    if (!chars.length) return undefined;
 
     if (prefersReducedMotion()) {
-      words.forEach((el) => {
+      chars.forEach((el) => {
         el.style.opacity = '1';
         el.style.filter = 'none';
         el.style.transform = 'none';
@@ -52,24 +57,24 @@ export default function Statement() {
     let painted = -1;
 
     const paint = (progress) => {
-      const total = words.length;
+      const total = chars.length;
       const slice = 1 / total;
-      const feather = slice * 2.5; // words overlap as they resolve
-      // Each word's start offset (i * slice) eats into the range, so raw
-      // progress can't drive the last word to a full reveal. Stretch progress
-      // across the true span so every word resolves by the end of the band.
-      const revealSpan = (total - 1) * slice + feather;
+      // Each char's start offset (i * slice) eats into the range, so raw
+      // progress can't drive the last letter to a full reveal. Stretch progress
+      // across the true span so every letter resolves by the end of the band.
+      const revealSpan = (total - 1) * slice + FEATHER;
       const scaled = progress * revealSpan;
 
       for (let i = 0; i < total; i += 1) {
-        // Ease each word individually (expo.out), like the GSAP reference.
-        const p = easeExpoOut(clamp((scaled - i * slice) / feather, 0, 1));
+        // Ease each letter individually (expo.out), like the GSAP reference.
+        const p = easeExpoOut(clamp((scaled - i * slice) / FEATHER, 0, 1));
         const inv = 1 - p;
-        words[i].style.opacity = (0.12 + 0.88 * p).toFixed(3);
-        words[i].style.filter = `blur(${(inv * 8).toFixed(2)}px)`;
-        words[i].style.transform = `translateY(${(inv * 0.3).toFixed(
+        // Soft ghost → sharp: gentler blur / skew / lift than the word version.
+        chars[i].style.opacity = (0.22 + 0.78 * p).toFixed(3);
+        chars[i].style.filter = `blur(${(inv * 4).toFixed(2)}px)`;
+        chars[i].style.transform = `translateY(${(inv * 0.18).toFixed(
           3
-        )}em) skewY(${(inv * 3).toFixed(2)}deg)`;
+        )}em) skewY(${(inv * 2).toFixed(2)}deg)`;
       }
     };
 
@@ -109,22 +114,34 @@ export default function Statement() {
     };
   }, []);
 
+  // Words stay whole for wrapping; letters inside animate individually. A flat
+  // running index maps each letter to its slot in charsRef / the reveal sweep.
   const words = HEADLINE.split(' ');
+  let charIndex = 0;
 
   return (
     <section className={cx('component')}>
       <h2 className={cx('headline')} ref={headlineRef}>
-        {words.map((word, i) => (
-          <React.Fragment key={i}>
-            <span
-              ref={(el) => {
-                wordsRef.current[i] = el;
-              }}
-              className={cx('word')}
-            >
-              {word}
+        {words.map((word, wi) => (
+          <React.Fragment key={wi}>
+            <span className={cx('word')}>
+              {word.split('').map((ch, ci) => {
+                const idx = charIndex;
+                charIndex += 1;
+                return (
+                  <span
+                    key={ci}
+                    ref={(el) => {
+                      charsRef.current[idx] = el;
+                    }}
+                    className={cx('char')}
+                  >
+                    {ch}
+                  </span>
+                );
+              })}
             </span>
-            {i < words.length - 1 ? ' ' : ''}
+            {wi < words.length - 1 ? ' ' : ''}
           </React.Fragment>
         ))}
       </h2>
