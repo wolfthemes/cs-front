@@ -5,12 +5,9 @@ import styles from './SkipNavigationLink.module.scss';
 let cx = classNames.bind(styles);
 
 export default function SkipNavigationLink() {
-  return (
-    <a
-      className={cx(['component', 'sr-only'])}
-      href={`#${SELECTORS.MAIN_CONTENT_ID}`}
-    >
-      Skip To Main Content
-    </a>
-  );
+	return (
+		<a className={cx(['component', 'sr-only'])} href={`#${SELECTORS.MAIN_CONTENT_ID}`}>
+			Skip To Main Content
+		</a>
+	);
 }

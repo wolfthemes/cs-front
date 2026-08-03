@@ -4,7 +4,7 @@
 // (the real :root {...} block), this file is safe to @import from any
 // individual .module.scss without duplicating anything into its output —
 // same as how modules already @import 'styles/breakpoints' for $breakpoint-*.
-//
+
 // This project is headless, so there's no --wp--preset--* (WordPress's own
 // theme.json/block-editor variables, not exposed to a decoupled frontend) —
 // these point at the --wpe--* tokens in _css-variables.scss instead.

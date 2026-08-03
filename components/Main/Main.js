@@ -5,14 +5,14 @@ import styles from './Main.module.scss';
 let cx = classNames.bind(styles);
 
 export default function Main({ children, className, ...props }) {
-  return (
-    <main
-      id={SELECTORS.MAIN_CONTENT_ID}
-      tabIndex={-1}
-      className={cx(['component', className])}
-      {...props}
-    >
-      {children}
-    </main>
-  );
+	return (
+		<main
+			id={SELECTORS.MAIN_CONTENT_ID}
+			tabIndex={-1}
+			className={cx(['component', className])}
+			{...props}
+		>
+			{children}
+		</main>
+	);
 }

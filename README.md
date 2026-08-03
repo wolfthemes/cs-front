@@ -1,6 +1,6 @@
 # cs-front — constantin.saguin.com
 
-Headless frontend for my resume website [constantin.saguin.com](https://constantin.saguin.com), built with [Faust.js](https://faustjs.org/) (Next.js + headless WordPress).
+Headless frontend for my resume website [constantin.saguin.com](https://constantin.saguin.com), built with [Faust.js](https://faustjs.org/) (Next.js + headless WordPress) - Coming soon
 
 ## Scaffolding a fresh Faust frontend
 
@@ -28,11 +28,11 @@ The connected WordPress install needs these plugins:
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the Next.js dev server |
-| `npm run build` | `faust build` — production build |
-| `npm run start` | `faust start` — serve the production build |
+| Command            | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| `npm run dev`      | Start the Next.js dev server                               |
+| `npm run build`    | `faust build` — production build                           |
+| `npm run start`    | `faust start` — serve the production build                 |
 | `npm run generate` | Regenerate `possibleTypes.json` from the WP GraphQL schema |
-| `npm run lint` | Lint JS/TS |
-| `npm run format` | Format with Prettier |
+| `npm run lint`     | Lint JS/TS                                                 |
+| `npm run format`   | Format with Prettier                                       |

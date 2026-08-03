@@ -33,6 +33,7 @@
 	margin-top: 3rem;
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
 	// Appear after the last statement line has faded in.
 	animation-delay: 0.85s;
 }
@@ -49,13 +50,15 @@
 	line-height: 1;
 	letter-spacing: -0.02em;
 	color: var(--wpe--color--white);
+
 	// Tabular figures so the width doesn't jitter while counting.
 	font-feature-settings: 'tnum';
 	font-variant-numeric: tabular-nums;
 }
 
 .stat-suffix {
-	color: var(--wpe--color--accent);
+	// color: var(--wpe--color--accent);
+    opacity: 0.5;
 }
 
 .stat-label {

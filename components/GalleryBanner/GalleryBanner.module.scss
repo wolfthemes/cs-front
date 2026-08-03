@@ -10,6 +10,7 @@
 	flex-direction: column;
 	gap: 20px;
 	padding-top: 20px;
+
 	// Slight oblique tilt; the scale overfills the corners the rotation would
 	// otherwise leave empty, and the .gallery-clip parent trims the overflow.
 	transform: rotate(-3deg) scale(1.12);

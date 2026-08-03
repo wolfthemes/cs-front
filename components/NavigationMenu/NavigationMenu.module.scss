@@ -66,16 +66,16 @@
 		white-space: nowrap;
 		text-align: center;
 
-		&:hover,
-		&:focus {
-			color: var(--wpe--navigation-menu--color);
-			background-color: rgba(255, 255, 255, 0.1);
-		}
-
 		// Remove link underline when component is inside header or footer.
 		header &,
 		footer & {
 			text-decoration: none;
+		}
+
+		&:hover,
+		&:focus {
+			color: var(--wpe--navigation-menu--color);
+			background-color: rgba(255, 255, 255, 0.1);
 		}
 	}
 
@@ -110,6 +110,7 @@
 
 	li ul {
 		@extend %hidden;
+
 		background-color: var(--wpe--dropdown--background-color);
 		display: flex;
 		flex-direction: column;

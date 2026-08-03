@@ -5,14 +5,14 @@ import styles from './Footer.module.scss';
 let cx = classNames.bind(styles);
 
 export default function Footer({ title, menuItems }) {
-  const year = new Date().getFullYear();
+	const year = new Date().getFullYear();
 
-  return (
-    <footer className={cx('component')}>
-      <Container>
-        <NavigationMenu className={cx('nav')} menuItems={menuItems} />
-        <p className={cx('copyright')}>{`${title} © ${year}. Powered by Headless WordPress.`}</p>
-      </Container>
-    </footer>
-  );
+	return (
+		<footer className={cx('component')}>
+			<Container>
+				<NavigationMenu className={cx('nav')} menuItems={menuItems} />
+				<p className={cx('copyright')}>{`${title} © ${year}. Powered by Headless WordPress.`}</p>
+			</Container>
+		</footer>
+	);
 }

@@ -8,9 +8,11 @@
 
 body {
 	margin: 0;
+
 	// Dark default layout.
 	background-color: var(--wpe--main--background-color);
 	color: var(--wpe--main--color);
+
 	// Fallback stack for the moment before the Geist class paints; Geist Sans is
 	// the real main font, applied via `.app-shell` (the wrapper in pages/_app.js).
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
@@ -96,11 +98,6 @@ img {
 	display: block;
 	max-width: 100%;
 	height: auto;
-}
-
-::-moz-selection {
-	color: var(--wpe--color--white);
-	background-color: var(--wpe--color--accent);
 }
 
 ::selection {
