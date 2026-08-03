@@ -119,13 +119,10 @@ export default function CaseStudies() {
 	if (works.length === 0) return null;
 
 	return (
-		<section ref={sectionRef} className={cx('component')} aria-labelledby="case-studies-title">
+		<section ref={sectionRef} className={cx('component')} aria-label="Case studies">
 			<div className={cx('sticky')}>
 				<div className={cx('head')}>
-					<p className={cx('eyebrow')}>Selected work</p>
-					<h2 id="case-studies-title" className={cx('title')}>
-						Case studies
-					</h2>
+					<p className={cx('eyebrow')}>~/case-studies</p>
 				</div>
 				<div ref={trackRef} className={cx('track')}>
 					{works.map((work) => (

@@ -30,21 +30,12 @@ $edge: clamp(1rem, 5vw, 5rem);
 }
 
 .eyebrow {
-	margin: 0 0 0.5rem;
+	margin: 0;
 	font-family: var(--font-geist-mono), monospace;
 	font-size: var(--wpe--font-size--sm);
 	letter-spacing: 0.02em;
 	text-transform: lowercase;
 	color: var(--wpe--color--accent);
-}
-
-.title {
-	margin: 0;
-	font-size: clamp(2rem, 4.5vw, 3.75rem);
-	line-height: 1;
-	letter-spacing: -0.03em;
-	font-weight: var(--wpe--font-weight--bold);
-	color: var(--wpe--color--white);
 }
 
 .track {
@@ -87,6 +78,8 @@ $edge: clamp(1rem, 5vw, 5rem);
 		object-fit: cover;
 		display: block;
 		will-change: transform;
+		transition: transform 0.4s ease-out;
+
 		// JS applies the parallax transform; this is the resting state.
 		transform: scale(1.14);
 	}
@@ -129,10 +122,6 @@ $edge: clamp(1rem, 5vw, 5rem);
 	transition: opacity 0.2s ease-out;
 }
 
-.media img {
-	transition: transform 0.4s ease-out;
-}
-
 @media (prefers-reduced-motion: reduce) {
 	// Degrade to a normal horizontal scroll strip — no pinning, no parallax.
 	.component {
@@ -142,8 +131,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 	.sticky {
 		position: static;
 		height: auto;
-		overflow-x: auto;
-		overflow-y: hidden;
+		overflow: auto hidden;
 		padding-bottom: 1rem;
 	}
 

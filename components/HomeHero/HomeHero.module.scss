@@ -18,6 +18,51 @@
 	animation-delay: 0.1s;
 }
 
+// Wraps the last word so the hand-drawn circle can be absolutely positioned
+// around it. inline-block keeps the SVG scoped to the word's box.
+.engineer {
+	position: relative;
+	display: inline-block;
+	white-space: nowrap;
+}
+
+// Marker loop drawn around "Engineer". Overshoots the word's box on every
+// side so it reads as a rough hand circle rather than a tidy outline.
+.engineer-circle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 122%;
+	height: 150%;
+	transform: translate(-50%, -50%);
+	overflow: visible;
+	pointer-events: none;
+	z-index: -1;
+
+	path {
+		fill: none;
+		stroke: var(--wpe--color--accent, #b6ff3a);
+		stroke-width: 3;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+
+		// Draw-on: the dash length must exceed the path length so the whole
+		// stroke can be hidden then revealed.
+		stroke-dasharray: 900;
+		stroke-dashoffset: 900;
+		animation: draw-circle 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+
+		// Begin just after the title has faded in (title delay 0.1s + ~0.7s).
+		animation-delay: 0.85s;
+	}
+}
+
+@keyframes draw-circle {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
 .intro {
 	margin: 1.5rem 0 0;
 	font-size: clamp(1.1rem, 1.5vw, 1.5rem);
@@ -147,5 +192,10 @@
 	.cta {
 		animation: none;
 		opacity: 1;
+	}
+
+	.engineer-circle path {
+		animation: none;
+		stroke-dashoffset: 0;
 	}
 }

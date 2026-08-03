@@ -48,13 +48,7 @@ export default function Contact() {
 		>
 			<div className={cx('inner')}>
 				<div className={cx('topbar')}>
-					<span className={cx('label')}>
-						<span className={cx('label-accent')}>~/</span>contact
-					</span>
-					<span className={cx('prompt')}>
-						<span className={cx('prompt-accent')}>$</span> whoami{' '}
-						<span className={cx('prompt-accent')}>--hire</span>
-					</span>
+					<span className={cx('eyebrow')}>~/contact</span>
 				</div>
 
 				<h2 id="contact-title" className={cx('title')}>

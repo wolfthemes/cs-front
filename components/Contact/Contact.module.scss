@@ -14,33 +14,15 @@ $edge: clamp(1rem, 5vw, 5rem);
 }
 
 .topbar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
 	margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.eyebrow {
+	margin: 0;
 	font-family: var(--font-geist-mono), monospace;
 	font-size: var(--wpe--font-size--sm);
-}
-
-.label {
-	padding: 0.35rem 0.7rem;
-	border: 1px solid rgba(255, 255, 255, 0.14);
-	border-radius: 6px;
-	color: rgba(255, 255, 255, 0.75);
-	white-space: nowrap;
-}
-
-.label-accent {
-	color: var(--wpe--color--accent);
-}
-
-.prompt {
-	color: rgba(255, 255, 255, 0.6);
-	white-space: nowrap;
-}
-
-.prompt-accent {
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
 	color: var(--wpe--color--accent);
 }
 
