@@ -1,0 +1,88 @@
+// CSS Variables
+// See `_breakpoints.scss` for media query breakpoint variables.
+
+@use 'sass:math';
+
+// Fluid size between two viewport widths (default 20rem–90rem), so the
+// type scale keeps its fluid min/max.
+@function fluid-size($min, $max, $min-vw: 20rem, $max-vw: 90rem) {
+	$slope: math.div($max - $min, $max-vw - $min-vw);
+	$intercept: $min - $slope * $min-vw;
+	@return clamp(#{$min}, #{$intercept} + #{$slope * 100}vw, #{$max});
+}
+
+:root {
+	// Color Definitions.
+	--wpe--color--black: #000;
+	--wpe--color--white: #fff;
+	--wpe--color--offwhite: #f7f7f7;
+	--wpe--color--neutral: rgba(175,184,193,0.2);
+	--wpe--color--slate: #0a2540;
+	--wpe--color--purple: #635bff;
+
+	// Color Assignments.
+	// Dark default layout: black surfaces, white text.
+	--wpe--color--accent: var(--wpe--color--purple);
+	--wpe--color--accent--dark: var(--wpe--color--slate);
+	--wpe--color--title: var(--wpe--color--white);
+	--wpe--link--color: var(--wpe--color--accent);
+	--wpe--code--color: var(--wpe--color--white);
+	--wpe--code--background-color: var(--wpe--color--neutral);
+	--wpe--header--color: var(--wpe--color--white);
+	--wpe--header--background-color: var(--wpe--color--black);
+	--wpe--navigation-menu--color: var(--wpe--color--white);
+	--wpe--navigation-menu--color--hover: var(--wpe--color--accent);
+	--wpe--navigation-menu--background-color: transparent;
+	--wpe--dropdown--background-color: var(--wpe--color--slate);
+	--wpe--main--color: var(--wpe--color--white);
+	--wpe--main--background-color: var(--wpe--color--black);
+	--wpe--footer--color: var(--wpe--color--white);
+	--wpe--footer--background-color: var(--wpe--color--black);
+	--wpe--heading--color: var(--wpe--color--white);
+	--wpe--border--light: 1px solid var(--wpe--color--neutral);
+	--wpe--border--extra-light: 1px solid var(--wpe--color--offwhite);
+
+	// Type — weights.
+	--wpe--font-weight--light: 300;
+	--wpe--font-weight--medium: 400;
+	--wpe--font-weight--semibold: 600;
+	--wpe--font-weight--bold: 700;
+
+	// Type — fluid size scale.
+	--wpe--font-size--xxs: 0.6875rem;
+	--wpe--font-size--xs: #{fluid-size(0.75rem, 0.8125rem)};
+	--wpe--font-size--sm: #{fluid-size(0.875rem, 0.9375rem)};
+	--wpe--font-size--base: #{fluid-size(1rem, 1.0625rem)};
+	--wpe--font-size--md: #{fluid-size(1.125rem, 1.25rem)};
+	--wpe--font-size--lg: #{fluid-size(1.375rem, 1.5625rem)};
+	--wpe--font-size--xl: #{fluid-size(1.625rem, 1.953rem)};
+	--wpe--font-size--2xl: #{fluid-size(1.953rem, 2.441rem)};
+	--wpe--font-size--3xl: #{fluid-size(2.25rem, 3.052rem)};
+	--wpe--font-size--display: #{fluid-size(2.625rem, 3.815rem)};
+	--wpe--font-size--hero: #{fluid-size(3.8rem, 4.768rem)};
+
+	// Type — body & heading rhythm.
+	--wpe--line-height--body: 1.55;
+	--wpe--line-height--h1: 1.08;
+	--wpe--line-height--h2: 1.15;
+	--wpe--line-height--h3: 1.2;
+	--wpe--line-height--h4: 1.3;
+	--wpe--line-height--h5: 1.35;
+	--wpe--line-height--h6: 1.45;
+
+	--wpe--letter-spacing--h1: -0.02em;
+	--wpe--letter-spacing--h2: -0.018em;
+	--wpe--letter-spacing--h3: -0.015em;
+	--wpe--letter-spacing--h4: -0.011em;
+	--wpe--letter-spacing--h5: -0.008em;
+	--wpe--letter-spacing--h6: -0.005em;
+
+	// Spacing.
+	--wpe--content--max-width: 620px;
+	--wpe--section--padding-y: 3rem;
+	--wpe--container--padding-x: 15px;
+	--wpe--container--max-width: 1000px;
+
+	// Shadows.
+	--wpe--shadow--large: 0 50px 120px -40px rgba(150, 150, 150, 0.2), 0 20px 60px -30px rgba(0, 0, 0, 0.5);
+}

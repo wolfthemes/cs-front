@@ -1,0 +1,40 @@
+// SCSS-only aliases (for use inside .scss files — shorter than
+// var(--wpe--...) directly). No actual CSS output here (Sass variables and
+// functions compile to nothing by themselves), so unlike _css-variables.scss
+// (the real :root {...} block), this file is safe to @import from any
+// individual .module.scss without duplicating anything into its output —
+// same as how modules already @import 'styles/breakpoints' for $breakpoint-*.
+//
+// This project is headless, so there's no --wp--preset--* (WordPress's own
+// theme.json/block-editor variables, not exposed to a decoupled frontend) —
+// these point at the --wpe--* tokens in _css-variables.scss instead.
+
+// Primary brand colour.
+// Main CTAs, links, active/hover states.
+$c-accent: var(--wpe--color--accent);
+
+// Darker variant of the accent colour.
+// Muted/secondary text, dark sections and overlays.
+$c-accent-dark: var(--wpe--color--accent--dark);
+
+// Primary text colour.
+// Headings, body copy, icons.
+$c-ink: var(--wpe--color--black);
+
+// Main site background.
+$c-base: var(--wpe--color--white);
+
+// Alternative surface background.
+// Cards, image placeholders, alternating sections.
+$c-surface: var(--wpe--color--offwhite);
+
+// Borders and dividers.
+$c-border: var(--wpe--color--neutral);
+
+@function fs($slug) {
+	@return var(--wpe--font-size--#{$slug});
+}
+
+@function fw($slug) {
+	@return var(--wpe--font-weight--#{$slug});
+}
