@@ -88,6 +88,12 @@
 		margin-right: 0.45rem;
 		vertical-align: -0.12em;
 		flex-shrink: 0;
+
+		// The Awwwards wordmark is much wider than the square marks, so it reads
+		// oversized at the shared height — scale it down to match optically.
+		&[data-brand='awwwards.com'] {
+			height: 0.7em;
+		}
 	}
 
 	// Active item — filled white pill with dark text.

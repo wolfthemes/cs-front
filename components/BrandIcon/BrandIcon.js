@@ -47,6 +47,7 @@ export default function BrandIcon({ url, className }) {
   return (
     <svg
       className={className}
+      data-brand={icon.host}
       viewBox={icon.viewBox}
       fill="currentColor"
       aria-hidden="true"
