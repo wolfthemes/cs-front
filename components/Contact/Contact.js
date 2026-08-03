@@ -5,7 +5,6 @@ import styles from './Contact.module.scss';
 let cx = className.bind(styles);
 
 const EMAIL = 'constantin@saguin.com';
-const LINKEDIN = 'https://www.linkedin.com/in/constantin-saguin/?locale=en-US';
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -75,16 +74,8 @@ export default function Contact() {
 						</span>
 						Get in touch
 					</a>
-					<a
-						className={cx('secondary')}
-						href={LINKEDIN}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						LinkedIn
-						<span aria-hidden="true" className={cx('arrow')}>
-							→
-						</span>
+					<a className={cx('email')} href={`mailto:${EMAIL}`}>
+						{EMAIL}
 					</a>
 				</div>
 			</div>
