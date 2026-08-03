@@ -10,5 +10,12 @@
 @import '@wordpress/base-styles/colors';
 @import '@wordpress/base-styles/variables';
 @import '@wordpress/base-styles/breakpoints';
-@import '@wordpress/block-library/src/style';
-@import '@wordpress/block-library/src/theme';
+
+// @wordpress/block-library's own SCSS now uses the `@use` module system
+// internally, which breaks under this version combo (its columns/style.scss
+// pulls in @wordpress/base-styles/mixins via `@use`, but that mixins module
+// isn't self-sufficient — $break-medium is undefined in its isolated scope).
+// We're building custom frontend styling anyway (see ContentWrapper.module.scss
+// for the hand-rolled block content rules), so we don't need core block CSS
+// parity here — dropping it removes a fragile upstream dependency instead of
+// pinning package versions around a WordPress packaging bug.
