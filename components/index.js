@@ -1,4 +1,5 @@
 export { BrandIcon } from './BrandIcon';
+export { CaseStudies } from './CaseStudies';
 export { Container } from './Container';
 export { ContentWrapper } from './ContentWrapper';
 export { EntryHeader } from './EntryHeader';
@@ -14,6 +15,7 @@ export { PostInfo } from './PostInfo';
 export { SkipNavigationLink } from './SkipNavigationLink';
 export { Hero } from './Hero';
 export { HomeHero } from './HomeHero';
+export { Statement } from './Statement';
 export { Signature } from './Signature';
 export { Post } from './Post';
 export { SEO } from './SEO';

@@ -1,7 +1,7 @@
 import { useQuery, gql } from '@apollo/client';
 import * as MENUS from '../constants/menus';
 import { BlogInfoFragment } from '../fragments/GeneralSettings';
-import { Header, Footer, Main, NavigationMenu, HomeHero, GalleryBanner, SEO } from '../components';
+import { Header, Footer, Main, NavigationMenu, HomeHero, GalleryBanner, Statement, CaseStudies, SEO } from '../components';
 
 export default function Component() {
 	const { data } = useQuery(Component.query, {
@@ -19,6 +19,8 @@ export default function Component() {
 			<Main>
 				<HomeHero />
 				<GalleryBanner />
+				<Statement />
+				<CaseStudies />
 			</Main>
 			<Footer title={siteTitle} menuItems={footerMenu} />
 		</>

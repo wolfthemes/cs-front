@@ -1,0 +1,158 @@
+// Pinned horizontal case-study carousel. The tall .component gives vertical
+// scroll room; the .sticky child pins to the viewport for that duration while
+// JS translates .track sideways. When the last card is reached the section
+// ends and normal vertical scrolling resumes. Reduced motion falls back to a
+// plain horizontal scroll strip (see the media query at the bottom).
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.component {
+	position: relative;
+
+	// Before JS measures the track, reserve one viewport so the layout doesn't
+	// jump; JS overrides this with the real (taller) height.
+	height: 100vh;
+}
+
+.sticky {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.head {
+	padding: 0 $edge;
+	margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.eyebrow {
+	margin: 0 0 0.5rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: var(--wpe--font-size--sm);
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
+	color: var(--wpe--color--accent);
+}
+
+.title {
+	margin: 0;
+	font-size: clamp(2rem, 4.5vw, 3.75rem);
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-weight: var(--wpe--font-weight--bold);
+	color: var(--wpe--color--white);
+}
+
+.track {
+	display: flex;
+	gap: clamp(1.25rem, 2.5vw, 2.5rem);
+	padding: 0 $edge;
+	will-change: transform;
+}
+
+.card {
+	flex: 0 0 auto;
+	width: clamp(260px, 40vw, 560px);
+}
+
+.card-link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+
+	&:hover .media img,
+	&:focus-visible .media img {
+		transform: scale(1.14) translateZ(0);
+	}
+
+	&:hover .card-cta,
+	&:focus-visible .card-cta {
+		opacity: 1;
+	}
+}
+
+.media {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
+	border-radius: 12px;
+	background-color: rgba(255, 255, 255, 0.06);
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		will-change: transform;
+		// JS applies the parallax transform; this is the resting state.
+		transform: scale(1.14);
+	}
+}
+
+.media-fallback {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	text-align: center;
+	font-size: clamp(1.25rem, 2vw, 1.75rem);
+	font-weight: var(--wpe--font-weight--medium);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.meta {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.card-title {
+	margin: 0;
+	font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+	font-weight: var(--wpe--font-weight--medium);
+	letter-spacing: -0.01em;
+	color: var(--wpe--color--white);
+}
+
+.card-cta {
+	flex-shrink: 0;
+	font-size: var(--wpe--font-size--sm);
+	color: rgba(255, 255, 255, 0.55);
+	opacity: 0;
+	transition: opacity 0.2s ease-out;
+}
+
+.media img {
+	transition: transform 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	// Degrade to a normal horizontal scroll strip — no pinning, no parallax.
+	.component {
+		height: auto !important;
+	}
+
+	.sticky {
+		position: static;
+		height: auto;
+		overflow-x: auto;
+		overflow-y: hidden;
+		padding-bottom: 1rem;
+	}
+
+	.track {
+		transform: none !important;
+	}
+
+	.media img {
+		transform: none !important;
+	}
+}
