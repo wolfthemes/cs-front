@@ -29,7 +29,6 @@ const COLUMNS = [
       'Docker',
       'Bedrock',
       'CI/CD (GitHub Actions)',
-      'Zero-downtime deploys (Capistrano)',
       'DigitalOcean',
       'BunnyCDN',
     ],
