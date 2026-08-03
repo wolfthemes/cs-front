@@ -11,7 +11,7 @@ export default function Footer({ title, menuItems }) {
     <footer className={cx('component')}>
       <Container>
         <NavigationMenu className={cx('nav')} menuItems={menuItems} />
-        <p className={cx('copyright')}>{`${title} © ${year}. Powered by WordPress.`}</p>
+        <p className={cx('copyright')}>{`${title} © ${year}. Powered by Headless WordPress.`}</p>
       </Container>
     </footer>
   );
