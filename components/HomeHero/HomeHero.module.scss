@@ -2,4 +2,39 @@
 	padding: 8rem 1rem 6rem;
 	margin: 0 auto;
 	max-width: var(--wpe--container--max-width);
+	text-align: left;
+}
+
+.intro {
+	margin: 0;
+	font-size: clamp(2.25rem, 5.5vw, 5.5rem);
+	line-height: 1.06;
+	letter-spacing: -0.02em;
+	font-weight: var(--wpe--font-weight--semibold);
+	color: var(--wpe--color--white);
+}
+
+.line {
+	display: block;
+	opacity: 0;
+	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes fade-in-up {
+	from {
+		opacity: 0;
+		transform: translateY(0.4em);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.line {
+		animation: none;
+		opacity: 1;
+	}
 }
