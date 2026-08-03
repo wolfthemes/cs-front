@@ -72,8 +72,9 @@
 			background-color: rgba(255, 255, 255, 0.1);
 		}
 
-		// Remove link underline when component is inside header.
-		header & {
+		// Remove link underline when component is inside header or footer.
+		header &,
+		footer & {
 			text-decoration: none;
 		}
 	}
