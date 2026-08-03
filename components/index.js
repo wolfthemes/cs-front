@@ -17,6 +17,7 @@ export { SkipNavigationLink } from './SkipNavigationLink';
 export { Hero } from './Hero';
 export { HomeHero } from './HomeHero';
 export { Statement } from './Statement';
+export { Playground } from './Playground';
 export { Signature } from './Signature';
 export { Post } from './Post';
 export { SEO } from './SEO';
