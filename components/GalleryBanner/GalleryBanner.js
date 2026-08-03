@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import className from 'classnames/bind';
 import styles from './GalleryBanner.module.scss';
 
 let cx = className.bind(styles);
+
+// Seconds for one full loop at rest — matches the CSS baseline (slow).
+const BASE_DURATION = 200;
+// How strongly the marquee speed tracks scroll velocity. Kept small for a
+// discrete nudge rather than a strong surge.
+const SCROLL_FOLLOW = 0.35;
+// Upper bound (px/s) on the scroll-driven boost, so a fast flick can't send the
+// rows flying — keeps the effect subtle.
+const MAX_BOOST = 320;
+// Easing applied to the scroll velocity each frame (0..1); lower = smoother,
+// longer tail after you stop scrolling.
+const VEL_SMOOTHING = 0.09;
 
 // Drop the image files in `public/gallery/` and reference them below as
 // `/gallery/<file>` (Next serves the public/ folder from the URL root, so the
@@ -69,7 +81,11 @@ function MarqueeItem({ image, duplicate }) {
 function MarqueeRow({ direction, images }) {
   return (
     <div className={cx('marquee-row', `marquee-row--${direction}`)}>
-      <div className={cx('marquee-track')}>
+      <div
+        className={cx('marquee-track')}
+        data-direction={direction}
+        data-count={images.length}
+      >
         {/* Real set — carries the descriptive alt text. */}
         {images.map((image, i) => (
           <MarqueeItem key={`real-${i}`} image={image} />
@@ -84,8 +100,100 @@ function MarqueeRow({ direction, images }) {
 }
 
 export default function GalleryBanner() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return undefined;
+
+    // Respect reduced-motion: leave the (paused) CSS animation in place and
+    // don't drive anything.
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return undefined;
+
+    // The seamless loop distance is the offset of the first duplicated figure:
+    // real-set width + one gap. Item widths come from the img width/height
+    // attributes, so this is stable even before the images finish loading.
+    const measurePeriod = (el) => {
+      const count = Number(el.dataset.count) || 0;
+      const first = el.children[0];
+      const dup = el.children[count];
+      return dup && first ? dup.offsetLeft - first.offsetLeft : el.scrollWidth / 2;
+    };
+
+    const tracks = Array.from(section.querySelectorAll('[data-direction]')).map(
+      (el) => {
+        el.style.animation = 'none'; // take over from the CSS marquee
+        return {
+          el,
+          dir: el.dataset.direction === 'left' ? 1 : -1,
+          period: measurePeriod(el),
+          pos: 0,
+        };
+      }
+    );
+
+    const onResize = () => {
+      tracks.forEach((t) => {
+        t.period = measurePeriod(t.el);
+      });
+    };
+    window.addEventListener('resize', onResize);
+
+    // Scroll velocity: accumulate scrolled pixels between frames, convert to
+    // px/s each frame, then ease it so it decays smoothly once scrolling stops.
+    let accum = 0;
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      accum += Math.abs(y - lastY);
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    let scrollVel = 0;
+    let raf;
+    let last = performance.now();
+    const frame = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.05); // clamp after tab switches
+      last = now;
+
+      const instVel = dt > 0 ? accum / dt : 0;
+      accum = 0;
+      scrollVel += (instVel - scrollVel) * VEL_SMOOTHING;
+
+      tracks.forEach((t) => {
+        if (t.period <= 0) return;
+        const base = t.period / BASE_DURATION; // slow baseline, px/s
+        const boost = Math.min(scrollVel * SCROLL_FOLLOW, MAX_BOOST);
+        const speed = base + boost;
+        t.pos = (t.pos + speed * dt) % t.period;
+        // dir 1 (left) slides content left; dir -1 (right) slides it right.
+        const x = t.dir === 1 ? -t.pos : t.pos - t.period;
+        t.el.style.transform = `translateX(${x}px)`;
+      });
+
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      tracks.forEach((t) => {
+        t.el.style.animation = '';
+        t.el.style.transform = '';
+      });
+    };
+  }, []);
+
   return (
-    <section className={cx('gallery-banner')} aria-labelledby="gallery-title">
+    <section
+      ref={sectionRef}
+      className={cx('gallery-banner')}
+      aria-labelledby="gallery-title"
+    >
       <h2 id="gallery-title" className="sr-only">
         Selected work
       </h2>
