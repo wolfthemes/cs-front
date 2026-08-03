@@ -145,6 +145,12 @@ export default function HomeHero() {
 					<Stat key={stat.label} {...stat} rowRef={statsRef} />
 				))}
 			</div>
+
+			<div className={cx('cta')}>
+				<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
+					Let&apos;s connect
+				</a>
+			</div>
 		</section>
 	);
 }
