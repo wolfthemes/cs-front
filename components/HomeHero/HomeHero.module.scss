@@ -60,15 +60,15 @@
 
 .stat {
 	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 0.4rem;
 }
 
 .stat-value {
-	font-size: clamp(2rem, 3vw, 2.75rem);
-	font-weight: var(--wpe--font-weight--bold);
-	line-height: 1;
-	letter-spacing: -0.02em;
+	font-size: var(--wpe--font-size--sm);
+	font-weight: var(--wpe--font-weight--medium);
+	letter-spacing: 0.01em;
 	color: var(--wpe--color--white);
 
 	// Tabular figures so the width doesn't jitter while counting.
