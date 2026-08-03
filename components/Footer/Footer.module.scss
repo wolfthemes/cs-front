@@ -5,6 +5,11 @@
 	padding-bottom: var(--wpe--section--padding-y);
 }
 
+// The menu ul is an inline-flex pill, so centre it within the footer.
+.nav {
+	text-align: center;
+}
+
 .copyright {
 	margin: 2rem 0;
 	text-align: center;
