@@ -69,9 +69,6 @@ export default function Contact() {
 
 				<div className={cx('actions')}>
 					<a className={cx('primary')} href={`mailto:${EMAIL}`}>
-						<span aria-hidden="true" className={cx('arrow')}>
-							→
-						</span>
 						Get in touch
 					</a>
 					<a className={cx('email')} href={`mailto:${EMAIL}`}>

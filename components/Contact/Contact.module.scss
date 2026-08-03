@@ -70,33 +70,22 @@ $edge: clamp(1rem, 5vw, 5rem);
 	margin-top: clamp(2rem, 4vw, 3rem);
 }
 
+// Matches the hero "Let's connect" button (.cta-button) for consistency.
 .primary {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.7rem;
-	padding: 1.1rem 2rem;
-	border-radius: 8px;
-	background-color: var(--wpe--color--purple);
-	color: var(--wpe--color--white);
-	font-size: clamp(1rem, 1.3vw, 1.15rem);
+	display: inline-block;
+	padding: 0.7rem 1.6rem;
+	border-radius: 100px;
+	background-color: var(--wpe--color--white);
+	color: var(--wpe--color--black);
 	font-weight: var(--wpe--font-weight--medium);
 	letter-spacing: -0.01em;
 	text-decoration: none;
-	transition: transform 0.2s ease-out, background-color 0.2s ease-out;
-
-	.arrow {
-		transition: transform 0.2s ease-out;
-	}
+	white-space: nowrap;
+	transition: opacity 0.2s ease-out;
 
 	&:hover,
 	&:focus-visible {
-		background-color: color-mix(in srgb, var(--wpe--color--purple) 85%, #fff);
-		transform: translateY(-2px);
-	}
-
-	&:hover .arrow,
-	&:focus-visible .arrow {
-		transform: translateX(3px);
+		opacity: 0.85;
 	}
 }
 
