@@ -13,7 +13,7 @@ const LINES = [
 	'and performance.',
 ];
 
-const LINE_BASE_DELAY = 0.2; // seconds
+const LINE_BASE_DELAY = 0.45; // seconds — start after the main heading
 const LINE_STAGGER = 0.15; // seconds between lines
 
 // Stats counted up below the statement. `value` is the target the counter
@@ -115,6 +115,7 @@ export default function HomeHero() {
 
 	return (
 		<section className={cx('component')}>
+			<h1 className={cx('title')}>Senior Web Engineer</h1>
 			<p className={cx('intro')}>
 				{LINES.map((line, i) => (
 					<span

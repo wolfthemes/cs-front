@@ -20,10 +20,11 @@
 	--wpe--color--neutral: rgba(175,184,193,0.2);
 	--wpe--color--slate: #0a2540;
 	--wpe--color--purple: #635bff;
+	--wpe--color--green: #00ff41; // Matrix / console green.
 
 	// Color Assignments.
 	// Dark default layout: black surfaces, white text.
-	--wpe--color--accent: var(--wpe--color--purple);
+	--wpe--color--accent: var(--wpe--color--green);
 	--wpe--color--accent--dark: var(--wpe--color--slate);
 	--wpe--color--title: var(--wpe--color--white);
 	--wpe--link--color: var(--wpe--color--accent);
