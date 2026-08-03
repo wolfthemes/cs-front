@@ -16,6 +16,19 @@ const LINES = [
 const LINE_BASE_DELAY = 0.2; // seconds
 const LINE_STAGGER = 0.15; // seconds between lines
 
+// Render a line, setting the word "WordPress" in EB Garamond via `.wordpress`.
+function renderLine(line) {
+  return line.split(/(WordPress)/).map((part, i) =>
+    part === 'WordPress' ? (
+      <span key={i} className={cx('wordpress')}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
 export default function HomeHero() {
   return (
     <section className={cx('component')}>
@@ -28,7 +41,7 @@ export default function HomeHero() {
               animationDelay: `${LINE_BASE_DELAY + i * LINE_STAGGER}s`,
             }}
           >
-            {line}
+            {renderLine(line)}
           </span>
         ))}
       </p>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import styles from './NavigationMenu.module.scss';
 import stylesFromWP from './NavigationMenuClassesFromWP.module.scss';
 import { flatListToHierarchical } from '@faustwp/core';
+import { BrandIcon } from '../BrandIcon';
 
 let cx = classNames.bind(styles);
 let cxFromWp = classNames.bind(stylesFromWP);
@@ -50,6 +51,7 @@ export default function NavigationMenu({ menuItems, className }) {
                 href={path ?? ''}
                 target={target || undefined}
                 rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+                <BrandIcon url={path} className={cx('icon')} />
                 {label ?? ''}
               </Link>
               {children.length ? renderMenu(children) : null}

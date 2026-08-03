@@ -189,17 +189,21 @@ export default function GalleryBanner() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className={cx('gallery-banner')}
-      aria-labelledby="gallery-title"
-    >
-      <h2 id="gallery-title" className="sr-only">
-        Selected work
-      </h2>
-      {ROWS.map((row, i) => (
-        <MarqueeRow key={i} direction={row.direction} images={row.images} />
-      ))}
-    </section>
+    // Straight-edged clip so the oblique banner can't spill onto neighbours or
+    // add a horizontal scrollbar.
+    <div className={cx('gallery-clip')}>
+      <section
+        ref={sectionRef}
+        className={cx('gallery-banner')}
+        aria-labelledby="gallery-title"
+      >
+        <h2 id="gallery-title" className="sr-only">
+          Selected work
+        </h2>
+        {ROWS.map((row, i) => (
+          <MarqueeRow key={i} direction={row.direction} images={row.images} />
+        ))}
+      </section>
+    </div>
   );
 }

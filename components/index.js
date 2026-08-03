@@ -1,3 +1,4 @@
+export { BrandIcon } from './BrandIcon';
 export { Container } from './Container';
 export { ContentWrapper } from './ContentWrapper';
 export { EntryHeader } from './EntryHeader';
