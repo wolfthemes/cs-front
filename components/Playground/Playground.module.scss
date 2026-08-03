@@ -1,0 +1,155 @@
+// Static "playground" capabilities block: a section header + three columns
+// (architecture -> frontend), each a numbered domain with a plain list of the
+// concrete tools. Columns reveal with a staggered fade-in on scroll; reduced
+// motion shows everything static.
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.component {
+	padding: clamp(6rem, 12vw, 11rem) $edge;
+	margin: 0 auto;
+	max-width: var(--wpe--container--max-width);
+}
+
+.head {
+	margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.eyebrow {
+	margin: 0 0 0.5rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: var(--wpe--font-size--sm);
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
+	color: var(--wpe--color--accent);
+}
+
+.title {
+	margin: 0;
+	max-width: 24ch;
+	font-size: clamp(2rem, 4.5vw, 3.75rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	font-weight: var(--wpe--font-weight--bold);
+	color: var(--wpe--color--white);
+}
+
+.columns {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	border-top: var(--wpe--border--light);
+	padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+	padding: 0 clamp(1.5rem, 3vw, 3rem);
+	border-left: var(--wpe--border--light);
+	opacity: 0;
+
+	&:first-child {
+		padding-left: 0;
+		border-left: 0;
+	}
+}
+
+.index {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0 0 clamp(2.5rem, 6vw, 5rem);
+	font-family: var(--font-geist-mono), monospace;
+	font-size: var(--wpe--font-size--sm);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: var(--wpe--color--accent);
+}
+
+.column-title {
+	margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+	font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	font-weight: var(--wpe--font-weight--bold);
+	color: var(--wpe--color--white);
+}
+
+.list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+
+	li {
+		font-size: var(--wpe--font-size--base);
+		font-weight: var(--wpe--font-weight--medium);
+		color: rgba(255, 255, 255, 0.75);
+	}
+}
+
+.glyph {
+	margin-top: clamp(2.5rem, 5vw, 4rem);
+	color: rgba(255, 255, 255, 0.85);
+
+	svg {
+		display: block;
+	}
+}
+
+// Scroll-reveal: columns start hidden and fade up once the section enters view.
+// Per-column animation-delay is set inline in the component.
+.is-revealed .column {
+	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes fade-in-up {
+	from {
+		opacity: 0;
+		transform: translateY(1.5rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 48rem) {
+	.columns {
+		grid-template-columns: 1fr;
+		gap: clamp(2.5rem, 8vw, 3.5rem);
+	}
+
+	.column {
+		padding: clamp(2rem, 7vw, 2.5rem) 0 0;
+		border-left: 0;
+		border-top: var(--wpe--border--light);
+
+		&:first-child {
+			padding-top: 0;
+			border-top: 0;
+		}
+	}
+
+	.index {
+		margin-bottom: 1.5rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.column {
+		opacity: 1;
+	}
+
+	.is-revealed .column {
+		animation: none;
+	}
+}
