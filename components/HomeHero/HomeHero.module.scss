@@ -18,19 +18,29 @@
 	animation-delay: 0.1s;
 }
 
-// Wraps the last word so the hand-drawn circle can be absolutely positioned
+// Wraps the circled word so the hand-drawn loop can be absolutely positioned
 // around it. inline-block keeps the SVG scoped to the word's box.
-.engineer {
+.circled {
 	position: relative;
 	display: inline-block;
 	white-space: nowrap;
 }
 
-// Hand-drawn marker loop (rough textured circle) drawn around "Engineer".
-// Stretched to overshoot the word's box on every side so it frames the word.
-// The source is a filled shape, so it's revealed with a left-to-right wipe
-// (like the mark being drawn) rather than a stroke-dash draw.
-.engineer-circle {
+// Animated angle used to reveal the loop. Registering it as an <angle> lets it
+// interpolate inside the conic-gradient mask so the circle appears to be drawn.
+@property --circle-sweep {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+
+// Hand-drawn marker loop (rough textured circle) drawn around the word.
+// Stretched to overshoot the word's box on every side so it frames it. The
+// source is a filled shape, so instead of a stroke-dash "draw" it's revealed
+// with a conic-gradient mask that sweeps around the centre — starting at the
+// loop's opening (~bottom-right, where the path begins) and tracing clockwise,
+// like a hand drawing the circle in one stroke.
+.circle {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -41,9 +51,20 @@
 	pointer-events: none;
 	z-index: -1;
 
-	// Wipe in from the left, echoing the hand drawing the circle.
-	clip-path: inset(0 100% 0 0);
-	animation: wipe-circle 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+	--circle-sweep: 0deg;
+
+	// `from 140deg` puts the reveal's start at the loop's opening (bottom-right).
+	// The wedge grows with --circle-sweep, uncovering the shape as it rotates.
+	$mask: conic-gradient(
+		from 140deg,
+		#000 0deg,
+		#000 var(--circle-sweep),
+		transparent var(--circle-sweep)
+	);
+	-webkit-mask: $mask;
+	mask: $mask;
+
+	animation: draw-circle 0.8s cubic-bezier(0.65, 0, 0.35, 1) both;
 
 	// Begin just after the title has faded in (title delay 0.1s + ~0.7s).
 	animation-delay: 0.85s;
@@ -53,9 +74,9 @@
 	}
 }
 
-@keyframes wipe-circle {
+@keyframes draw-circle {
 	to {
-		clip-path: inset(0 0 0 0);
+		--circle-sweep: 360deg;
 	}
 }
 
@@ -190,8 +211,8 @@
 		opacity: 1;
 	}
 
-	.engineer-circle {
+	.circle {
 		animation: none;
-		clip-path: none;
+		--circle-sweep: 360deg;
 	}
 }

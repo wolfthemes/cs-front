@@ -4,10 +4,10 @@ import styles from './HomeHero.module.scss';
 
 let cx = className.bind(styles);
 
-// Hand-drawn marker loop (user-provided asset) used to circle "Engineer" in the
+// Hand-drawn marker loop (user-provided asset) used to circle a word in the
 // hero heading, echoing the circled "connect" reference. Fill colour is driven
-// from SCSS (`.engineer-circle path`) so it can pick up the brand accent; the
-// original fill="white" attributes are dropped for that reason. The full-canvas
+// from SCSS (`.circle path`) so it can pick up the brand accent; the original
+// fill="white" attributes are dropped for that reason. The full-canvas
 // <mask>/<clipPath> from the source are no-ops (they cover the whole viewBox)
 // and are omitted.
 const PATHS = [
@@ -93,10 +93,10 @@ const PATHS = [
 	'M200.159 101.03C198.829 101.29 197.289 101.75 195.949 102.01C198.829 101.29 200.679 101.67 200.159 101.03Z',
 ];
 
-export default function EngineerCircle() {
+export default function HeroCircle() {
 	return (
 		<svg
-			className={cx('engineer-circle')}
+			className={cx('circle')}
 			viewBox="0 0 310 118"
 			preserveAspectRatio="none"
 			aria-hidden="true"

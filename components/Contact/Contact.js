@@ -56,17 +56,13 @@ export default function Contact() {
 				</h2>
 
 				<p className={cx('lead')}>
-					Open to senior full-time remote roles and select freelance or contract work. Based in
-					France (CEST) and comfortable across EU and US time zones — recruiters, feel free to reach
-					out.
+					Senior full-time remote roles and select contract work. Based in France (CEST), working
+					across EU and US time zones.
 				</p>
 
 				<div className={cx('actions')}>
 					<a className={cx('primary')} href={`mailto:${EMAIL}`}>
 						Get in touch
-					</a>
-					<a className={cx('email')} href={`mailto:${EMAIL}`}>
-						{EMAIL}
 					</a>
 				</div>
 			</div>

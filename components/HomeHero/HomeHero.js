@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
-import EngineerCircle from './EngineerCircle';
+import HeroCircle from './HeroCircle';
 
 let cx = className.bind(styles);
 
@@ -142,11 +142,12 @@ export default function HomeHero() {
 	return (
 		<section className={cx('component')}>
 			<h1 className={cx('title')}>
-				Senior Web{' '}
-				<span className={cx('engineer')}>
-					Engineer
-					<EngineerCircle />
-				</span>
+				Senior{' '}
+				<span className={cx('circled')}>
+					Web
+					<HeroCircle />
+				</span>{' '}
+				Engineer
 			</h1>
 			<p className={cx('intro')}>
 				{LINES.map((line, i) => (
