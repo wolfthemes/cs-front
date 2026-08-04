@@ -17,7 +17,7 @@ function normalizePath(value) {
 	return path.replace(/\/+$/, '') || '/';
 }
 
-export default function NavigationMenu({ menuItems, className }) {
+export default function NavigationMenu({ menuItems, className, onItemClick }) {
 	const router = useRouter();
 
 	if (!menuItems) {
@@ -51,6 +51,7 @@ export default function NavigationMenu({ menuItems, className }) {
 								href={path ?? ''}
 								target={target || undefined}
 								rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+								onClick={(event) => onItemClick?.(item, event)}
 							>
 								<BrandIcon url={path} className={cx('icon')} />
 								{label ?? ''}
