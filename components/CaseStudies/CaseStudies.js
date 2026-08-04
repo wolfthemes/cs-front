@@ -44,6 +44,15 @@ function Card({ work }) {
 					<h3 className={cx('card-title')}>{work.title}</h3>
 					<span className={cx('card-cta')}>View project →</span>
 				</div>
+				{work.workSkills?.nodes?.length > 0 && (
+					<ul className={cx('tags')} aria-label="Tech used">
+						{work.workSkills.nodes.map((skill) => (
+							<li key={skill.id} className={cx('tag')}>
+								{skill.name}
+							</li>
+						))}
+					</ul>
+				)}
 			</Link>
 		</article>
 	);
@@ -141,6 +150,13 @@ CaseStudies.query = gql`
 				id
 				title
 				uri
+				workSkills {
+					nodes {
+						id
+						name
+						slug
+					}
+				}
 				featuredImage {
 					node {
 						sourceUrl
