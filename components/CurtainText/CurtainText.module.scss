@@ -1,0 +1,68 @@
+// Letter-by-letter curtain reveal. clip-path keeps layout/baseline intact
+// (unlike an overflow mask). Per-letter animation-delay is set inline by the
+// component; the inline value wins over the shorthand's implicit delay:0.
+
+.curtain {
+	// Passthrough wrapper — inherits the surrounding type.
+	display: inline;
+}
+
+.letter {
+	display: inline-block;
+	white-space: pre; // keep spaces on multi-word text
+	will-change: transform, clip-path;
+}
+
+// Entrance mode: play once on mount.
+.curtain:not(.is-hover) .letter {
+	animation: curtain-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+// Hover mode: each letter rolls when the word is hovered.
+.is-hover:hover .letter {
+	animation: curtain-hover 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes curtain-rise {
+	from {
+		transform: translateY(0.6em);
+		clip-path: inset(100% 0 0 0);
+	}
+
+	to {
+		transform: translateY(0);
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+// Starts and ends on the resting state (no pop): the glyph wipes up and out,
+// then re-enters and rises from the bottom — a curtain roll.
+@keyframes curtain-hover {
+	0% {
+		transform: translateY(0);
+		clip-path: inset(0 0 0 0);
+	}
+
+	35% {
+		transform: translateY(-0.55em);
+		clip-path: inset(0 0 100% 0);
+	}
+
+	36% {
+		transform: translateY(0.55em);
+		clip-path: inset(100% 0 0 0);
+	}
+
+	100% {
+		transform: translateY(0);
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.letter {
+		transform: none;
+		clip-path: none;
+		animation: none;
+	}
+}
