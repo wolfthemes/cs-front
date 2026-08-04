@@ -13,7 +13,7 @@ const COLUMNS = [
 		glyph: 'stack',
 		items: [
 			'Headless WordPress (Faust / Next.js)',
-			'WPGraphQL / REST API',
+			'WPGraphQL, REST API',
 			'OOP / PSR-4',
 			'Composer',
 			'WP-CLI',
@@ -26,11 +26,11 @@ const COLUMNS = [
 		glyph: 'grid',
 		items: [
 			'Linux / nginx',
-			'Docker',
+			'Docker, WP-Env, WP VIP',
 			'Bedrock',
 			'CI/CD (GitHub Actions)',
-			'DigitalOcean',
-			'BunnyCDN',
+			'DigitalOcean, Vercel',
+			'CDN',
 		],
 	},
 	{

@@ -16,124 +16,104 @@ const MAX_BOOST = 320;
 // longer tail after you stop scrolling.
 const VEL_SMOOTHING = 0.09;
 
-// Drop the image files in `public/gallery/` and reference them below as
-// `/gallery/<file>` (Next serves the public/ folder from the URL root, so the
-// `public` segment is NOT part of the src). Give each image its real intrinsic
-// width/height so the row reserves space before the file loads (no layout
-// shift). Rows scroll forever; direction alternates right / left / right.
+// Each preview URL is encoded in the image filename: `slug--path.ext` maps to
+// `${PREVIEW_BASE}/slug/path`, where `--` stands in for the `/`. Inner single
+// hyphens stay (e.g. `nu--portfolio-gallery` -> `nu/portfolio-gallery`). So the
+// only per-image data below is `{ file, width, height }` — the src, link, and
+// alt are all derived from the filename. width/height are the real intrinsic
+// sizes so each row reserves space before the file loads (no layout shift).
+const PREVIEW_BASE = 'https://preview.wolfthemes.store';
+
+function stripExt(file) {
+	return file.replace(/\.[^.]+$/, '');
+}
+
+// Preview URL from the filename, or null when the name carries no `--` (those
+// images just render unlinked).
+function deriveHref(file) {
+	const name = stripExt(file);
+	if (!name.includes('--')) return null;
+	return `${PREVIEW_BASE}/${name.replace(/--/g, '/')}`;
+}
+
+// Readable alt text from the same filename: `sable--shop-home` -> "sable — shop
+// home"; a name without `--` just has its hyphens spaced out.
+function deriveAlt(file) {
+	const [slug, ...rest] = stripExt(file).split('--');
+	const label = rest.join(' ').replace(/-/g, ' ');
+	return label ? `${slug} — ${label}` : slug.replace(/-/g, ' ');
+}
+
+// Rows scroll forever; direction alternates right / left / right.
 const ROWS = [
 	{
 		direction: 'right',
 		images: [
-			{
-				src: '/gallery/Soundkraft-Home.jpg',
-				width: 1707,
-				height: 904,
-				alt: 'Soundkraft — music theme homepage',
-			},
-			{
-				src: '/gallery/Home-Vinyl-Omnity.jpg',
-				width: 800,
-				height: 614,
-				alt: 'Omnity — vinyl shop home',
-			},
-			{
-				src: '/gallery/Creative-Agency-MediaFoundry.jpg',
-				width: 1600,
-				height: 873,
-				alt: 'MediaFoundry — creative agency',
-			},
-			{
-				src: '/gallery/Portfolio-Vertical-Sable.jpg',
-				width: 1600,
-				height: 847,
-				alt: 'Sable — vertical portfolio',
-			},
-			{ src: '/gallery/main-home.jpg', width: 1600, height: 867, alt: 'Homepage design' },
-			{ src: '/gallery/parallax.jpg', width: 1400, height: 900, alt: 'Parallax scrolling layout' },
-			{ src: '/gallery/00.jpg', width: 1707, height: 904, alt: 'Project screenshot' },
+			{ file: 'aurenza--artistic-agency.jpg', width: 1707, height: 904 },
+			{ file: 'omnity--main-home.jpg', width: 800, height: 614 },
+			{ file: 'mediafoundry--creative-agency.jpg', width: 1600, height: 873 },
+			{ file: 'sable--portfolio-vertical.jpg', width: 1600, height: 847 },
+			{ file: 'yor--home.jpg', width: 1600, height: 867 },
+			{ file: 'loud--parallax.jpg', width: 1400, height: 900 },
 		],
 	},
 	{
 		direction: 'left',
 		images: [
-			{
-				src: '/gallery/Designer-Home-Prequelle.jpg',
-				width: 1600,
-				height: 758,
-				alt: 'Prequelle — designer home',
-			},
-			{
-				src: '/gallery/Event-Countdown-Poize.jpg',
-				width: 1600,
-				height: 873,
-				alt: 'Poize — event countdown',
-			},
-			{
-				src: '/gallery/Production-Studio-MediaFoundry.jpg',
-				width: 1600,
-				height: 873,
-				alt: 'MediaFoundry — production studio',
-			},
-			{ src: '/gallery/Shop-Home-Sable.jpg', width: 1600, height: 847, alt: 'Sable — shop home' },
-			{ src: '/gallery/designer.jpg', width: 1600, height: 875, alt: 'Designer portfolio layout' },
-			{ src: '/gallery/home.jpg', width: 1356, height: 848, alt: 'Homepage layout' },
+			{ file: 'prequelle--designer-home.jpg', width: 1600, height: 758 },
+			{ file: 'poize--event-countdown.jpg', width: 1600, height: 873 },
+			{ file: 'mediafoundry--production-studio.jpg', width: 1600, height: 873 },
+			{ file: 'sable--shop-home.jpg', width: 1600, height: 847 },
+			{ file: 'gaintab--home.jpg', width: 1356, height: 848 },
+			{ file: 'aurenza--event-spotlight.jpg', width: 1707, height: 904 },
 		],
 	},
 	{
 		direction: 'right',
 		images: [
-			{
-				src: '/gallery/Home-Classic-Soundkraft.jpg',
-				width: 1707,
-				height: 904,
-				alt: 'Soundkraft — classic home',
-			},
-			{
-				src: '/gallery/vertical-pres.jpg',
-				width: 1600,
-				height: 900,
-				alt: 'Vertical presentation layout',
-			},
-			{
-				src: '/gallery/interactive-links.jpg',
-				width: 858,
-				height: 480,
-				alt: 'Interactive links section',
-			},
-			{ src: '/gallery/04.jpg', width: 1707, height: 904, alt: 'Project screenshot' },
-			{
-				src: '/gallery/2021-07-28_18h40_32-640x350.jpg',
-				width: 640,
-				height: 350,
-				alt: 'Project screenshot',
-			},
-			{
-				src: '/gallery/slider-rpes-l-1-748x418.webp',
-				width: 748,
-				height: 418,
-				alt: 'Slider presentation',
-			},
+			{ file: 'soundkraft--home.jpg', width: 1707, height: 904 },
+			{ file: 'morvan--vertical-presentation.jpg', width: 1600, height: 900 },
+			{ file: 'phase--interactive-links.jpg', width: 858, height: 480 },
+			{ file: 'nu--portfolio-gallery.jpg', width: 640, height: 350 },
+			{ file: 'supeflic--slider-presenation.webp', width: 748, height: 418 },
 		],
 	},
 ];
 
 function MarqueeItem({ image, duplicate }) {
+	const href = deriveHref(image.file);
+	const img = (
+		<img
+			src={`/gallery/${image.file}`}
+			width={image.width}
+			height={image.height}
+			// The duplicate set is decorative — blank alt so it isn't announced twice.
+			alt={duplicate ? '' : deriveAlt(image.file)}
+			loading="lazy"
+			decoding="async"
+		/>
+	);
+
 	return (
 		<figure
 			className={cx('marquee-item')}
-			// The second (duplicate) set is decorative — hide it from assistive tech
-			// and blank its alt so the images aren't announced twice.
+			// The second (duplicate) set is hidden from assistive tech.
 			aria-hidden={duplicate ? 'true' : undefined}
 		>
-			<img
-				src={image.src}
-				width={image.width}
-				height={image.height}
-				alt={duplicate ? '' : image.alt}
-				loading="lazy"
-				decoding="async"
-			/>
+			{href ? (
+				<a
+					className={cx('marquee-link')}
+					href={href}
+					target="_blank"
+					rel="noopener noreferrer"
+					// Duplicate anchors are decorative; keep them out of the tab order.
+					tabIndex={duplicate ? -1 : undefined}
+				>
+					{img}
+				</a>
+			) : (
+				img
+			)}
 		</figure>
 	);
 }

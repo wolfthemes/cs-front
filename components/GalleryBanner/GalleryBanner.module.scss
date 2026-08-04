@@ -69,6 +69,22 @@
 	}
 }
 
+// Anchor wrapping the image — fill the item box so the img keeps sizing by
+// row height.
+.marquee-link {
+	display: block;
+	height: 100%;
+
+	&:hover img,
+	&:focus-visible img {
+		opacity: 0.85;
+	}
+
+	img {
+		transition: opacity 0.2s ease-out;
+	}
+}
+
 // Accessibility: respect reduced-motion.
 @media (prefers-reduced-motion: reduce) {
 	.marquee-track {
