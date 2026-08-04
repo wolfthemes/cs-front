@@ -59,7 +59,15 @@ function Card({ work }) {
 }
 
 export default function CaseStudies() {
-	const { data } = useQuery(CaseStudies.query);
+	// Try to fetch works with their skill tags. If the `workSkills` field isn't
+	// in the schema (e.g. permalinks/taxonomy not refreshed yet), that query
+	// fails validation and returns no data — which would hide the whole section.
+	// So on error we fall back to a skills-free query: the case studies still
+	// show, just without tags. Once the field is available, tags come back
+	// automatically.
+	const primary = useQuery(CaseStudies.query);
+	const fallback = useQuery(CaseStudies.baseQuery, { skip: !primary.error });
+	const data = primary.data ?? fallback.data;
 	const works = data?.works?.nodes ?? [];
 
 	const sectionRef = useRef(null);
@@ -143,13 +151,29 @@ export default function CaseStudies() {
 	);
 }
 
+// Core fields every card needs, shared by both the skills and skills-free
+// queries so they can't drift apart.
+const WORK_FIELDS = `
+	id
+	title
+	uri
+	featuredImage {
+		node {
+			sourceUrl
+			altText
+			mediaDetails {
+				width
+				height
+			}
+		}
+	}
+`;
+
 CaseStudies.query = gql`
 	query GetCaseStudies {
 		works(first: 20) {
 			nodes {
-				id
-				title
-				uri
+				${WORK_FIELDS}
 				workSkills {
 					nodes {
 						id
@@ -157,16 +181,17 @@ CaseStudies.query = gql`
 						slug
 					}
 				}
-				featuredImage {
-					node {
-						sourceUrl
-						altText
-						mediaDetails {
-							width
-							height
-						}
-					}
-				}
+			}
+		}
+	}
+`;
+
+// Fallback used when `workSkills` isn't available in the schema.
+CaseStudies.baseQuery = gql`
+	query GetCaseStudiesBase {
+		works(first: 20) {
+			nodes {
+				${WORK_FIELDS}
 			}
 		}
 	}
