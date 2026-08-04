@@ -7,7 +7,7 @@ let cx = className.bind(styles);
 // Placeholder copy — the big headline reveals word-by-word on scroll, the two
 // paragraphs below sit offset to the right (see layout ref).
 const HEADLINE =
-	'From scaling modern infrastructures to engineering smooth interactive experiences, I build modern WordPress products designed for longevity and performance.';
+	'From scaling modern infrastructures to engineering smooth interactive experiences, I build modern websites designed for longevity and performance.';
 
 const LEAD =
 	'We are dedicated to building products that solve real problems and drive measurable results. Our work is not just about aesthetics — it is about creating meaningful connections that last.';

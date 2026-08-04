@@ -50,11 +50,11 @@ const ROWS = [
 		direction: 'right',
 		images: [
 			{ file: 'aurenza--artistic-agency.jpg', width: 1707, height: 904 },
-			{ file: 'omnity--main-home.jpg', width: 800, height: 614 },
+			{ file: 'omnity--home.jpg', width: 800, height: 614 },
 			{ file: 'mediafoundry--creative-agency.jpg', width: 1600, height: 873 },
 			{ file: 'sable--portfolio-vertical.jpg', width: 1600, height: 847 },
 			{ file: 'yor--home.jpg', width: 1600, height: 867 },
-			{ file: 'loud--parallax.jpg', width: 1400, height: 900 },
+			{ file: 'loud--main-home--parallax-showcase.jpg', width: 1400, height: 900 },
 		],
 	},
 	{
@@ -75,7 +75,7 @@ const ROWS = [
 			{ file: 'morvan--vertical-presentation.jpg', width: 1600, height: 900 },
 			{ file: 'phase--interactive-links.jpg', width: 858, height: 480 },
 			{ file: 'nu--portfolio-gallery.jpg', width: 640, height: 350 },
-			{ file: 'supeflic--slider-presenation.webp', width: 748, height: 418 },
+			{ file: 'superflick--slider-presentation.webp', width: 748, height: 418 },
 		],
 	},
 ];
