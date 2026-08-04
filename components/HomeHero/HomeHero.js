@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 import HeroCircle from './HeroCircle';
-import { CurtainText } from '../../components';
+import { ShuffleText } from '../../components';
 
 let cx = className.bind(styles);
 
@@ -129,7 +129,7 @@ function renderLine(line) {
 		if (part === 'engineering') {
 			return (
 				<span key={i} className={cx('engineering')}>
-					<CurtainText text={part} trigger="hover" />
+					<ShuffleText text={part} autoPlayDelay={1000} />
 				</span>
 			);
 		}

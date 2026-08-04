@@ -1,0 +1,20 @@
+// Character shuffle (jquery.chuffle style). A hidden "ghost" holds the final
+// word so it reserves the exact layout box (keeps width, baseline and line
+// wrapping stable); the scrambling glyphs are overlaid on top and never reflow
+// the surrounding text.
+
+.shuffle {
+	position: relative;
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.ghost {
+	visibility: hidden;
+}
+
+.anim {
+	position: absolute;
+	inset: 0;
+	white-space: nowrap;
+}

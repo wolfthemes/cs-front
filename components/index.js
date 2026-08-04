@@ -3,7 +3,7 @@ export { AboutPanel } from './AboutPanel';
 export { CaseStudies } from './CaseStudies';
 export { Contact } from './Contact';
 export { Container } from './Container';
-export { CurtainText } from './CurtainText';
+export { ShuffleText } from './ShuffleText';
 export { ContentWrapper } from './ContentWrapper';
 export { EntryHeader } from './EntryHeader';
 export { FeaturedImage } from './FeaturedImage';
