@@ -1,6 +1,7 @@
 import '../faust.config';
 import React from 'react';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { FaustProvider } from '@faustwp/core';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
@@ -32,11 +33,28 @@ const fontVariables = [
 	ebGaramond.variable,
 ].join(' ');
 
+// Google Analytics (gtag.js). Loaded via next/script with `afterInteractive`
+// so it doesn't block first paint; next/script also de-dupes the tag across
+// client-side route changes.
+const GA_ID = 'G-GMEJ725XRF';
+
 export default function MyApp({ Component, pageProps }) {
 	const router = useRouter();
 
 	return (
 		<FaustProvider pageProps={pageProps}>
+			<Script
+				src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+				strategy="afterInteractive"
+			/>
+			<Script id="gtag-init" strategy="afterInteractive">
+				{`
+					window.dataLayer = window.dataLayer || [];
+					function gtag(){dataLayer.push(arguments);}
+					gtag('js', new Date());
+					gtag('config', '${GA_ID}');
+				`}
+			</Script>
 			<div className={`app-shell ${fontVariables}`}>
 				<Component {...pageProps} key={router.asPath} />
 				<GrainOverlay />
