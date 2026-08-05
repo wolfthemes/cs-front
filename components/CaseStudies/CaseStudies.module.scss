@@ -80,7 +80,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 .media {
 	position: relative;
 	overflow: hidden;
-	aspect-ratio: 4 / 3;
+	aspect-ratio: 3 / 2;
 	background-color: rgba(255, 255, 255, 0.06);
 
 	img {
@@ -131,6 +131,19 @@ $edge: clamp(1rem, 5vw, 5rem);
 	color: rgba(255, 255, 255, 0.55);
 	opacity: 0;
 	transition: opacity 0.2s ease-out;
+}
+
+// Short project blurb under the title — kept small and muted so it supports the
+// title without competing with it.
+.card-excerpt {
+	margin-top: 0.5rem;
+	font-size: fs(sm);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.5);
+
+	p {
+		margin: 0;
+	}
 }
 
 .tags {

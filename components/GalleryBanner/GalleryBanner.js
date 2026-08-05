@@ -246,7 +246,7 @@ export default function GalleryBanner() {
 			effect = new ImagePlaneEffect(section, {
 				selector: 'img',
 				dir: [0, 1],
-				maxVelo: 0.012,
+				hover: false, // no cursor lens on the passive banner
 				scrollGain: 0.2,
 				grain: 0.02,
 			});

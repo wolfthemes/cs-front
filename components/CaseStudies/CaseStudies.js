@@ -55,6 +55,12 @@ function Card({ work }) {
 					<h3 className={cx('card-title')}>{work.title}</h3>
 					<span className={cx('card-cta')}>{ctaLabel} →</span>
 				</div>
+				{work.excerpt && (
+					<div
+						className={cx('card-excerpt')}
+						dangerouslySetInnerHTML={{ __html: work.excerpt }}
+					/>
+				)}
 				{work.workSkills?.nodes?.length > 0 && (
 					<ul className={cx('tags')} aria-label="Tech used">
 						{work.workSkills.nodes.map((skill) => (
@@ -225,6 +231,7 @@ const WORK_FIELDS = `
 	id
 	title
 	uri
+	excerpt
 	workLinkUrl
 	workLinkText
 	featuredImage {
