@@ -52,7 +52,10 @@ function Card({ work }) {
 					)}
 				</div>
 				<div className={cx('meta')}>
-					<h3 className={cx('card-title')}>{work.title}</h3>
+					<h3 className={cx('card-title')}>
+						{work.title}
+						{work.workYear && <span className={cx('card-year')}>[{work.workYear}]</span>}
+					</h3>
 					<span className={cx('card-cta')}>{ctaLabel} →</span>
 				</div>
 				{work.excerpt && (
@@ -245,6 +248,7 @@ const WORK_FIELDS = `
 	title
 	uri
 	excerpt
+	workYear
 	workLinkUrl
 	workLinkText
 	featuredImage {

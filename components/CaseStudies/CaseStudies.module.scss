@@ -125,6 +125,16 @@ $edge: clamp(1rem, 5vw, 5rem);
 	color: $c-base;
 }
 
+// Year in brackets next to the title — small, monospace and muted so it reads
+// as a timestamp rather than part of the title.
+.card-year {
+	margin-left: 0.5rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	letter-spacing: 0.01em;
+	color: rgba(255, 255, 255, 0.45);
+}
+
 .card-cta {
 	flex-shrink: 0;
 	font-size: fs(sm);

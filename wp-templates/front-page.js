@@ -55,7 +55,9 @@ export default function Component() {
 
 	return (
 		<>
-			<SEO title={siteTitle} description={siteDescription} />
+			{/* Home uses the site-level SEO defaults so the title/description match
+			    the canonical resume metadata rather than the bare WP site title. */}
+			<SEO />
 			<Header title={siteTitle} description={siteDescription} menuItems={primaryMenu} />
 			<Main>
 				<HomeHero />
