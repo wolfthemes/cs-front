@@ -19,6 +19,9 @@ function normalizePath(value) {
 const SECTION_ALIASES = {
 	'': 'home',
 	work: 'case-studies',
+	works: 'case-studies',
+	project: 'case-studies',
+	projects: 'case-studies',
 	'case-study': 'case-studies',
 	'case-studies': 'case-studies',
 };

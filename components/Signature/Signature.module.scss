@@ -3,18 +3,14 @@
 
 .component {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 
 	svg {
-		width: 240px;
+		width: 180px;
 		height: auto;
 		display: block;
 		color: $c-base;
 		overflow: visible;
-
-		@media (min-width: $breakpoint-small) {
-			width: 300px;
-		}
 	}
 
 	svg path {

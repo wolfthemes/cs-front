@@ -69,11 +69,10 @@
 }
 
 // Hand-signed sign-off closing the about section — aligned with the body block
-// and pushed to its right edge like the end of a letter.
+// and left-aligned under the last paragraph.
 .signature {
 	margin: 3.5rem 0 0 auto;
 	max-width: 42rem;
-	justify-content: flex-end;
 }
 
 @media (width <= 48rem) {

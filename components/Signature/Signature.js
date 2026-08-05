@@ -5,8 +5,9 @@ import styles from './Signature.module.scss';
 let cx = className.bind(styles);
 
 // Signature draw-on-entrance — a vanilla stroke-dashoffset version of a GSAP
-// DrawSVG effect (ported from the constantin-saguin project). Runs once on
-// mount rather than on scroll, since it's the hero entrance.
+// DrawSVG effect (ported from the constantin-saguin project). Draws once when
+// the signature scrolls into view, since it closes the about section below the
+// fold rather than being visible on load.
 export default function Signature({ className: extraClass }) {
 	const svgRef = useRef(null);
 
@@ -29,20 +30,38 @@ export default function Signature({ className: extraClass }) {
 		if (reducedMotion) return undefined;
 
 		let raf;
-		const start = performance.now();
 		const offsets = lengths.map((l) => (l / totalLength) * TOTAL_DURATION);
-		const step = (now) => {
-			const elapsed = now - start;
-			paths.forEach((path, i) => {
-				const pathStart = offsets.slice(0, i).reduce((s, d) => s + d, 0);
-				const progress = Math.min(Math.max((elapsed - pathStart) / offsets[i], 0), 1);
-				path.style.strokeDashoffset = lengths[i] * (1 - progress);
-			});
-			if (elapsed < TOTAL_DURATION) raf = requestAnimationFrame(step);
-		};
-		raf = requestAnimationFrame(step);
 
-		return () => cancelAnimationFrame(raf);
+		const draw = () => {
+			const start = performance.now();
+			const step = (now) => {
+				const elapsed = now - start;
+				paths.forEach((path, i) => {
+					const pathStart = offsets.slice(0, i).reduce((s, d) => s + d, 0);
+					const progress = Math.min(Math.max((elapsed - pathStart) / offsets[i], 0), 1);
+					path.style.strokeDashoffset = lengths[i] * (1 - progress);
+				});
+				if (elapsed < TOTAL_DURATION) raf = requestAnimationFrame(step);
+			};
+			raf = requestAnimationFrame(step);
+		};
+
+		// Draw once the signature enters the viewport rather than on mount.
+		const observer = new IntersectionObserver(
+			([entry], obs) => {
+				if (entry.isIntersecting) {
+					obs.disconnect();
+					draw();
+				}
+			},
+			{ threshold: 0.4 }
+		);
+		observer.observe(svg);
+
+		return () => {
+			observer.disconnect();
+			if (raf) cancelAnimationFrame(raf);
+		};
 	}, []);
 
 	return (
