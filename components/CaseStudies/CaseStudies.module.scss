@@ -43,16 +43,22 @@ $edge: clamp(1rem, 5vw, 5rem);
 .track {
 	display: flex;
 	gap: clamp(1.25rem, 2.5vw, 2.5rem);
-
-	// Extra breathing room past the last card at the end of the horizontal run
-	// (it counts toward scrollWidth, so the pin scrolls far enough to reveal it).
-	padding: 0 clamp(6rem, 15vw, 16rem) 0 $edge;
+	padding: 0 $edge;
 	will-change: transform;
 }
 
 .card {
 	flex: 0 0 auto;
 	width: clamp(260px, 40vw, 560px);
+
+	// Breathing room past the last card at the end of the horizontal run. A
+	// flex container's trailing padding is dropped from scrollWidth when its
+	// children overflow (so padding-right on .track wouldn't extend the scroll),
+	// but a last-child margin IS counted — so the pin scrolls far enough to
+	// clear the final card instead of cutting it off at the viewport edge.
+	&:last-child {
+		margin-right: clamp(6rem, 15vw, 16rem);
+	}
 }
 
 .card-link {
