@@ -1,5 +1,6 @@
 .gallery-clip {
 	position: relative;
+
 	// Sit the whole gallery above the grain overlay (z 2147483000 in
 	// GrainOverlay), so the grain doesn't speckle over the marquee.
 	z-index: 2147483001;
