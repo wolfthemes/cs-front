@@ -10,10 +10,10 @@ const HEADLINE =
 	'From scaling modern infrastructures to engineering smooth interactive experiences, I build modern websites designed for longevity and performance.';
 
 const LEAD =
-	'We are dedicated to building products that solve real problems and drive measurable results. Our work is not just about aesthetics — it is about creating meaningful connections that last.';
+	'I build robust WordPress products that solve real business needs and deliver lasting value. My work goes beyond clean interfaces — it combines thoughtful engineering, performance, and usability to create websites people enjoy using.';
 
 const SUPPORT =
-	'The team blends engineering, strategy, and design to ship solutions that stand out. We are committed to building systems that help you grow and keep people engaged long after launch.';
+	'With 14+ years of experience across themes, plugins, and custom platforms, I bring together development, product thinking, and design sensitivity. The result is reliable, scalable solutions built to perform long after launch.';
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&

@@ -18,7 +18,6 @@ const COLUMNS = [
 			'Composer',
 			'WP-CLI',
 			'Multisite',
-			'Custom post types & ACF',
 		],
 	},
 	{
