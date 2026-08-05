@@ -14,7 +14,7 @@ const LEAD =
 	'I build robust WordPress products that solve real business needs and deliver lasting value. My work goes beyond clean interfaces — it combines thoughtful engineering, performance, and usability to create websites people enjoy using.';
 
 const SUPPORT =
-	'With 14+ years of experience across themes, plugins, and custom platforms, I bring together development, product thinking, and design sensitivity. The result is reliable, scalable solutions built to perform long after launch.';
+	'I started in the 00\'s by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.';
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
