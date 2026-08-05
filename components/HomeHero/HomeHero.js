@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
-import HeroCircle from './HeroCircle';
+// import HeroCircle from './HeroCircle'; // ellipse disabled for now
 import { ShuffleText } from '../../components';
 
 let cx = className.bind(styles);
@@ -146,7 +146,7 @@ export default function HomeHero() {
 				Senior{' '}
 				<span className={cx('circled')}>
 					Web
-					<HeroCircle />
+					{/* <HeroCircle /> disabled for now */}
 				</span>{' '}
 				Engineer
 			</h1>
