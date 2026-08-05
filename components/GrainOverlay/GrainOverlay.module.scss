@@ -11,12 +11,15 @@
 	pointer-events: none;
 	z-index: 2147483000; // above all content, incl. the fixed header
 	mix-blend-mode: screen;
-	opacity: 0.4;
+
+	// Master strength dial (effective grain ~= opacity * intensity prop). Screen
+	// is additive, so keep this low or it hazes the black background.
+	opacity: 0.14;
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.grain {
 		// Keep the static grain but calm it down.
-		opacity: 0.28;
+		opacity: 0.1;
 	}
 }
