@@ -46,13 +46,18 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 			return undefined;
 		}
 
+		let cancelled = false;
+
 		const measure = () => {
+			if (cancelled || !el.parentNode) return;
 			const temp = document.createElement('p');
 			temp.className = el.className;
 			temp.style.cssText =
 				'position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;';
 			temp.style.width = `${el.clientWidth}px`;
-			const words = text.split(' ');
+			// Collapse runs of whitespace so a stray double space can't create an
+			// empty token (which would otherwise skew the line grouping).
+			const words = text.trim().split(/\s+/);
 			temp.innerHTML = words
 				.map(
 					(w) =>
@@ -79,13 +84,32 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 			if (current.length) groups.push(current);
 			el.parentNode.removeChild(temp);
 
+			if (cancelled) return;
 			const grouped = groups.map((g) => g.join(' '));
 			setLines(grouped);
 			onMeasured?.(grouped.length);
 		};
 
+		// Measure once now, then again after the web fonts swap in — the fallback
+		// font wraps at different widths, so grouping before fonts are ready would
+		// break the lines at the wrong words.
 		measure();
-		return undefined;
+		const fontsReady = document.fonts?.ready ?? Promise.resolve();
+		fontsReady.then(() => measure());
+
+		// Keep the line grouping correct across viewport width changes.
+		let resizeRaf = 0;
+		const onResize = () => {
+			cancelAnimationFrame(resizeRaf);
+			resizeRaf = requestAnimationFrame(measure);
+		};
+		window.addEventListener('resize', onResize);
+
+		return () => {
+			cancelled = true;
+			cancelAnimationFrame(resizeRaf);
+			window.removeEventListener('resize', onResize);
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [text]);
 
@@ -101,7 +125,9 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 					obs.disconnect();
 				}
 			},
-			{ threshold: 0.2 }
+			// Fire once the paragraph is comfortably into view, not the moment its
+			// top edge peeks in — the bottom margin holds the trigger back ~25%.
+			{ threshold: 0, rootMargin: '0px 0px -25% 0px' }
 		);
 		observer.observe(el);
 		return () => observer.disconnect();

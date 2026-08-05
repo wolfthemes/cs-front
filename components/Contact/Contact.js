@@ -34,7 +34,9 @@ export default function Contact() {
 					obs.disconnect();
 				}
 			},
-			{ threshold: 0.25 }
+			// Hold the reveal back until the section is comfortably in view rather
+			// than firing the moment its top edge appears.
+			{ threshold: 0, rootMargin: '0px 0px -25% 0px' }
 		);
 		observer.observe(node);
 		return () => observer.disconnect();

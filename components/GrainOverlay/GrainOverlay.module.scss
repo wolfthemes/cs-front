@@ -1,6 +1,7 @@
 // Full-viewport grain canvas, fixed above everything and blended over the page.
-// pointer-events: none so it never blocks interaction. `overlay` keeps mid-tones
-// neutral and only layers the grain's contrast; tune the strength with opacity.
+// pointer-events: none so it never blocks interaction. `screen` is additive, so
+// the (dark-based) grain shows as faint speckle even on the black background —
+// unlike `overlay`, which leaves pure black untouched. Tune with opacity.
 
 .grain {
 	position: fixed;
@@ -9,13 +10,13 @@
 	height: 100vh;
 	pointer-events: none;
 	z-index: 2147483000; // above all content, incl. the fixed header
-	mix-blend-mode: overlay;
-	opacity: 0.22;
+	mix-blend-mode: screen;
+	opacity: 0.4;
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.grain {
 		// Keep the static grain but calm it down.
-		opacity: 0.15;
+		opacity: 0.28;
 	}
 }

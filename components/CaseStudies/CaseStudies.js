@@ -173,6 +173,10 @@ export default function CaseStudies() {
 				selector: 'img',
 				// Horizontal displacement — matches the carousel's sideways motion.
 				dir: [1, 0],
+				// Tamer than the defaults: maxVelo caps the hover aberration, scrollGain
+				// scales the scroll-driven distortion. Lower these to calm it further.
+				maxVelo: 0.012,
+				scrollGain: 0.25,
 				// WP media is cross-origin and would taint the WebGL texture. Route it
 				// through Next's same-origin image optimizer so the texture is clean.
 				textureSrc: (img) =>

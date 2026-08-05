@@ -67,10 +67,10 @@ export default function GrainOverlay({ intensity = 0.5, fps = 24 }) {
 							// One noise sample per device pixel, reshuffled each frame.
 							vec2 px = vUv * uResolution;
 							float n = hash(px + fract(uTime) * 137.0);
-							// Centre on 0.5 so an 'overlay' blend leaves mid-tones alone
-							// and only adds the grain's deviation.
-							float g = 0.5 + (n - 0.5) * uIntensity;
-							gl_FragColor = vec4(vec3(g), 1.0);
+							// Dark-based grain for a 'screen' (additive) blend: near-black
+							// with speckle, so it ADDS faint noise to the black background
+							// (an 'overlay' blend would leave pure black untouched).
+							gl_FragColor = vec4(vec3(n * uIntensity), 1.0);
 						}
 					`,
 					uniforms: {
