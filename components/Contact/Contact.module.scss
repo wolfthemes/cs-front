@@ -105,48 +105,28 @@ $edge: clamp(1rem, 5vw, 5rem);
 	}
 }
 
-// Reveal on scroll: each block fades up, staggered. Base state.
-.topbar,
-.title,
-.lead,
-.actions {
-	opacity: 0;
-	transform: translateY(0.6em);
-	transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-		transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+// Each title line is its own block so they can reveal one after another.
+.title-line {
+	display: block;
 }
 
-.is-visible {
-	.topbar {
-		opacity: 1;
-		transform: none;
-		transition-delay: 0s;
-	}
+// Reveal on scroll: the title reveals line by line, then the lead, then the
+// button last. Per-element transition-delay is set inline in the component.
+.reveal {
+	opacity: 0;
+	transform: translateY(0.7em);
+	transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+		transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+	will-change: opacity, transform;
+}
 
-	.title {
-		opacity: 1;
-		transform: none;
-		transition-delay: 0.1s;
-	}
-
-	.lead {
-		opacity: 1;
-		transform: none;
-		transition-delay: 0.2s;
-	}
-
-	.actions {
-		opacity: 1;
-		transform: none;
-		transition-delay: 0.3s;
-	}
+.is-visible .reveal {
+	opacity: 1;
+	transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.topbar,
-	.title,
-	.lead,
-	.actions {
+	.reveal {
 		opacity: 1;
 		transform: none;
 		transition: none;
