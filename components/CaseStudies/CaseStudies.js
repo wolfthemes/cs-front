@@ -173,6 +173,10 @@ export default function CaseStudies() {
 				selector: 'img',
 				// Horizontal displacement — matches the carousel's sideways motion.
 				dir: [1, 0],
+				// Restore the image parallax inside the shader (the DOM parallax
+				// stands down while the GL layer is active): the crop slides within
+				// each frame as the card travels across the viewport.
+				parallax: 0.06,
 				// Tamer than the defaults: maxVelo caps the hover aberration, scrollGain
 				// scales the scroll-driven distortion. Lower these to calm it further.
 				maxVelo: 0.012,
