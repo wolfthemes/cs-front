@@ -222,6 +222,33 @@ export default function GalleryBanner() {
 		};
 	}, []);
 
+	// WebGL image layer (velocity chromatic aberration + grain via the user's
+	// lib/fragment.glsl). Local images, so no CORS; loaded client-only and skipped
+	// for reduced motion. Flip the flag to disable.
+	useEffect(() => {
+		const MARQUEE_SHADER_ENABLED = true;
+		const section = sectionRef.current;
+
+		const reduce =
+			typeof window !== 'undefined' &&
+			window.matchMedia &&
+			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!MARQUEE_SHADER_ENABLED || !section || reduce) return undefined;
+
+		let effect;
+		let cancelled = false;
+
+		import('../../lib/ImagePlaneEffect').then(({ default: ImagePlaneEffect }) => {
+			if (cancelled) return;
+			effect = new ImagePlaneEffect(section, { selector: 'img' });
+		});
+
+		return () => {
+			cancelled = true;
+			if (effect) effect.dispose();
+		};
+	}, []);
+
 	return (
 		// Straight-edged clip so the oblique banner can't spill onto neighbours or
 		// add a horizontal scrollbar.

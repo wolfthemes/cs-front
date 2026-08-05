@@ -6,6 +6,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { GeistPixelSquare, GeistPixelGrid, GeistPixelCircle } from 'geist/font/pixel';
 import { EB_Garamond } from 'next/font/google';
+import { GrainOverlay } from '../components';
 import '@faustwp/core/dist/css/toolbar.css';
 import '../styles/global.scss';
 
@@ -38,6 +39,7 @@ export default function MyApp({ Component, pageProps }) {
 		<FaustProvider pageProps={pageProps}>
 			<div className={`app-shell ${fontVariables}`}>
 				<Component {...pageProps} key={router.asPath} />
+				<GrainOverlay />
 			</div>
 		</FaustProvider>
 	);

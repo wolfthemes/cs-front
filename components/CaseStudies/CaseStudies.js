@@ -72,6 +72,10 @@ export default function CaseStudies() {
 
 	const sectionRef = useRef(null);
 	const trackRef = useRef(null);
+	const stickyRef = useRef(null);
+	// True once the WebGL image layer has taken over the visuals; the DOM
+	// parallax below then stands down so the two don't fight.
+	const glActiveRef = useRef(false);
 
 	useEffect(() => {
 		const section = sectionRef.current;
@@ -104,15 +108,18 @@ export default function CaseStudies() {
 			track.style.transform = `translate3d(${-currentX}px, 0, 0)`;
 
 			// Subtle parallax: nudge each image opposite to its distance from the
-			// viewport centre as it travels across.
-			const vw = window.innerWidth;
-			cards.forEach((card) => {
-				const img = card.querySelector('img');
-				if (!img) return;
-				const rect = card.getBoundingClientRect();
-				const rel = (rect.left + rect.width / 2 - vw / 2) / vw; // ~ -1..1
-				img.style.transform = `translate3d(${clamp(-rel, -1, 1) * PARALLAX}px, 0, 0) scale(1.14)`;
-			});
+			// viewport centre as it travels across. Skipped when the WebGL layer
+			// is driving the images (it owns the motion then).
+			if (!glActiveRef.current) {
+				const vw = window.innerWidth;
+				cards.forEach((card) => {
+					const img = card.querySelector('img');
+					if (!img) return;
+					const rect = card.getBoundingClientRect();
+					const rel = (rect.left + rect.width / 2 - vw / 2) / vw; // ~ -1..1
+					img.style.transform = `translate3d(${clamp(-rel, -1, 1) * PARALLAX}px, 0, 0) scale(1.14)`;
+				});
+			}
 
 			raf = requestAnimationFrame(tick);
 		};
@@ -133,11 +140,46 @@ export default function CaseStudies() {
 		};
 	}, [works.length]);
 
+	// WebGL image layer: velocity warp + RGB shift while the slider moves, plus a
+	// hover ripple. Loaded client-only (ogl is browser-only) and skipped for
+	// reduced motion; if WebGL or a texture upload fails it disposes itself and
+	// the plain images stay.
+	useEffect(() => {
+		// Paused: the WebGL image distortion is being reworked with the proper
+		// shaders. Flip to true to re-enable the current ImagePlaneEffect layer.
+		const SLIDER_SHADER_ENABLED = false;
+
+		const sticky = stickyRef.current;
+		if (!SLIDER_SHADER_ENABLED || !sticky || works.length === 0 || prefersReducedMotion())
+			return undefined;
+
+		let effect;
+		let cancelled = false;
+
+		import('../../lib/ImagePlaneEffect').then(({ default: ImagePlaneEffect }) => {
+			if (cancelled) return;
+			effect = new ImagePlaneEffect(sticky, {
+				selector: 'img',
+				// WP media is cross-origin and would taint the WebGL texture. Route it
+				// through Next's same-origin image optimizer so the texture is clean.
+				textureSrc: (img) =>
+					`/_next/image?url=${encodeURIComponent(img.currentSrc || img.src)}&w=1920&q=75`,
+			});
+			if (effect.planes && effect.planes.length) glActiveRef.current = true;
+		});
+
+		return () => {
+			cancelled = true;
+			glActiveRef.current = false;
+			if (effect) effect.dispose();
+		};
+	}, [works.length]);
+
 	if (works.length === 0) return null;
 
 	return (
 		<section ref={sectionRef} className={cx('component')} aria-label="Case studies">
-			<div className={cx('sticky')}>
+			<div ref={stickyRef} className={cx('sticky')}>
 				<div className={cx('head')}>
 					<p className={cx('eyebrow')}>~/case-studies</p>
 				</div>
