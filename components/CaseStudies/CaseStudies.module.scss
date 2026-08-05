@@ -43,7 +43,10 @@ $edge: clamp(1rem, 5vw, 5rem);
 .track {
 	display: flex;
 	gap: clamp(1.25rem, 2.5vw, 2.5rem);
-	padding: 0 $edge;
+
+	// Extra breathing room past the last card at the end of the horizontal run
+	// (it counts toward scrollWidth, so the pin scrolls far enough to reveal it).
+	padding: 0 clamp(6rem, 15vw, 16rem) 0 $edge;
 	will-change: transform;
 }
 
