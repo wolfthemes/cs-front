@@ -5,9 +5,7 @@
 
 .grain {
 	position: fixed;
-	inset: 0;
-	width: 100vw;
-	height: 100vh;
+	inset: 0; // sizes to the viewport without 100vw (which overflows past a scrollbar)
 	pointer-events: none;
 	z-index: 2147483000; // above all content, incl. the fixed header
 	mix-blend-mode: screen;
