@@ -138,8 +138,8 @@ $edge: clamp(1rem, 5vw, 5rem);
 .card-cta {
 	flex-shrink: 0;
 	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.55);
-	opacity: 0;
+	color: $c-base;
+	opacity: 0.75;
 	transition: opacity 0.2s ease-out;
 }
 
