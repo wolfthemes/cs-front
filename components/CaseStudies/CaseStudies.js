@@ -110,8 +110,21 @@ export default function CaseStudies() {
 
 		// Vertical scroll room through the pinned section equals the horizontal
 		// overflow of the track, so 1px of page scroll ≈ 1px of sideways travel.
+		// scrollWidth drops the trailing padding AND the last card's margin for
+		// overflowing flex children, which would leave the final card cut off at
+		// the viewport edge — so measure the true right extent directly.
 		const layout = () => {
-			maxX = Math.max(track.scrollWidth - window.innerWidth, 0);
+			const last = cards[cards.length - 1];
+			let contentRight = track.scrollWidth;
+			if (last) {
+				const trackPadRight = parseFloat(getComputedStyle(track).paddingRight) || 0;
+				const lastMarginRight = parseFloat(getComputedStyle(last).marginRight) || 0;
+				// offsetLeft includes the track's left padding, offsetWidth excludes
+				// margins, so add the last card's right margin and the track's right
+				// padding to get the full scrollable width.
+				contentRight = last.offsetLeft + last.offsetWidth + lastMarginRight + trackPadRight;
+			}
+			maxX = Math.max(contentRight - window.innerWidth, 0);
 			section.style.height = `${window.innerHeight + maxX}px`;
 		};
 
