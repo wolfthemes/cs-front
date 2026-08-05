@@ -145,9 +145,9 @@ export default function CaseStudies() {
 	// reduced motion; if WebGL or a texture upload fails it disposes itself and
 	// the plain images stay.
 	useEffect(() => {
-		// Paused: the WebGL image distortion is being reworked with the proper
-		// shaders. Flip to true to re-enable the current ImagePlaneEffect layer.
-		const SLIDER_SHADER_ENABLED = false;
+		// WebGL image layer on the work carousel — same engine/shader as the
+		// marquee. Flip to false to disable.
+		const SLIDER_SHADER_ENABLED = true;
 
 		const sticky = stickyRef.current;
 		if (!SLIDER_SHADER_ENABLED || !sticky || works.length === 0 || prefersReducedMotion())
@@ -178,7 +178,12 @@ export default function CaseStudies() {
 	if (works.length === 0) return null;
 
 	return (
-		<section ref={sectionRef} className={cx('component')} aria-label="Case studies">
+		<section
+			id="case-studies"
+			ref={sectionRef}
+			className={cx('component')}
+			aria-label="Case studies"
+		>
 			<div ref={stickyRef} className={cx('sticky')}>
 				<div className={cx('head')}>
 					<p className={cx('eyebrow')}>~/case-studies</p>
