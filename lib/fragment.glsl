@@ -30,9 +30,13 @@ void main() {
 
   float c = circle(newUV, uMouse, 0.0, 0.6);
 
-  float r = texture2D(tMap, newUV.xy += c * (uVelo * .9)).x;
-	float g = texture2D(tMap, newUV.xy += c * (uVelo * .925)).y;
-	float b = texture2D(tMap, newUV.xy += c * (uVelo * .95)).z;
+  // Ungated scroll distortion — shows on scroll even without the mouse. Zero
+  // when not scrolling, so the hover (circle-gated) behaviour is unchanged.
+  float s = uScrollVelo;
+
+  float r = texture2D(tMap, newUV.xy += c * (uVelo * .9) + s * .9).x;
+	float g = texture2D(tMap, newUV.xy += c * (uVelo * .925) + s * .925).y;
+	float b = texture2D(tMap, newUV.xy += c * (uVelo * .95) + s * .95).z;
 
   vec4 newColor = vec4(r, g, b, 1.);
 
