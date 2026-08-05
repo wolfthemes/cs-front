@@ -138,6 +138,7 @@ export default function Playground() {
 
 	return (
 		<section
+			id="playground"
 			ref={sectionRef}
 			className={cx('component', { 'is-revealed': revealed })}
 			aria-labelledby="playground-title"

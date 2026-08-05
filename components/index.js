@@ -1,5 +1,4 @@
 export { BrandIcon } from './BrandIcon';
-export { AboutPanel } from './AboutPanel';
 export { CaseStudies } from './CaseStudies';
 export { Contact } from './Contact';
 export { Container } from './Container';

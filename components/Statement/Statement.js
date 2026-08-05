@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import className from 'classnames/bind';
 import styles from './Statement.module.scss';
+import { Signature } from '../../components';
 
 let cx = className.bind(styles);
 
@@ -120,7 +121,7 @@ export default function Statement() {
 	let charIndex = 0;
 
 	return (
-		<section className={cx('component')}>
+		<section id="about" className={cx('component')}>
 			<p className={cx('eyebrow')}>~/about</p>
 			<h2 className={cx('headline')} ref={headlineRef}>
 				{words.map((word, wi) => (
@@ -151,6 +152,8 @@ export default function Statement() {
 				<p className={cx('lead')}>{LEAD}</p>
 				<p className={cx('support')}>{SUPPORT}</p>
 			</div>
+
+			<Signature className={cx('signature')} />
 		</section>
 	);
 }

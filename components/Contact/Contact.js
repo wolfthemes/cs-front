@@ -42,6 +42,7 @@ export default function Contact() {
 
 	return (
 		<section
+			id="contact"
 			ref={ref}
 			className={cx('component', { 'is-visible': visible })}
 			aria-labelledby="contact-title"

@@ -141,7 +141,7 @@ export default function HomeHero() {
 	const statsRef = useRef(null);
 
 	return (
-		<section className={cx('component')}>
+		<section id="home" className={cx('component')}>
 			<h1 className={cx('title')}>
 				Senior{' '}
 				<span className={cx('circled')}>

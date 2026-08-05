@@ -68,6 +68,14 @@
 	color: rgba(255, 255, 255, 0.5);
 }
 
+// Hand-signed sign-off closing the about section — aligned with the body block
+// and pushed to its right edge like the end of a letter.
+.signature {
+	margin: 3.5rem 0 0 auto;
+	max-width: 42rem;
+	justify-content: flex-end;
+}
+
 @media (width <= 48rem) {
 	.component {
 		padding: 7rem 1rem;
@@ -76,5 +84,10 @@
 	.body {
 		margin-top: 3.5rem;
 		margin-left: 0;
+	}
+
+	.signature {
+		margin-left: 0;
+		justify-content: center;
 	}
 }
