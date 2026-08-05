@@ -186,8 +186,9 @@ export default function GalleryBanner() {
 		window.addEventListener('scroll', onScroll, { passive: true });
 
 		let scrollVel = 0;
-		let raf;
+		let raf = 0;
 		let last = performance.now();
+		let visible = false;
 		const frame = (now) => {
 			const dt = Math.min((now - last) / 1000, 0.05); // clamp after tab switches
 			last = now;
@@ -207,12 +208,37 @@ export default function GalleryBanner() {
 				t.el.style.transform = `translateX(${x}px)`;
 			});
 
+			// Stop when scrolled away or the tab is hidden; the observer restarts it.
+			if (!visible || document.hidden) {
+				raf = 0;
+				return;
+			}
 			raf = requestAnimationFrame(frame);
 		};
-		raf = requestAnimationFrame(frame);
+
+		const start = () => {
+			if (!raf) {
+				last = performance.now();
+				raf = requestAnimationFrame(frame);
+			}
+		};
+		const io = new IntersectionObserver(
+			(entries) => {
+				visible = entries[0].isIntersecting;
+				if (visible && !document.hidden) start();
+			},
+			{ rootMargin: '200px' }
+		);
+		io.observe(section);
+		const onVisibility = () => {
+			if (!document.hidden && visible) start();
+		};
+		document.addEventListener('visibilitychange', onVisibility);
 
 		return () => {
-			cancelAnimationFrame(raf);
+			if (raf) cancelAnimationFrame(raf);
+			io.disconnect();
+			document.removeEventListener('visibilitychange', onVisibility);
 			window.removeEventListener('scroll', onScroll);
 			window.removeEventListener('resize', onResize);
 			tracks.forEach((t) => {

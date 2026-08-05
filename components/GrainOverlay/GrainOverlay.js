@@ -8,7 +8,7 @@ import styles from './GrainOverlay.module.scss';
 //
 // ogl is imported dynamically inside the effect so this stays client-only and
 // never runs during SSR.
-export default function GrainOverlay({ intensity = 0.5 }) {
+export default function GrainOverlay({ intensity = 0.5, fps = 24 }) {
 	const canvasRef = useRef(null);
 
 	useEffect(() => {
@@ -88,10 +88,18 @@ export default function GrainOverlay({ intensity = 0.5 }) {
 				onResize();
 				window.addEventListener('resize', onResize);
 
+				// Throttle to ~`fps`: each redraw of this blended full-screen canvas
+				// forces the browser to re-composite the whole page, so drawing fewer
+				// grain frames is a large win (and 24fps reads as more filmic). Skip
+				// entirely when the tab is hidden.
+				const interval = 1000 / fps;
+				let lastDraw = -Infinity;
 				const render = (t) => {
+					if (!reduce) raf = requestAnimationFrame(render);
+					if (document.hidden || t - lastDraw < interval) return;
+					lastDraw = t;
 					program.uniforms.uTime.value = t * 0.001;
 					renderer.render({ scene: mesh });
-					if (!reduce) raf = requestAnimationFrame(render);
 				};
 				render(0);
 			})
@@ -108,7 +116,7 @@ export default function GrainOverlay({ intensity = 0.5 }) {
 				if (ext) ext.loseContext();
 			}
 		};
-	}, [intensity]);
+	}, [intensity, fps]);
 
 	return <canvas ref={canvasRef} className={styles.grain} aria-hidden="true" />;
 }
