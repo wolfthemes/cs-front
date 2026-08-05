@@ -172,7 +172,23 @@ export default function HomeHero() {
 
 			<div className={cx('cta')}>
 				<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
-					Let&apos;s connect
+					<span className={cx('cta-label')}>Let&apos;s connect</span>
+					<svg
+						className={cx('cta-arrow')}
+						width="16"
+						height="16"
+						viewBox="0 0 16 16"
+						fill="none"
+						aria-hidden="true"
+					>
+						<path
+							d="M3.5 8h9M8.5 4l4 4-4 4"
+							stroke="currentColor"
+							strokeWidth="1.5"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
 				</a>
 			</div>
 		</section>

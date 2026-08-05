@@ -1,3 +1,5 @@
+@import 'styles/tokens';
+
 .component {
 	padding: 8rem 1rem 6rem;
 	margin: 0 auto;
@@ -11,8 +13,8 @@
 	font-size: clamp(3rem, 6.5vw, 6rem);
 	line-height: 1;
 	letter-spacing: -0.03em;
-	font-weight: var(--wpe--font-weight--bold);
-	color: var(--wpe--color--white);
+	font-weight: fw(bold);
+	color: $c-base;
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 	animation-delay: 0.1s;
@@ -35,17 +37,18 @@
 }
 
 // Hand-drawn marker loop (rough textured circle) drawn around the word.
-// Stretched to overshoot the word's box on every side so it frames it. The
-// source is a filled shape, so instead of a stroke-dash "draw" it's revealed
-// with a conic-gradient mask that sweeps around the centre — starting at the
-// loop's opening (~bottom-right, where the path begins) and tracing clockwise,
-// like a hand drawing the circle in one stroke.
+// Stretched to overshoot the word's box so it frames it — kept flatter than
+// wide (a horizontal ellipse) so it hugs the wide word rather than reading as a
+// round circle. The source is a filled shape, so instead of a stroke-dash
+// "draw" it's revealed with a conic-gradient mask that sweeps around the centre
+// — starting near the top (just left of centre, above the right of the "W") and
+// tracing clockwise, like a hand drawing the loop in one stroke.
 .circle {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 128%;
-	height: 165%;
+	height: 120%;
 	transform: translate(-50%, -50%);
 	overflow: visible;
 	pointer-events: none;
@@ -53,10 +56,11 @@
 
 	--circle-sweep: 0deg;
 
-	// `from 140deg` puts the reveal's start at the loop's opening (bottom-right).
-	// The wedge grows with --circle-sweep, uncovering the shape as it rotates.
+	// `from 340deg` (in conic angles 0deg = top, clockwise) starts the reveal at
+	// the top, slightly left of centre — above the right part of the "W". The
+	// wedge grows with --circle-sweep, uncovering the shape as it rotates.
 	$mask: conic-gradient(
-		from 140deg,
+		from 340deg,
 		#000 0deg,
 		#000 var(--circle-sweep),
 		transparent var(--circle-sweep)
@@ -70,7 +74,7 @@
 	animation-delay: 0.85s;
 
 	path {
-		fill: var(--wpe--color--accent, #b6ff3a);
+		fill: $c-accent;
 	}
 }
 
@@ -85,15 +89,16 @@
 	font-size: clamp(1.35rem, 2.2vw, 2rem);
 	line-height: 1.35;
 	letter-spacing: -0.01em;
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
 	color: rgba(255, 255, 255, 0.8);
 }
 
 .wordpress {
 	font-family: var(--font-eb-garamond), serif;
 	font-weight: 400;
-
-	// color: var(--wpe--color--accent);
+	font-size: 1.2em;
+	line-height: 0.2;
+	color: $c-base;
 }
 
 .wolfthemes {
@@ -101,11 +106,13 @@
 	font-weight: 400;
 	font-size: 1.2em;
 	line-height: 0.2;
+	color: $c-base;
 }
 
 .engineering {
 	font-family: var(--font-geist-pixel-square), var(--font-geist-mono), monospace;
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
+	color: $c-base;
 }
 
 .line {
@@ -134,10 +141,10 @@
 }
 
 .stat-value {
-	font-size: var(--wpe--font-size--sm);
-	font-weight: var(--wpe--font-weight--medium);
+	font-size: fs(sm);
+	font-weight: fw(medium);
 	letter-spacing: 0.01em;
-	color: var(--wpe--color--white);
+	color: $c-base;
 
 	// Tabular figures so the width doesn't jitter while counting.
 	font-feature-settings: 'tnum';
@@ -157,7 +164,7 @@
 }
 
 .stat-label {
-	font-size: var(--wpe--font-size--sm);
+	font-size: fs(sm);
 	color: rgba(255, 255, 255, 0.5);
 	letter-spacing: 0.01em;
 }
@@ -173,12 +180,14 @@
 
 // White pill matching the nav CTA.
 .cta-button {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
 	padding: 0.7rem 1.6rem;
 	border-radius: 100px;
-	background-color: var(--wpe--color--white);
-	color: var(--wpe--color--black);
-	font-weight: var(--wpe--font-weight--medium);
+	background-color: $c-base;
+	color: $c-ink;
+	font-weight: fw(medium);
 	letter-spacing: -0.01em;
 	text-decoration: none;
 	white-space: nowrap;
@@ -187,7 +196,16 @@
 	&:hover,
 	&:focus {
 		opacity: 0.85;
+
+		.cta-arrow {
+			transform: translateX(0.2rem);
+		}
 	}
+}
+
+.cta-arrow {
+	flex-shrink: 0;
+	transition: transform 0.2s ease-out;
 }
 
 @keyframes fade-in-up {
@@ -209,6 +227,10 @@
 	.cta {
 		animation: none;
 		opacity: 1;
+	}
+
+	.cta-arrow {
+		transition: none;
 	}
 
 	.circle {
