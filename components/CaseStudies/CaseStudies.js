@@ -21,9 +21,20 @@ const TRACK_EASE = 0.12;
 
 function Card({ work }) {
 	const image = work.featuredImage?.node;
+	// An explicit work_link_url (e.g. a live demo or external product page) wins
+	// over the internal post URI, for both the image link and the CTA. When it's
+	// set the destination is off-site, so open it in a new tab.
+	const href = work.workLinkUrl || work.uri || '#';
+	const isExternal = Boolean(work.workLinkUrl);
+	const ctaLabel = work.workLinkText || 'View project';
 	return (
 		<article className={cx('card')}>
-			<Link href={work.uri ?? '#'} className={cx('card-link')}>
+			<Link
+				href={href}
+				className={cx('card-link')}
+				target={isExternal ? '_blank' : undefined}
+				rel={isExternal ? 'noopener noreferrer' : undefined}
+			>
 				<div className={cx('media')}>
 					{image ? (
 						<img
@@ -42,7 +53,7 @@ function Card({ work }) {
 				</div>
 				<div className={cx('meta')}>
 					<h3 className={cx('card-title')}>{work.title}</h3>
-					<span className={cx('card-cta')}>View project →</span>
+					<span className={cx('card-cta')}>{ctaLabel} →</span>
 				</div>
 				{work.workSkills?.nodes?.length > 0 && (
 					<ul className={cx('tags')} aria-label="Tech used">
@@ -206,6 +217,8 @@ const WORK_FIELDS = `
 	id
 	title
 	uri
+	workLinkUrl
+	workLinkText
 	featuredImage {
 		node {
 			sourceUrl
