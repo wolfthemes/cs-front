@@ -4,17 +4,9 @@ import styles from './GalleryBanner.module.scss';
 
 let cx = className.bind(styles);
 
-// Seconds for one full loop at rest — matches the CSS baseline (slow).
+// Seconds for one full loop at rest — matches the CSS baseline (slow). The
+// marquee drifts at this steady speed; scroll no longer boosts it.
 const BASE_DURATION = 200;
-// How strongly the marquee speed tracks scroll velocity. Kept small for a
-// discrete nudge rather than a strong surge.
-const SCROLL_FOLLOW = 0.35;
-// Upper bound (px/s) on the scroll-driven boost, so a fast flick can't send the
-// rows flying — keeps the effect subtle.
-const MAX_BOOST = 320;
-// Easing applied to the scroll velocity each frame (0..1); lower = smoother,
-// longer tail after you stop scrolling.
-const VEL_SMOOTHING = 0.09;
 
 // Each preview URL is encoded in the image filename: `slug--path.ext` maps to
 // `${PREVIEW_BASE}/slug/path`, where `--` stands in for the `/`. Inner single
@@ -174,18 +166,6 @@ export default function GalleryBanner() {
 		};
 		window.addEventListener('resize', onResize);
 
-		// Scroll velocity: accumulate scrolled pixels between frames, convert to
-		// px/s each frame, then ease it so it decays smoothly once scrolling stops.
-		let accum = 0;
-		let lastY = window.scrollY;
-		const onScroll = () => {
-			const y = window.scrollY;
-			accum += Math.abs(y - lastY);
-			lastY = y;
-		};
-		window.addEventListener('scroll', onScroll, { passive: true });
-
-		let scrollVel = 0;
 		let raf = 0;
 		let last = performance.now();
 		let visible = false;
@@ -193,15 +173,10 @@ export default function GalleryBanner() {
 			const dt = Math.min((now - last) / 1000, 0.05); // clamp after tab switches
 			last = now;
 
-			const instVel = dt > 0 ? accum / dt : 0;
-			accum = 0;
-			scrollVel += (instVel - scrollVel) * VEL_SMOOTHING;
-
 			tracks.forEach((t) => {
 				if (t.period <= 0) return;
-				const base = t.period / BASE_DURATION; // slow baseline, px/s
-				const boost = Math.min(scrollVel * SCROLL_FOLLOW, MAX_BOOST);
-				const speed = base + boost;
+				// Steady drift at the baseline speed — no scroll-driven boost.
+				const speed = t.period / BASE_DURATION; // px/s
 				t.pos = (t.pos + speed * dt) % t.period;
 				// dir 1 (left) slides content left; dir -1 (right) slides it right.
 				const x = t.dir === 1 ? -t.pos : t.pos - t.period;
@@ -239,7 +214,6 @@ export default function GalleryBanner() {
 			if (raf) cancelAnimationFrame(raf);
 			io.disconnect();
 			document.removeEventListener('visibilitychange', onVisibility);
-			window.removeEventListener('scroll', onScroll);
 			window.removeEventListener('resize', onResize);
 			tracks.forEach((t) => {
 				t.el.style.animation = '';
@@ -266,8 +240,16 @@ export default function GalleryBanner() {
 
 		import('../../lib/ImagePlaneEffect').then(({ default: ImagePlaneEffect }) => {
 			if (cancelled) return;
-			// Vertical displacement for the gallery marquee.
-			effect = new ImagePlaneEffect(section, { selector: 'img', dir: [0, 1] });
+			// Gallery marquee: subtle vertical shimmer. Lighter than the carousel —
+			// the hover lens stays, but the scroll/idle distortion and grain are dialed
+			// down so the always-moving banner reads calm.
+			effect = new ImagePlaneEffect(section, {
+				selector: 'img',
+				dir: [0, 1],
+				maxVelo: 0.012,
+				scrollGain: 0.2,
+				grain: 0.02,
+			});
 		});
 
 		return () => {

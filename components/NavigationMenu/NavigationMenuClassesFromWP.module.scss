@@ -5,25 +5,28 @@
 @import 'styles/tokens';
 
 // The "Get It" CTA — add the `button` CSS class to the last menu item in
-// wp-admin (Appearance --> Menus --> CSS Classes). Rendered as a white pill.
+// wp-admin (Appearance --> Menus --> CSS Classes). Rendered as a ghost pill
+// (outlined, transparent) so it doesn't compete with the solid white hero CTA.
 .button {
 	@media (min-width: $breakpoint-small) {
 		margin-left: 0.4rem;
 	}
 
 	a {
-		background-color: $c-base;
+		background-color: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.3);
 		border-radius: 100px;
-		color: $c-ink;
+		color: $c-base;
 		padding: 0.45rem 1.1rem;
 		text-decoration: none;
 		white-space: nowrap;
+		transition: border-color 0.2s ease-out, background-color 0.2s ease-out;
 
 		&:hover,
 		&:focus {
-			background-color: $c-base;
-			color: $c-ink;
-			opacity: 0.85;
+			background-color: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.6);
+			color: $c-base;
 		}
 	}
 }
