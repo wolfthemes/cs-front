@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Statement.module.scss';
 import { Signature } from '../../components';
@@ -21,6 +21,110 @@ const prefersReducedMotion = () =>
 	window.matchMedia &&
 	window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const LINE_STAGGER = 0.11; // seconds between each line's slide-up
+
+// Splits a paragraph into its real wrapped lines (measured against the live
+// column width) and slides each line up, staggered, once it scrolls into view.
+// `startIndex` continues the stagger across paragraphs so the whole block reads
+// as one cascade; `onMeasured` reports the line count so the next paragraph can
+// pick up where this one left off.
+function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
+	const ref = useRef(null);
+	const [lines, setLines] = useState(null);
+	const [visible, setVisible] = useState(false);
+
+	// Measure the wrapped lines by laying the words out in a hidden clone that
+	// matches the paragraph's rendered width, then grouping words by their top.
+	useEffect(() => {
+		const el = ref.current;
+		if (!el) return undefined;
+
+		if (prefersReducedMotion()) {
+			setLines([text]);
+			setVisible(true);
+			onMeasured?.(1);
+			return undefined;
+		}
+
+		const measure = () => {
+			const temp = document.createElement('p');
+			temp.className = el.className;
+			temp.style.cssText =
+				'position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;';
+			temp.style.width = `${el.clientWidth}px`;
+			const words = text.split(' ');
+			temp.innerHTML = words
+				.map(
+					(w) =>
+						`<span style="display:inline-block">${w
+							.replace(/&/g, '&amp;')
+							.replace(/</g, '&lt;')}</span>`
+				)
+				.join(' ');
+			el.parentNode.appendChild(temp);
+
+			const spans = Array.from(temp.querySelectorAll('span'));
+			const groups = [];
+			let current = [];
+			let lastTop = null;
+			spans.forEach((span, i) => {
+				const top = span.offsetTop;
+				if (lastTop !== null && top > lastTop && current.length) {
+					groups.push(current);
+					current = [];
+				}
+				current.push(words[i]);
+				lastTop = top;
+			});
+			if (current.length) groups.push(current);
+			el.parentNode.removeChild(temp);
+
+			const grouped = groups.map((g) => g.join(' '));
+			setLines(grouped);
+			onMeasured?.(grouped.length);
+		};
+
+		measure();
+		return undefined;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [text]);
+
+	// Reveal once the paragraph enters the viewport.
+	useEffect(() => {
+		const el = ref.current;
+		if (!el || visible) return undefined;
+
+		const observer = new IntersectionObserver(
+			([entry], obs) => {
+				if (entry.isIntersecting) {
+					setVisible(true);
+					obs.disconnect();
+				}
+			},
+			{ threshold: 0.2 }
+		);
+		observer.observe(el);
+		return () => observer.disconnect();
+	}, [visible]);
+
+	return (
+		<p ref={ref} className={cx(cls, { 'is-visible': visible })}>
+			{lines
+				? lines.map((line, i) => (
+						<span className={cx('reveal-line')} key={i}>
+							<span
+								className={cx('reveal-line-inner')}
+								style={{ transitionDelay: `${(startIndex + i) * LINE_STAGGER}s` }}
+							>
+								{line}
+							</span>
+						</span>
+				  ))
+				: text}
+		</p>
+	);
+}
+
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 
 // Per-word ease (matches GSAP's 'expo.out') — fast in, long gentle settle.
@@ -39,6 +143,8 @@ const FEATHER = 0.16;
 export default function Statement() {
 	const headlineRef = useRef(null);
 	const charsRef = useRef([]);
+	// Line count of the first paragraph, so the second continues the cascade.
+	const [leadLineCount, setLeadLineCount] = useState(0);
 
 	useEffect(() => {
 		const chars = charsRef.current.filter(Boolean);
@@ -149,8 +255,8 @@ export default function Statement() {
 			</h2>
 
 			<div className={cx('body')}>
-				<p className={cx('lead')}>{LEAD}</p>
-				<p className={cx('support')}>{SUPPORT}</p>
+				<RevealParagraph text={LEAD} className="lead" onMeasured={setLeadLineCount} />
+				<RevealParagraph text={SUPPORT} className="support" startIndex={leadLineCount} />
 			</div>
 
 			<Signature className={cx('signature')} />

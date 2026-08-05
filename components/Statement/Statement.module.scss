@@ -5,6 +5,11 @@
 	margin: 0 auto;
 	max-width: var(--wpe--container--max-width);
 	text-align: left;
+
+	// Anchor navigation (#about) uses block:start, which would land on the top
+	// of the 12rem padding and leave a large empty gap. Pull the scroll target
+	// down into the section so the eyebrow/headline land near the top.
+	scroll-margin-top: -9rem;
 }
 
 .eyebrow {
@@ -68,6 +73,33 @@
 	color: rgba(255, 255, 255, 0.5);
 }
 
+// Line-by-line slide-up reveal for the two body paragraphs. Each measured line
+// is its own block; the inner span starts lifted + faded and settles in.
+.reveal-line {
+	display: block;
+}
+
+.reveal-line-inner {
+	display: block;
+	opacity: 0;
+	transform: translateY(0.8em);
+	transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+		transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.is-visible .reveal-line-inner {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal-line-inner {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
 // Hand-signed sign-off closing the about section — aligned with the body block
 // and left-aligned under the last paragraph.
 .signature {
@@ -78,6 +110,8 @@
 @media (width <= 48rem) {
 	.component {
 		padding: 7rem 1rem;
+		// Smaller top padding here, so skip less.
+		scroll-margin-top: -4rem;
 	}
 
 	.body {

@@ -30,6 +30,7 @@ const STATS = [
 
 const COUNT_DURATION = 1400; // ms
 const COUNT_START_DELAY = 700; // ms — let the statement settle first
+const SHUFFLE_AFTER_STATS = 150; // ms gap after the counters land before the shuffle
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -110,7 +111,7 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 // Render a line, styling key words: "WordPress" in EB Garamond (`.wordpress`),
 // "WolfThemes" in the self-hosted Sickamore font (`.wolfthemes`), and
 // "engineering" in Geist Pixel (`.engineering`).
-function renderLine(line) {
+function renderLine(line, playShuffle) {
 	return line.split(/(WordPress|WolfThemes|engineering)/).map((part, i) => {
 		if (part === 'WordPress') {
 			return (
@@ -129,7 +130,7 @@ function renderLine(line) {
 		if (part === 'engineering') {
 			return (
 				<span key={i} className={cx('engineering')}>
-					<ShuffleText text={part} autoPlayDelay={1000} />
+					<ShuffleText text={part} play={playShuffle} />
 				</span>
 			);
 		}
@@ -139,6 +140,40 @@ function renderLine(line) {
 
 export default function HomeHero() {
 	const statsRef = useRef(null);
+	const [statsDone, setStatsDone] = useState(false);
+
+	// Hold the hero "engineering" shuffle until the stat counters have finished.
+	// Mirror the counters' own trigger (the stats row entering view) and their
+	// total run time, so the shuffle lands just after the numbers settle.
+	useEffect(() => {
+		const node = statsRef.current;
+		if (!node) return undefined;
+
+		if (prefersReducedMotion()) {
+			setStatsDone(true);
+			return undefined;
+		}
+
+		let doneTimer;
+		const observer = new IntersectionObserver(
+			([entry], obs) => {
+				if (entry.isIntersecting) {
+					obs.disconnect();
+					doneTimer = setTimeout(
+						() => setStatsDone(true),
+						COUNT_START_DELAY + COUNT_DURATION + SHUFFLE_AFTER_STATS
+					);
+				}
+			},
+			{ threshold: 0.4 }
+		);
+		observer.observe(node);
+
+		return () => {
+			observer.disconnect();
+			if (doneTimer) clearTimeout(doneTimer);
+		};
+	}, []);
 
 	return (
 		<section id="home" className={cx('component')}>
@@ -159,7 +194,7 @@ export default function HomeHero() {
 							animationDelay: `${LINE_BASE_DELAY + i * LINE_STAGGER}s`,
 						}}
 					>
-						{renderLine(line)}
+						{renderLine(line, statsDone)}
 					</span>
 				))}
 			</p>

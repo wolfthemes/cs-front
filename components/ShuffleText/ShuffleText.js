@@ -24,10 +24,13 @@ function randomGlyphFor(ch) {
 // the exact box — the shuffling glyphs are overlaid on top and never reflow the
 // surrounding text. The word reads as one via aria-label; the visual layers are
 // aria-hidden. It also replays on hover/focus. Pass `autoPlayDelay` (ms) to
-// fire once on mount after that delay. Reusable anywhere: <ShuffleText text="..." />.
+// fire once on mount after that delay, or `play` to fire once when it flips
+// truthy (e.g. after another animation finishes). Reusable anywhere:
+// <ShuffleText text="..." />.
 export default function ShuffleText({
 	text,
 	autoPlayDelay = null, // ms after mount to auto-fire once; null disables
+	play = false, // external trigger: runs once when this becomes truthy
 	shuffleDuration = 240, // ms a glyph spends scrambling before it locks
 	stagger = 55, // ms between one glyph locking and the next (the L→R sweep)
 	tick = 40, // ms between random-letter swaps while scrambling
@@ -83,6 +86,15 @@ export default function ShuffleText({
 			if (rafRef.current) cancelAnimationFrame(rafRef.current);
 		};
 	}, [autoPlayDelay, run]);
+
+	// Fire once when `play` flips truthy (external trigger).
+	const playedRef = useRef(false);
+	useEffect(() => {
+		if (play && !playedRef.current) {
+			playedRef.current = true;
+			run();
+		}
+	}, [play, run]);
 
 	return (
 		<span

@@ -31,6 +31,73 @@ function sectionIdFor(path) {
 	return SECTION_ALIASES[slug] ?? slug;
 }
 
+// Absolute page Y that lands a section at its resting position, honouring the
+// target's scroll-margin-top (the about section pulls itself down with a
+// negative margin). rect.top + scrollY is the element's document top, so this is
+// stable regardless of the current scroll position — and re-reading it each
+// frame absorbs any late reflow.
+function restingScrollY(target) {
+	const margin = parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+	return window.scrollY + target.getBoundingClientRect().top - margin;
+}
+
+// Smooth-scroll to a section and land exactly on its resting position. The
+// pinned works carousel begins its horizontal travel precisely at top === 0
+// (see CaseStudies: targetX = clamp(-section.top, 0, maxX)), so the landing must
+// be pixel-exact. Rather than let the browser's native smooth scroll undershoot
+// and then hard-snap (which shows a jump), this animates to the target itself
+// and recomputes it each frame, so it converges exactly with no correction. The
+// animation bows out the moment the user takes over scrolling.
+function scrollToSection(target) {
+	if (typeof window === 'undefined') {
+		target.scrollIntoView({ block: 'start' });
+		return;
+	}
+
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		window.scrollTo(0, Math.round(restingScrollY(target)));
+		return;
+	}
+
+	let aborted = false;
+
+	const abort = () => {
+		aborted = true;
+	};
+	const cleanup = () => {
+		window.removeEventListener('wheel', abort);
+		window.removeEventListener('touchmove', abort);
+		window.removeEventListener('keydown', abort);
+	};
+
+	window.addEventListener('wheel', abort, { passive: true });
+	window.addEventListener('touchmove', abort, { passive: true });
+	window.addEventListener('keydown', abort);
+
+	const DURATION = 600; // ms
+	const startY = window.scrollY;
+	const startTime = performance.now();
+	const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+	const step = (now) => {
+		if (aborted) {
+			cleanup();
+			return;
+		}
+		const t = Math.min((now - startTime) / DURATION, 1);
+		const targetY = restingScrollY(target);
+		if (t < 1) {
+			window.scrollTo(0, startY + (targetY - startY) * easeOutCubic(t));
+			requestAnimationFrame(step);
+		} else {
+			window.scrollTo(0, Math.round(targetY));
+			cleanup();
+		}
+	};
+
+	requestAnimationFrame(step);
+}
+
 export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 	const [isNavShown, setIsNavShown] = useState(false);
 
@@ -44,7 +111,7 @@ export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 		if (!target) return;
 		event.preventDefault();
 		setIsNavShown(false);
-		target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		scrollToSection(target);
 		window.history.replaceState(null, '', id === 'home' ? '/' : `#${id}`);
 	};
 

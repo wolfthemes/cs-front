@@ -1,10 +1,10 @@
 @import 'styles/tokens';
 
 .component {
-	padding: 8rem 1rem 6rem;
+	padding: 6rem 1rem 6rem;
 	margin: 0 auto;
 	max-width: var(--wpe--container--max-width);
-	min-height: 90vh;
+	min-height: calc(90vh - 90px);
 	text-align: left;
 }
 
@@ -86,7 +86,7 @@
 
 .intro {
 	margin: 1.5rem 0 0;
-	font-size: clamp(1.35rem, 2.2vw, 2rem);
+	font-size: clamp(1.15rem, 1.9vw, 1.7rem);
 	line-height: 1.35;
 	letter-spacing: -0.01em;
 	font-weight: fw(medium);
