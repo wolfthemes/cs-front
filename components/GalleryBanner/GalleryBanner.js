@@ -240,7 +240,8 @@ export default function GalleryBanner() {
 
 		import('../../lib/ImagePlaneEffect').then(({ default: ImagePlaneEffect }) => {
 			if (cancelled) return;
-			effect = new ImagePlaneEffect(section, { selector: 'img' });
+			// Vertical displacement for the gallery marquee.
+			effect = new ImagePlaneEffect(section, { selector: 'img', dir: [0, 1] });
 		});
 
 		return () => {

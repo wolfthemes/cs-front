@@ -6,6 +6,8 @@ uniform vec2 uMouse;
 uniform float uVelo;
 uniform float uAmount;
 uniform float uScrollVelo;
+uniform vec2 uDir;     // displacement axis: [1,0] horizontal, [0,1] vertical
+uniform float uGrain;  // grain strength
 
 varying vec2 vUv;
 
@@ -34,14 +36,16 @@ void main() {
   // when not scrolling, so the hover (circle-gated) behaviour is unchanged.
   float s = uScrollVelo;
 
-  float r = texture2D(tMap, newUV.xy += c * (uVelo * .9) + s * .9).x;
-	float g = texture2D(tMap, newUV.xy += c * (uVelo * .925) + s * .925).y;
-	float b = texture2D(tMap, newUV.xy += c * (uVelo * .95) + s * .95).z;
+  // Displace along uDir only (horizontal or vertical), so the RGB split follows
+  // the section's motion axis instead of smearing diagonally.
+  float r = texture2D(tMap, newUV += (c * (uVelo * .9) + s * .9) * uDir).x;
+	float g = texture2D(tMap, newUV += (c * (uVelo * .925) + s * .925) * uDir).y;
+	float b = texture2D(tMap, newUV += (c * (uVelo * .95) + s * .95) * uDir).z;
 
   vec4 newColor = vec4(r, g, b, 1.);
 
   newUV.y *= random(vec2(newUV.y, uAmount));
-  newColor.rgb += random(newUV)* 0.10;
+  newColor.rgb += random(newUV) * uGrain;
 
   gl_FragColor = newColor;
 }

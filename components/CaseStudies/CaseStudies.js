@@ -160,6 +160,8 @@ export default function CaseStudies() {
 			if (cancelled) return;
 			effect = new ImagePlaneEffect(sticky, {
 				selector: 'img',
+				// Horizontal displacement — matches the carousel's sideways motion.
+				dir: [1, 0],
 				// WP media is cross-origin and would taint the WebGL texture. Route it
 				// through Next's same-origin image optimizer so the texture is clean.
 				textureSrc: (img) =>
