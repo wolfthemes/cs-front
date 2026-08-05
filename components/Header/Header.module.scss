@@ -1,4 +1,5 @@
 @import 'styles/breakpoints';
+@import 'styles/tokens';
 
 .component {
 	color: var(--wpe--header--color);
@@ -25,7 +26,7 @@
 	position: relative;
 	font-family: var(--font-geist-mono), source-code-pro, Menlo, monospace;
 	font-size: 1rem;
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
 	letter-spacing: -0.01em;
 	text-transform: lowercase;
 	text-decoration: none;
@@ -35,7 +36,7 @@
 	// just the name.
 	&::before {
 		content: '~/';
-		color: var(--wpe--color--accent);
+		color: $c-accent;
 		margin-right: 0.1rem;
 	}
 }
@@ -43,8 +44,8 @@
 .nav-toggle {
 	align-items: center;
 	background-color: transparent;
-	border: 0.1rem solid var(--wpe--color--white);
-	color: var(--wpe--color--white);
+	border: 0.1rem solid $c-base;
+	color: $c-base;
 	cursor: pointer;
 	display: flex;
 	margin: 0;
@@ -55,8 +56,8 @@
 
 	&:hover,
 	&:focus {
-		background-color: var(--wpe--color--white);
-		color: var(--wpe--color--black);
+		background-color: $c-base;
+		color: $c-ink;
 	}
 
 	@media (min-width: $breakpoint-small) {

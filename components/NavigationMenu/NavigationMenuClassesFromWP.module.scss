@@ -2,6 +2,7 @@
 // Appearance --> Menus --> Screen Options --> CSS Classes
 
 @import 'styles/breakpoints';
+@import 'styles/tokens';
 
 // The "Get It" CTA — add the `button` CSS class to the last menu item in
 // wp-admin (Appearance --> Menus --> CSS Classes). Rendered as a white pill.
@@ -11,17 +12,17 @@
 	}
 
 	a {
-		background-color: var(--wpe--color--white);
+		background-color: $c-base;
 		border-radius: 100px;
-		color: var(--wpe--color--black);
+		color: $c-ink;
 		padding: 0.45rem 1.1rem;
 		text-decoration: none;
 		white-space: nowrap;
 
 		&:hover,
 		&:focus {
-			background-color: var(--wpe--color--white);
-			color: var(--wpe--color--black);
+			background-color: $c-base;
+			color: $c-ink;
 			opacity: 0.85;
 		}
 	}

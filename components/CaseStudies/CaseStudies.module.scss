@@ -1,3 +1,5 @@
+@import 'styles/tokens';
+
 // Pinned horizontal case-study carousel. The tall .component gives vertical
 // scroll room; the .sticky child pins to the viewport for that duration while
 // JS translates .track sideways. When the last card is reached the section
@@ -32,10 +34,10 @@ $edge: clamp(1rem, 5vw, 5rem);
 .eyebrow {
 	margin: 0;
 	font-family: var(--font-geist-mono), monospace;
-	font-size: var(--wpe--font-size--sm);
+	font-size: fs(sm);
 	letter-spacing: 0.02em;
 	text-transform: lowercase;
-	color: var(--wpe--color--accent);
+	color: $c-accent;
 }
 
 .track {
@@ -94,7 +96,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 	padding: 1.5rem;
 	text-align: center;
 	font-size: clamp(1.25rem, 2vw, 1.75rem);
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
 	color: rgba(255, 255, 255, 0.6);
 }
 
@@ -109,14 +111,14 @@ $edge: clamp(1rem, 5vw, 5rem);
 .card-title {
 	margin: 0;
 	font-size: clamp(1.1rem, 1.6vw, 1.4rem);
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
 	letter-spacing: -0.01em;
-	color: var(--wpe--color--white);
+	color: $c-base;
 }
 
 .card-cta {
 	flex-shrink: 0;
-	font-size: var(--wpe--font-size--sm);
+	font-size: fs(sm);
 	color: rgba(255, 255, 255, 0.55);
 	opacity: 0;
 	transition: opacity 0.2s ease-out;
@@ -133,7 +135,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 
 .tag {
 	font-family: var(--font-geist-mono), monospace;
-	font-size: var(--wpe--font-size--sm);
+	font-size: fs(sm);
 	letter-spacing: 0.01em;
 	line-height: 1;
 	padding: 0.35em 0.6em;

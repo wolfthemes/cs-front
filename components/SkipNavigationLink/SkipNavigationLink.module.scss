@@ -1,7 +1,9 @@
+@import 'styles/tokens';
+
 // Skip link specific styles. Intentionally separate from this theme's sr-only class.
 .component {
-  color: var(--wpe--color--white);
-  background-color: var(--wpe--color--black);
+  color: $c-base;
+  background-color: $c-ink;
   padding: 0.5rem 0.8rem !important;
   position: relative;
   margin: 0.5rem !important;

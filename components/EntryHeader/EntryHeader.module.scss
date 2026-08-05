@@ -1,7 +1,8 @@
 @import 'styles/breakpoints';
+@import 'styles/tokens';
 
 .component {
-	color: var(--wpe--color--white);
+	color: $c-base;
 	position: relative;
 	overflow: hidden;
 	margin-bottom: 2rem;
@@ -12,7 +13,7 @@
 }
 
 .has-image {
-	--wpe--color--title: var(--wpe--color--white);
+	--wpe--color--title: $c-base;
 }
 
 .text,
@@ -40,7 +41,7 @@
 }
 
 .byline {
-	font-weight: var(--wpe--font-weight--medium);
+	font-weight: fw(medium);
 	font-size: 1.2rem;
 }
 

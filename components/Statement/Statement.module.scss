@@ -1,3 +1,5 @@
+@import 'styles/tokens';
+
 .component {
 	padding: 12rem 1rem;
 	margin: 0 auto;
@@ -8,10 +10,10 @@
 .eyebrow {
 	margin: 0 0 1.5rem;
 	font-family: var(--font-geist-mono), monospace;
-	font-size: var(--wpe--font-size--sm);
+	font-size: fs(sm);
 	letter-spacing: 0.02em;
 	text-transform: lowercase;
-	color: var(--wpe--color--accent);
+	color: $c-accent;
 }
 
 .headline {
@@ -22,8 +24,8 @@
 	font-size: clamp(2.25rem, 4.5vw, 3.75rem);
 	line-height: 1.18;
 	letter-spacing: -0.02em;
-	font-weight: var(--wpe--font-weight--medium);
-	color: var(--wpe--color--white);
+	font-weight: fw(medium);
+	color: $c-base;
 }
 
 // Keeps each word intact so letters never wrap mid-word.
@@ -55,13 +57,13 @@
 	font-size: clamp(1.25rem, 2vw, 1.75rem);
 	line-height: 1.35;
 	letter-spacing: -0.01em;
-	font-weight: var(--wpe--font-weight--medium);
-	color: var(--wpe--color--white);
+	font-weight: fw(medium);
+	color: $c-base;
 }
 
 .support {
 	margin: 0;
-	font-size: var(--wpe--font-size--base);
+	font-size: fs(base);
 	line-height: 1.6;
 	color: rgba(255, 255, 255, 0.5);
 }
