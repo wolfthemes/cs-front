@@ -95,11 +95,17 @@ export default function GrainOverlay({ intensity = 0.5, fps = 24 }) {
 				const interval = 1000 / fps;
 				let lastDraw = -Infinity;
 				const render = (t) => {
+					if (cancelled) return;
 					if (!reduce) raf = requestAnimationFrame(render);
 					if (document.hidden || t - lastDraw < interval) return;
 					lastDraw = t;
 					program.uniforms.uTime.value = t * 0.001;
-					renderer.render({ scene: mesh });
+					try {
+						renderer.render({ scene: mesh });
+					} catch {
+						// Lost WebGL context (e.g. after an HMR reload) — stop quietly.
+						cancelled = true;
+					}
 				};
 				render(0);
 			})
@@ -111,10 +117,9 @@ export default function GrainOverlay({ intensity = 0.5, fps = 24 }) {
 			cancelled = true;
 			if (raf) cancelAnimationFrame(raf);
 			if (onResize) window.removeEventListener('resize', onResize);
-			if (renderer) {
-				const ext = renderer.gl.getExtension('WEBGL_lose_context');
-				if (ext) ext.loseContext();
-			}
+			// Note: we deliberately do NOT call WEBGL_lose_context here. This canvas
+			// is the JSX-rendered element (reused across HMR/remounts); losing its
+			// context would poison the next renderer built on it.
 		};
 	}, [intensity, fps]);
 
