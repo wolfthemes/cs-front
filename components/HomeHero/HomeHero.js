@@ -2,19 +2,19 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 // import HeroCircle from './HeroCircle'; // ellipse disabled for now
-import { ShuffleText, SplitLines } from '../../components';
+import { ShuffleText } from '../../components';
 
 let cx = className.bind(styles);
 
-// One flowing paragraph. SplitLines measures its real wrapped lines so each one
-// can animate in, instead of hardcoding the breaks.
-const INTRO =
-	"Founder of WolfThemes, I've been building commercial WordPress products used by " +
-	'more than 36,000 customers worldwide. Today, I focus on engineering modern, scalable ' +
-	'web applications designed for performance and longevity.';
+const INTRO_LINES = [
+	"Founder of WolfThemes, I've been building commercial",
+	'WordPress products used by more than 36,000 customers worldwide.',
+	'Today, I focus on engineering modern, scalable web',
+	'applications designed for performance and longevity.',
+];
 
-// Words carry the class of any styled term so they measure at their real width
-// (WolfThemes/WordPress use accent fonts; "engineering" the pixel font).
+// Words carry the class of any styled term (WolfThemes/WordPress use accent
+// fonts; "engineering" the pixel font).
 const wordClass = (word) => {
 	if (word.includes('WordPress')) return 'wordpress';
 	if (word.includes('WolfThemes')) return 'wolfthemes';
@@ -117,16 +117,14 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 export default function HomeHero() {
 	const statsRef = useRef(null);
 	const [statsDone, setStatsDone] = useState(false);
-	const introWords = useMemo(
+	const introLines = useMemo(
 		() =>
-			INTRO.split(/\s+/).map((text) => {
-				const classKey = wordClass(text);
-				return {
+			INTRO_LINES.map((line) =>
+				line.split(/\s+/).map((text) => ({
 					text,
-					classKey,
-					className: classKey ? cx(classKey) : undefined,
-				};
-			}),
+					classKey: wordClass(text),
+				}))
+			),
 		[]
 	);
 
@@ -192,13 +190,19 @@ export default function HomeHero() {
 			<div className={cx('bottom')}>
 				<div className={cx('bottom-left')}>
 					<p className={cx('intro')}>
-						<SplitLines
-							words={introWords}
-							renderWord={renderIntroWord}
-							lineClassName={cx('line')}
-							baseDelay={LINE_BASE_DELAY}
-							stagger={LINE_STAGGER}
-						/>
+						{introLines.map((line, li) => (
+							<span
+								key={li}
+								className={cx('line')}
+								style={{ animationDelay: `${LINE_BASE_DELAY + li * LINE_STAGGER}s` }}
+							>
+								{line.map((word, wi) => (
+									<React.Fragment key={`${li}-${wi}`}>
+										{renderIntroWord(word)}{' '}
+									</React.Fragment>
+								))}
+							</span>
+						))}
 					</p>
 
 					<div className={cx('cta')}>

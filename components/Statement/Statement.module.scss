@@ -25,26 +25,12 @@
 	margin: 0;
 	max-width: 35ch;
 
-	// Display line — the reveal happens per letter.
+	// Display line. The reveal happens per measured line.
 	font-size: clamp(2.25rem, 4.5vw, 3.75rem);
 	line-height: 1.18;
 	letter-spacing: -0.02em;
 	font-weight: fw(medium);
 	color: $c-base;
-}
-
-// Keeps each word intact so letters never wrap mid-word.
-.word {
-	display: inline-block;
-}
-
-.char {
-	display: inline-block;
-
-	// Scroll-driven reveal writes opacity/filter/transform here; hint the
-	// compositor so blur + skew stay smooth.
-	will-change: opacity, filter, transform;
-	transform-origin: left bottom;
 }
 
 .body {
@@ -73,8 +59,8 @@
 	color: rgba(255, 255, 255, 0.5);
 }
 
-// Line-by-line slide-up reveal for the two body paragraphs. Each measured line
-// is its own block; the inner span starts lifted + faded and settles in.
+// Line-by-line slide-up reveal. Each measured line is its own block; the inner
+// span starts lifted + faded and settles in.
 .reveal-line {
 	display: block;
 	overflow: hidden;
