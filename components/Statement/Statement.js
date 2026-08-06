@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Statement.module.scss';
 import { Signature } from '../../components';
+import { onScrollFrame } from '../../lib/scroll';
 
 let cx = className.bind(styles);
 
@@ -14,7 +15,7 @@ const LEAD =
 	'I build robust WordPress products that solve real business needs and deliver lasting value. My work goes beyond clean interfaces — it combines thoughtful engineering, performance, and usability to create websites people enjoy using.';
 
 const SUPPORT =
-	'I started in the 00\'s by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.';
+	'I started in the late 00\'s by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.';
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -31,7 +32,6 @@ const LINE_STAGGER = 0.11; // seconds between each line's slide-up
 function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 	const ref = useRef(null);
 	const [lines, setLines] = useState(null);
-	const [visible, setVisible] = useState(false);
 
 	// Measure the wrapped lines by laying the words out in a hidden clone that
 	// matches the paragraph's rendered width, then grouping words by their top.
@@ -41,7 +41,7 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 
 		if (prefersReducedMotion()) {
 			setLines([text]);
-			setVisible(true);
+			el.classList.add(styles['is-visible']);
 			onMeasured?.(1);
 			return undefined;
 		}
@@ -116,12 +116,12 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 	// Reveal once the paragraph enters the viewport.
 	useEffect(() => {
 		const el = ref.current;
-		if (!el || visible) return undefined;
+		if (!el) return undefined;
 
 		const observer = new IntersectionObserver(
 			([entry], obs) => {
 				if (entry.isIntersecting) {
-					setVisible(true);
+					el.classList.add(styles['is-visible']);
 					obs.disconnect();
 				}
 			},
@@ -131,10 +131,10 @@ function RevealParagraph({ text, className: cls, startIndex = 0, onMeasured }) {
 		);
 		observer.observe(el);
 		return () => observer.disconnect();
-	}, [visible]);
+	}, []);
 
 	return (
-		<p ref={ref} className={cx(cls, { 'is-visible': visible })}>
+		<p ref={ref} className={cx(cls)}>
 			{lines
 				? lines.map((line, i) => (
 						<span className={cx('reveal-line')} key={i}>
@@ -159,7 +159,7 @@ const easeExpoOut = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
 // Catch-up factor for the smoothed scrub. Lower = more lag / smoother; this
 // approximates GSAP's `scrub: 1.2` (the animation eases toward the scroll
 // position instead of tracking it frame-for-frame).
-const SCRUB_SMOOTH = 0.085;
+const SCRUB_SMOOTH = 0.16;
 
 // Fraction of the sweep that is mid-transition at once. Wider than a single
 // character, so the reveal edge is a soft gradient across several letters
@@ -171,6 +171,9 @@ export default function Statement() {
 	const charsRef = useRef([]);
 	// Line count of the first paragraph, so the second continues the cascade.
 	const [leadLineCount, setLeadLineCount] = useState(0);
+	const handleLeadMeasured = (count) => {
+		setLeadLineCount((current) => (current === count ? current : count));
+	};
 
 	useEffect(() => {
 		const chars = charsRef.current.filter(Boolean);
@@ -185,9 +188,9 @@ export default function Statement() {
 			return undefined;
 		}
 
-		let rafId = null;
 		let current = 0; // smoothed progress (lags behind the scroll target)
 		let painted = -1;
+		let active = false;
 
 		const paint = (progress) => {
 			const total = chars.length;
@@ -204,19 +207,23 @@ export default function Statement() {
 				const inv = 1 - p;
 				// Soft ghost → sharp: gentler blur / skew / lift than the word version.
 				chars[i].style.opacity = (0.22 + 0.78 * p).toFixed(3);
-				chars[i].style.filter = `blur(${(inv * 4).toFixed(2)}px)`;
+				chars[i].style.filter = `blur(${(inv * 2.5).toFixed(2)}px)`;
 				chars[i].style.transform = `translateY(${(inv * 0.18).toFixed(
 					3
 				)}em) skewY(${(inv * 2).toFixed(2)}deg)`;
 			}
 		};
+		paint(0);
+		painted = 0;
 
 		// Continuous rAF loop (same approach as GalleryBanner): the reveal is bound
 		// to the live scroll position every frame — a true scrub that runs forward
 		// and backward with the scrollbar — not a one-shot trigger on visibility.
 		// `current` eases toward the scroll target for a smooth, GSAP-scrub feel,
 		// and it stays in sync with Lenis smooth scrolling.
-		const frame = () => {
+		const unsubscribe = onScrollFrame(() => {
+			if (!active) return;
+
 			const el = headlineRef.current;
 			if (el) {
 				const rect = el.getBoundingClientRect();
@@ -237,13 +244,27 @@ export default function Statement() {
 					painted = current;
 				}
 			}
-			rafId = requestAnimationFrame(frame);
-		};
+		});
 
-		rafId = requestAnimationFrame(frame);
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				active = entry.isIntersecting;
+				if (!active) {
+					current = entry.boundingClientRect.top < 0 ? 1 : 0;
+					paint(current);
+					painted = current;
+				}
+			},
+			// Keep the scrub live while the headline is approaching / leaving the
+			// viewport, but stop the per-character writes once the paragraph block is
+			// the only thing animating.
+			{ threshold: 0, rootMargin: '20% 0px 20% 0px' }
+		);
+		observer.observe(headlineRef.current);
 
 		return () => {
-			if (rafId !== null) cancelAnimationFrame(rafId);
+			observer.disconnect();
+			unsubscribe();
 		};
 	}, []);
 
@@ -281,7 +302,7 @@ export default function Statement() {
 			</h2>
 
 			<div className={cx('body')}>
-				<RevealParagraph text={LEAD} className="lead" onMeasured={setLeadLineCount} />
+				<RevealParagraph text={LEAD} className="lead" onMeasured={handleLeadMeasured} />
 				<RevealParagraph text={SUPPORT} className="support" startIndex={leadLineCount} />
 			</div>
 

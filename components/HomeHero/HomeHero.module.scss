@@ -1,11 +1,33 @@
 @import 'styles/tokens';
 
 .component {
-	padding: 6rem 1rem 6rem;
+	display: flex;
+	flex-direction: column;
+
+	// Heading pinned to the top, the .bottom row pushed to the bottom.
+	justify-content: space-between;
+	gap: clamp(3rem, 8vh, 7rem);
+	padding: 0 1rem 2rem;
 	margin: 0 auto;
 	max-width: var(--wpe--container--max-width);
-	min-height: calc(90vh - 90px);
+	min-height: calc(100vh - 90px);
 	text-align: left;
+}
+
+// Bottom band: subheading + CTA on the left, stats on the right.
+.bottom {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: clamp(2rem, 4vw, 4rem);
+}
+
+.bottom-left {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(1.5rem, 3vw, 2.25rem);
+	flex: 1 1 68rem;
+	max-width: min(68rem, 100%);
 }
 
 .title {
@@ -65,9 +87,10 @@
 		#000 var(--circle-sweep),
 		transparent var(--circle-sweep)
 	);
+
+	/* stylelint-disable-next-line property-no-vendor-prefix */
 	-webkit-mask: $mask;
 	mask: $mask;
-
 	animation: draw-circle 0.8s cubic-bezier(0.65, 0, 0.35, 1) both;
 
 	// Begin just after the title has faded in (title delay 0.1s + ~0.7s).
@@ -85,27 +108,31 @@
 }
 
 .intro {
-	margin: 1.5rem 0 0;
+	margin: 0;
 	font-size: clamp(1.25rem, 2.05vw, 1.85rem);
-	line-height: 1.35;
+	line-height: 1.42;
 	letter-spacing: -0.01em;
 	font-weight: fw(medium);
 	color: rgba(255, 255, 255, 0.7);
 }
 
 .wordpress {
+	display: inline-block;
 	font-family: var(--font-eb-garamond), serif;
 	font-weight: 400;
-	font-size: 1.2em;
-	line-height: 0.2;
+	font-size: 1.08em;
+	line-height: 1;
+	vertical-align: -0.02em;
 	color: $c-base;
 }
 
 .wolfthemes {
+	display: inline-block;
 	font-family: Sickamore, var(--font-eb-garamond), serif;
 	font-weight: 400;
-	font-size: 1.2em;
-	line-height: 0.2;
+	font-size: 1.08em;
+	line-height: 1;
+	vertical-align: -0.06em;
 	color: $c-base;
 }
 
@@ -117,15 +144,21 @@
 
 .line {
 	display: block;
+	padding-block: 0.06em;
+	margin-block: -0.06em;
+	overflow: visible;
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+// Bottom-right: the three stats stacked and right-aligned.
 .stats {
+	flex-shrink: 0;
 	display: flex;
-	flex-wrap: wrap;
-	gap: 2.5rem 3.5rem;
-	margin-top: 3rem;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: clamp(1rem, 2vw, 1.5rem);
+	text-align: right;
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 
@@ -160,7 +193,7 @@
 
 .stat-suffix {
 	// color: var(--wpe--color--accent);
-    opacity: 0.5;
+	opacity: 0.5;
 }
 
 .stat-label {
@@ -170,7 +203,7 @@
 }
 
 .cta {
-	margin-top: 3rem;
+	// Spacing handled by .bottom-left's gap.
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 
@@ -220,6 +253,21 @@
 	}
 }
 
+// Narrow screens: stack the bottom band and left-align the stats under the
+// subheading + CTA instead of splitting left/right.
+@media (width <= 48rem) {
+	.bottom {
+		flex-direction: column;
+		align-items: stretch;
+		gap: clamp(2.5rem, 8vw, 3.5rem);
+	}
+
+	.stats {
+		align-items: flex-start;
+		text-align: left;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.title,
 	.line,
@@ -234,7 +282,8 @@
 	}
 
 	.circle {
-		animation: none;
 		--circle-sweep: 360deg;
+
+		animation: none;
 	}
 }

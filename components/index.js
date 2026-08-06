@@ -3,6 +3,7 @@ export { CaseStudies } from './CaseStudies';
 export { Contact } from './Contact';
 export { Container } from './Container';
 export { ShuffleText } from './ShuffleText';
+export { SplitLines } from './SplitLines';
 export { ContentWrapper } from './ContentWrapper';
 export { EntryHeader } from './EntryHeader';
 export { FeaturedImage } from './FeaturedImage';

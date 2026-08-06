@@ -1,3 +1,4 @@
+import '../faust.config';
 import { WordPressTemplate } from '@faustwp/core';
 
 export default function Preview(props) {

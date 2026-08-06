@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import * as MENUS from '../constants/menus';
 import { BlogInfoFragment } from '../fragments/GeneralSettings';
+import { scrollTo } from '../lib/scroll';
 import {
 	Header,
 	Footer,
@@ -35,7 +36,7 @@ export default function Component() {
 		let raf = 0;
 		const snap = () => {
 			const el = document.getElementById(id);
-			if (el) el.scrollIntoView({ block: 'start' });
+			if (el) scrollTo(el, { immediate: true });
 		};
 
 		snap();

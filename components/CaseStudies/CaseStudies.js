@@ -3,6 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 import Link from 'next/link';
 import className from 'classnames/bind';
 import styles from './CaseStudies.module.scss';
+import { onScrollFrame } from '../../lib/scroll';
 
 let cx = className.bind(styles);
 
@@ -107,7 +108,6 @@ export default function CaseStudies() {
 		if (prefersReducedMotion()) return undefined;
 
 		const cards = Array.from(track.children);
-		let raf = 0;
 		let maxX = 0;
 		let currentX = 0;
 
@@ -153,16 +153,14 @@ export default function CaseStudies() {
 					img.style.transform = `translate3d(${clamp(-rel, -1, 1) * PARALLAX}px, 0, 0) scale(1.14)`;
 				});
 			}
-
-			raf = requestAnimationFrame(tick);
 		};
 
 		layout();
 		window.addEventListener('resize', layout);
-		raf = requestAnimationFrame(tick);
+		const unsubscribe = onScrollFrame(tick);
 
 		return () => {
-			cancelAnimationFrame(raf);
+			unsubscribe();
 			window.removeEventListener('resize', layout);
 			section.style.height = '';
 			track.style.transform = '';

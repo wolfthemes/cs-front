@@ -1,0 +1,12 @@
+// Zero-height, clipped measuring layer. It lays the words out at the real column
+// width (so line breaks match the visible copy) but takes no space and never
+// paints. Kept in the flow (not absolutely positioned) so its width is the
+// parent's content width.
+.measure {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	pointer-events: none;
+	user-select: none;
+}

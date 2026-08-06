@@ -1,5 +1,5 @@
 import '../faust.config';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -9,6 +9,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistPixelSquare, GeistPixelGrid, GeistPixelCircle } from 'geist/font/pixel';
 import { EB_Garamond } from 'next/font/google';
 import { GrainOverlay } from '../components';
+import { initSmoothScroll, resizeSmoothScroll } from '../lib/scroll';
 import '@faustwp/core/dist/css/toolbar.css';
 import '../styles/global.scss';
 
@@ -43,6 +44,14 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export default function MyApp({ Component, pageProps }) {
 	const router = useRouter();
+
+	useEffect(() => {
+		initSmoothScroll();
+	}, []);
+
+	useEffect(() => {
+		resizeSmoothScroll();
+	}, [router.asPath]);
 
 	return (
 		<FaustProvider pageProps={pageProps}>

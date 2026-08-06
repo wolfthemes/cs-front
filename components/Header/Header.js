@@ -2,6 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { Container, NavigationMenu, SkipNavigationLink } from '../../components';
+import { getScrollY, scrollTo } from '../../lib/scroll';
 import styles from './Header.module.scss';
 
 let cx = classNames.bind(styles);
@@ -33,12 +34,11 @@ function sectionIdFor(path) {
 
 // Absolute page Y that lands a section at its resting position, honouring the
 // target's scroll-margin-top (the about section pulls itself down with a
-// negative margin). rect.top + scrollY is the element's document top, so this is
-// stable regardless of the current scroll position — and re-reading it each
-// frame absorbs any late reflow.
+// negative margin). rect.top + shared scrollY is the element's document top, so
+// this is stable regardless of the current scroll position.
 function restingScrollY(target) {
 	const margin = parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
-	return window.scrollY + target.getBoundingClientRect().top - margin;
+	return getScrollY() + target.getBoundingClientRect().top - margin;
 }
 
 // Smooth-scroll to a section and land exactly on its resting position. The
@@ -54,48 +54,17 @@ function scrollToSection(target) {
 		return;
 	}
 
+	const targetY = Math.round(restingScrollY(target));
+
 	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		window.scrollTo(0, Math.round(restingScrollY(target)));
+		scrollTo(targetY, { immediate: true });
 		return;
 	}
 
-	let aborted = false;
-
-	const abort = () => {
-		aborted = true;
-	};
-	const cleanup = () => {
-		window.removeEventListener('wheel', abort);
-		window.removeEventListener('touchmove', abort);
-		window.removeEventListener('keydown', abort);
-	};
-
-	window.addEventListener('wheel', abort, { passive: true });
-	window.addEventListener('touchmove', abort, { passive: true });
-	window.addEventListener('keydown', abort);
-
-	const DURATION = 600; // ms
-	const startY = window.scrollY;
-	const startTime = performance.now();
-	const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-	const step = (now) => {
-		if (aborted) {
-			cleanup();
-			return;
-		}
-		const t = Math.min((now - startTime) / DURATION, 1);
-		const targetY = restingScrollY(target);
-		if (t < 1) {
-			window.scrollTo(0, startY + (targetY - startY) * easeOutCubic(t));
-			requestAnimationFrame(step);
-		} else {
-			window.scrollTo(0, Math.round(targetY));
-			cleanup();
-		}
-	};
-
-	requestAnimationFrame(step);
+	scrollTo(targetY, {
+		duration: 1.1,
+		easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+	});
 }
 
 export default function Header({ title = 'Headless by WP Engine', menuItems }) {

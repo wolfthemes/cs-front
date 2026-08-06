@@ -1,23 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 // import HeroCircle from './HeroCircle'; // ellipse disabled for now
-import { ShuffleText } from '../../components';
+import { ShuffleText, SplitLines } from '../../components';
 
 let cx = className.bind(styles);
 
-// Explicit line breaks so the copy animates line by line (each is its own
-// block with a staggered fade-in-up).
-const LINES = [
-	"Founder of WolfThemes, I've been building commercial WordPress",
-	'products used by more than 36,000 customers worldwide.',
-	'Today, I focus on engineering modern, scalable web',
-	'applications designed for performance and longevity for',
-	'creators, small businesses, and enterprises.',
-];
+// One flowing paragraph. SplitLines measures its real wrapped lines so each one
+// can animate in, instead of hardcoding the breaks.
+const INTRO =
+	"Founder of WolfThemes, I've been building commercial WordPress products used by " +
+	'more than 36,000 customers worldwide. Today, I focus on engineering modern, scalable ' +
+	'web applications designed for performance and longevity.';
 
-const LINE_BASE_DELAY = 0.45; // seconds — start after the main heading
-const LINE_STAGGER = 0.15; // seconds between lines
+// Words carry the class of any styled term so they measure at their real width
+// (WolfThemes/WordPress use accent fonts; "engineering" the pixel font).
+const wordClass = (word) => {
+	if (word.includes('WordPress')) return 'wordpress';
+	if (word.includes('WolfThemes')) return 'wolfthemes';
+	if (word === 'engineering') return 'engineering';
+	return undefined;
+};
+
+const LINE_BASE_DELAY = 0.45; // seconds; start after the main heading
+const LINE_STAGGER = 0.12; // seconds between lines
 
 // Stats counted up below the statement. `value` is the target the counter
 // animates to; `decimals` keeps the display stable (e.g. 4.5), `suffix` is the
@@ -29,7 +35,7 @@ const STATS = [
 ];
 
 const COUNT_DURATION = 1400; // ms
-const COUNT_START_DELAY = 700; // ms — let the statement settle first
+const COUNT_START_DELAY = 700; // ms; let the statement settle first
 const SHUFFLE_AFTER_STATS = 150; // ms gap after the counters land before the shuffle
 
 const prefersReducedMotion = () =>
@@ -37,7 +43,7 @@ const prefersReducedMotion = () =>
 	window.matchMedia &&
 	window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// easeOutCubic — fast start, gentle landing.
+// easeOutCubic: fast start, gentle landing.
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
 // Count a single number from 0 to `value` once the row scrolls into view.
@@ -108,39 +114,37 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 	);
 }
 
-// Render a line, styling key words: "WordPress" in EB Garamond (`.wordpress`),
-// "WolfThemes" in the self-hosted Sickamore font (`.wolfthemes`), and
-// "engineering" in Geist Pixel (`.engineering`).
-function renderLine(line, playShuffle) {
-	return line.split(/(WordPress|WolfThemes|engineering)/).map((part, i) => {
-		if (part === 'WordPress') {
-			return (
-				<span key={i} className={cx('wordpress')}>
-					{part}
-				</span>
-			);
-		}
-		if (part === 'WolfThemes') {
-			return (
-				<span key={i} className={cx('wolfthemes')}>
-					{part}
-				</span>
-			);
-		}
-		if (part === 'engineering') {
-			return (
-				<span key={i} className={cx('engineering')}>
-					<ShuffleText text={part} play={playShuffle} />
-				</span>
-			);
-		}
-		return part;
-	});
-}
-
 export default function HomeHero() {
 	const statsRef = useRef(null);
 	const [statsDone, setStatsDone] = useState(false);
+	const introWords = useMemo(
+		() =>
+			INTRO.split(/\s+/).map((text) => {
+				const classKey = wordClass(text);
+				return {
+					text,
+					classKey,
+					className: classKey ? cx(classKey) : undefined,
+				};
+			}),
+		[]
+	);
+
+	const renderIntroWord = (word) => {
+		if (word.classKey === 'engineering') {
+			return (
+				<span className={cx('engineering')}>
+					<ShuffleText text={word.text} play={statsDone} />
+				</span>
+			);
+		}
+
+		if (word.classKey) {
+			return <span className={cx(word.classKey)}>{word.text}</span>;
+		}
+
+		return word.text;
+	};
 
 	// Hold the hero "engineering" shuffle until the stat counters have finished.
 	// Mirror the counters' own trigger (the stats row entering view) and their
@@ -185,46 +189,46 @@ export default function HomeHero() {
 				</span>{' '}
 				Engineer
 			</h1>
-			<p className={cx('intro')}>
-				{LINES.map((line, i) => (
-					<span
-						key={i}
-						className={cx('line')}
-						style={{
-							animationDelay: `${LINE_BASE_DELAY + i * LINE_STAGGER}s`,
-						}}
-					>
-						{renderLine(line, statsDone)}
-					</span>
-				))}
-			</p>
-
-			<div className={cx('stats')} ref={statsRef}>
-				{STATS.map((stat) => (
-					<Stat key={stat.label} {...stat} rowRef={statsRef} />
-				))}
-			</div>
-
-			<div className={cx('cta')}>
-				<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
-					<span className={cx('cta-label')}>Let&apos;s connect</span>
-					<svg
-						className={cx('cta-arrow')}
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="none"
-						aria-hidden="true"
-					>
-						<path
-							d="M3.5 8h9M8.5 4l4 4-4 4"
-							stroke="currentColor"
-							strokeWidth="1.5"
-							strokeLinecap="round"
-							strokeLinejoin="round"
+			<div className={cx('bottom')}>
+				<div className={cx('bottom-left')}>
+					<p className={cx('intro')}>
+						<SplitLines
+							words={introWords}
+							renderWord={renderIntroWord}
+							lineClassName={cx('line')}
+							baseDelay={LINE_BASE_DELAY}
+							stagger={LINE_STAGGER}
 						/>
-					</svg>
-				</a>
+					</p>
+
+					<div className={cx('cta')}>
+						<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
+							<span className={cx('cta-label')}>Let&apos;s connect</span>
+							<svg
+								className={cx('cta-arrow')}
+								width="16"
+								height="16"
+								viewBox="0 0 16 16"
+								fill="none"
+								aria-hidden="true"
+							>
+								<path
+									d="M3.5 8h9M8.5 4l4 4-4 4"
+									stroke="currentColor"
+									strokeWidth="1.5"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								/>
+							</svg>
+						</a>
+					</div>
+				</div>
+
+				<div className={cx('stats')} ref={statsRef}>
+					{STATS.map((stat) => (
+						<Stat key={stat.label} {...stat} rowRef={statsRef} />
+					))}
+				</div>
 			</div>
 		</section>
 	);

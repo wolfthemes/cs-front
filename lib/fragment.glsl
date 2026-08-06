@@ -36,13 +36,12 @@ void main() {
   // when not scrolling, so the hover (circle-gated) behaviour is unchanged.
   float s = uScrollVelo;
 
-  // Displace along uDir only (horizontal or vertical), so the RGB split follows
-  // the section's motion axis instead of smearing diagonally.
-  float r = texture2D(tMap, newUV += (c * (uVelo * .9) + s * .9) * uDir).x;
-	float g = texture2D(tMap, newUV += (c * (uVelo * .925) + s * .925) * uDir).y;
-	float b = texture2D(tMap, newUV += (c * (uVelo * .95) + s * .95) * uDir).z;
-
-  vec4 newColor = vec4(r, g, b, 1.);
+  // Displace along uDir only (horizontal or vertical), so the warp follows the
+  // section's motion axis instead of smearing diagonally. Sampling all three
+  // channels at the SAME displaced UV keeps the liquid velocity distortion but
+  // drops the RGB channel split (chromatic aberration).
+  newUV += (c * uVelo + s) * uDir;
+  vec4 newColor = vec4(texture2D(tMap, newUV).rgb, 1.);
 
   newUV.y *= random(vec2(newUV.y, uAmount));
   newColor.rgb += random(newUV) * uGrain;
