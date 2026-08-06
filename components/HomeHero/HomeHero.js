@@ -103,7 +103,7 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 				    (e.g. 0 -> 14) can't shift the suffix during the count-up. */}
 				<span
 					className={cx('stat-num')}
-					style={{ minWidth: `${value.toFixed(decimals).length}ch` }}
+					style={{ '--stat-num-width': `${value.toFixed(decimals).length}ch` }}
 				>
 					{display}
 				</span>

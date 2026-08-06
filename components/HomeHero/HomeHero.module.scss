@@ -185,9 +185,10 @@
 }
 
 .stat-num {
-	// Fixed width (set inline per stat) + right alignment so the number grows
+	// Fixed width (set as a CSS variable per stat) + right alignment so the number grows
 	// into reserved space instead of pushing the suffix as digits are added.
 	display: inline-block;
+	min-width: var(--stat-num-width);
 	text-align: right;
 }
 
@@ -256,15 +257,58 @@
 // Narrow screens: stack the bottom band and left-align the stats under the
 // subheading + CTA instead of splitting left/right.
 @media (width <= 48rem) {
+	.component {
+		justify-content: flex-start;
+		gap: clamp(2rem, 7vw, 3rem);
+		padding: clamp(1rem, 4vw, 1.5rem) 1rem 2.5rem;
+		min-height: auto;
+	}
+
+	.title {
+		font-size: clamp(3rem, 17vw, 5rem);
+	}
+
 	.bottom {
 		flex-direction: column;
 		align-items: stretch;
-		gap: clamp(2.5rem, 8vw, 3.5rem);
+		gap: clamp(1.75rem, 7vw, 2.5rem);
+	}
+
+	.bottom-left {
+		flex-basis: auto;
+		gap: clamp(1.25rem, 6vw, 2rem);
+		max-width: 100%;
+	}
+
+	.intro {
+		font-size: clamp(1.25rem, 7.3vw, 2rem);
+		line-height: 1.28;
 	}
 
 	.stats {
-		align-items: flex-start;
+		align-items: stretch;
+		gap: 0.75rem;
 		text-align: left;
+	}
+
+	.stat {
+		display: grid;
+		grid-template-columns: 6.25rem minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: baseline;
+	}
+
+	.stat-value {
+		text-align: left;
+	}
+
+	.stat-num {
+		min-width: 0;
+		text-align: left;
+	}
+
+	.stat-label {
+		min-width: 0;
 	}
 }
 
