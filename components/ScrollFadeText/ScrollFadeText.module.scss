@@ -1,0 +1,17 @@
+// Each word is an inline-block so it never breaks across a line mid-word; the
+// spaces between words are plain text nodes, so the copy wraps like normal.
+.word {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.char {
+	display: inline-block;
+	will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.char {
+		opacity: 1 !important;
+	}
+}

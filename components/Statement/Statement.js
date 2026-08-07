@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Statement.module.scss';
-import { Signature } from '../../components';
+import { ScrollFadeText, Signature } from '../../components';
 
 let cx = className.bind(styles);
 
@@ -153,7 +153,8 @@ function RevealParagraph({ as: Tag = 'p', text, className: cls, startIndex = 0, 
 }
 
 export default function Statement() {
-	// Line count of the first paragraph, so the second continues the cascade.
+	// Line count of the lead paragraph, so the support paragraph continues the
+	// cascade of the line-reveal below the headline.
 	const [leadLineCount, setLeadLineCount] = useState(0);
 	const handleLeadMeasured = (count) => {
 		setLeadLineCount((current) => (current === count ? current : count));
@@ -162,7 +163,8 @@ export default function Statement() {
 	return (
 		<section id="about" className={cx('component')}>
 			<p className={cx('eyebrow')}>~/about</p>
-			<RevealParagraph as="h2" text={HEADLINE} className="headline" />
+			{/* Headline: letters light up one by one as it scrolls through view. */}
+			<ScrollFadeText as="h2" text={HEADLINE} className={cx('headline')} />
 
 			<div className={cx('body')}>
 				<RevealParagraph text={LEAD} className="lead" onMeasured={handleLeadMeasured} />

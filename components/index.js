@@ -2,6 +2,7 @@ export { BrandIcon } from './BrandIcon';
 export { CaseStudies } from './CaseStudies';
 export { Contact } from './Contact';
 export { Container } from './Container';
+export { ScrollFadeText } from './ScrollFadeText';
 export { ShuffleText } from './ShuffleText';
 export { SplitLines } from './SplitLines';
 export { ContentWrapper } from './ContentWrapper';
