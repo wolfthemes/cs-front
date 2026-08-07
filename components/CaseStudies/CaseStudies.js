@@ -60,10 +60,7 @@ function Card({ work }) {
 					<span className={cx('card-cta')}>{ctaLabel} →</span>
 				</div>
 				{work.excerpt && (
-					<div
-						className={cx('card-excerpt')}
-						dangerouslySetInnerHTML={{ __html: work.excerpt }}
-					/>
+					<div className={cx('card-excerpt')} dangerouslySetInnerHTML={{ __html: work.excerpt }} />
 				)}
 				{work.workSkills?.nodes?.length > 0 && (
 					<ul className={cx('tags')} aria-label="Tech used">
@@ -110,6 +107,10 @@ export default function CaseStudies() {
 		const cards = Array.from(track.children);
 		let maxX = 0;
 		let currentX = 0;
+		// Card geometry cached once per layout so the per-frame parallax can place
+		// each image from `currentX` instead of calling getBoundingClientRect()
+		// (which, read after the track transform write, forces a reflow per card).
+		let cardMetrics = [];
 
 		// Vertical scroll room through the pinned section equals the horizontal
 		// overflow of the track, so 1px of page scroll ≈ 1px of sideways travel.
@@ -129,6 +130,15 @@ export default function CaseStudies() {
 			}
 			maxX = Math.max(contentRight - window.innerWidth, 0);
 			section.style.height = `${window.innerHeight + maxX}px`;
+
+			// Cache each card's centre relative to the track's own origin. On screen
+			// the track is translated by -currentX, so a card centre sits at
+			// (offsetLeft + width/2 - currentX) in viewport space — no per-frame
+			// measurement needed.
+			cardMetrics = cards.map((card) => ({
+				img: card.querySelector('img'),
+				center: card.offsetLeft + card.offsetWidth / 2,
+			}));
 		};
 
 		const tick = () => {
@@ -145,11 +155,11 @@ export default function CaseStudies() {
 			// is driving the images (it owns the motion then).
 			if (!glActiveRef.current) {
 				const vw = window.innerWidth;
-				cards.forEach((card) => {
-					const img = card.querySelector('img');
+				cardMetrics.forEach(({ img, center }) => {
 					if (!img) return;
-					const rect = card.getBoundingClientRect();
-					const rel = (rect.left + rect.width / 2 - vw / 2) / vw; // ~ -1..1
+					// Card centre in viewport space from cached geometry + this
+					// frame's currentX — no getBoundingClientRect, no forced reflow.
+					const rel = (center - currentX - vw / 2) / vw; // ~ -1..1
 					img.style.transform = `translate3d(${clamp(-rel, -1, 1) * PARALLAX}px, 0, 0) scale(1.14)`;
 				});
 			}

@@ -53,6 +53,7 @@ export default function VideoScrollBackground({
 
 		let duration = 0;
 		let current = 0; // eased currentTime actually applied (seconds)
+		let lastApplied = -1; // last value written to video.currentTime
 
 		// Scroll → [0, 1]. In fixed mode that's progress through the whole page;
 		// in section mode it's progress through this section's own scroll travel.
@@ -76,8 +77,13 @@ export default function VideoScrollBackground({
 			const target = readProgress() * duration;
 			current += (target - current) * SEEK_EASE;
 			if (Math.abs(target - current) < 0.01) current = target;
+			// The Lenis rAF never idles, so onFrame fires continuously; skip the
+			// seek when the eased frame hasn't moved to avoid kicking the media
+			// seek pipeline every frame while the user is stationary.
+			if (Math.abs(current - lastApplied) < 0.01) return;
 			try {
 				video.currentTime = current;
+				lastApplied = current;
 			} catch {
 				/* not seekable yet — catch it on the next frame */
 			}
@@ -121,7 +127,11 @@ export default function VideoScrollBackground({
 	// section of its own. GrainOverlay (max z-index) still composites over it.
 	if (fixed) {
 		return (
-			<div ref={sectionRef} className={cx('component', 'fixed', sectionClassName)} aria-hidden="true">
+			<div
+				ref={sectionRef}
+				className={cx('component', 'fixed', sectionClassName)}
+				aria-hidden="true"
+			>
 				{video}
 			</div>
 		);

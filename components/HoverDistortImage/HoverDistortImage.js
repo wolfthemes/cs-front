@@ -159,25 +159,48 @@ export default function HoverDistortImage({
 		});
 		ro.observe(wrap);
 
-		let raf;
-		const start = performance.now();
+		let raf = 0;
+		let visible = false;
+		const startTime = performance.now();
 		const render = (now) => {
 			const u = program.uniforms;
 			u.uHover.value = lerp(u.uHover.value, hoverTarget, 0.08);
 			u.uMouse.value[0] = lerp(u.uMouse.value[0], target.mx, 0.1);
 			u.uMouse.value[1] = lerp(u.uMouse.value[1], target.my, 0.1);
-			u.uVelocity.value = velocityRef
-				? lerp(u.uVelocity.value, velocityRef.current || 0, 0.1)
-				: 0;
-			u.uTime.value = (now - start) / 1000;
+			u.uVelocity.value = velocityRef ? lerp(u.uVelocity.value, velocityRef.current || 0, 0.1) : 0;
+			u.uTime.value = (now - startTime) / 1000;
 			renderer.render({ scene: mesh });
+
+			// Don't burn GPU when scrolled out of view or on a hidden tab; the
+			// observer / visibilitychange / pointerenter restart the loop.
+			if (!visible || document.hidden) {
+				raf = 0;
+				return;
+			}
 			raf = requestAnimationFrame(render);
 		};
-		raf = requestAnimationFrame(render);
+		const start = () => {
+			if (!raf && !disposed) raf = requestAnimationFrame(render);
+		};
+
+		const io = new IntersectionObserver(
+			(entries) => {
+				visible = entries[0].isIntersecting;
+				if (visible && !document.hidden) start();
+			},
+			{ rootMargin: '200px' }
+		);
+		io.observe(wrap);
+		const onVisibility = () => {
+			if (!document.hidden && visible) start();
+		};
+		document.addEventListener('visibilitychange', onVisibility);
 
 		return () => {
 			disposed = true;
-			cancelAnimationFrame(raf);
+			if (raf) cancelAnimationFrame(raf);
+			io.disconnect();
+			document.removeEventListener('visibilitychange', onVisibility);
 			ro.disconnect();
 			wrap.removeEventListener('pointermove', onMove);
 			wrap.removeEventListener('pointerenter', onEnter);

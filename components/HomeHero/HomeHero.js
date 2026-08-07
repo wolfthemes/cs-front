@@ -46,22 +46,20 @@ const prefersReducedMotion = () =>
 // easeOutCubic: fast start, gentle landing.
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
-// Count a single number from 0 to `value` once the row scrolls into view.
-function useCountUp(value, decimals, ref) {
+// Count a single number from 0 to `value` once `started` flips true (driven by a
+// single shared observer in HomeHero, so the three stats don't each watch the row).
+function useCountUp(value, decimals, started) {
 	const [display, setDisplay] = useState(0);
 
 	useEffect(() => {
-		const node = ref.current;
-		if (!node) return undefined;
-
 		if (prefersReducedMotion()) {
 			setDisplay(value);
 			return undefined;
 		}
+		if (!started) return undefined;
 
 		let rafId;
 		let startTs;
-		let delayTimer;
 
 		const step = (ts) => {
 			if (startTs === undefined) startTs = ts;
@@ -70,32 +68,21 @@ function useCountUp(value, decimals, ref) {
 			if (progress < 1) rafId = requestAnimationFrame(step);
 		};
 
-		const observer = new IntersectionObserver(
-			(entries, obs) => {
-				if (entries[0].isIntersecting) {
-					obs.disconnect();
-					delayTimer = setTimeout(() => {
-						rafId = requestAnimationFrame(step);
-					}, COUNT_START_DELAY);
-				}
-			},
-			{ threshold: 0.4 }
-		);
-
-		observer.observe(node);
+		const delayTimer = setTimeout(() => {
+			rafId = requestAnimationFrame(step);
+		}, COUNT_START_DELAY);
 
 		return () => {
-			observer.disconnect();
 			if (rafId) cancelAnimationFrame(rafId);
-			if (delayTimer) clearTimeout(delayTimer);
+			clearTimeout(delayTimer);
 		};
-	}, [value, decimals, ref]);
+	}, [value, started]);
 
 	return display.toFixed(decimals);
 }
 
-function Stat({ value, decimals, suffix, label, rowRef }) {
-	const display = useCountUp(value, decimals, rowRef);
+function Stat({ value, decimals, suffix, label, started }) {
+	const display = useCountUp(value, decimals, started);
 	return (
 		<div className={cx('stat')}>
 			<span className={cx('stat-value')}>
@@ -116,6 +103,9 @@ function Stat({ value, decimals, suffix, label, rowRef }) {
 
 export default function HomeHero() {
 	const statsRef = useRef(null);
+	// One observer for the whole stats row: `started` triggers all three counters,
+	// `statsDone` (below) gates the "engineering" shuffle after they land.
+	const [started, setStarted] = useState(false);
 	const [statsDone, setStatsDone] = useState(false);
 	const introLines = useMemo(
 		() =>
@@ -144,38 +134,47 @@ export default function HomeHero() {
 		return word.text;
 	};
 
-	// Hold the hero "engineering" shuffle until the stat counters have finished.
-	// Mirror the counters' own trigger (the stats row entering view) and their
-	// total run time, so the shuffle lands just after the numbers settle.
+	// Single shared observer: flip `started` once the stats row enters view. The
+	// three counters and the shuffle gate below both key off this one signal
+	// instead of each attaching their own observer to the same node.
 	useEffect(() => {
 		const node = statsRef.current;
 		if (!node) return undefined;
 
 		if (prefersReducedMotion()) {
-			setStatsDone(true);
+			setStarted(true);
 			return undefined;
 		}
 
-		let doneTimer;
 		const observer = new IntersectionObserver(
 			([entry], obs) => {
 				if (entry.isIntersecting) {
 					obs.disconnect();
-					doneTimer = setTimeout(
-						() => setStatsDone(true),
-						COUNT_START_DELAY + COUNT_DURATION + SHUFFLE_AFTER_STATS
-					);
+					setStarted(true);
 				}
 			},
 			{ threshold: 0.4 }
 		);
 		observer.observe(node);
-
-		return () => {
-			observer.disconnect();
-			if (doneTimer) clearTimeout(doneTimer);
-		};
+		return () => observer.disconnect();
 	}, []);
+
+	// Hold the hero "engineering" shuffle until the counters have finished: once
+	// `started` flips, wait their delay + run time so the shuffle lands just after
+	// the numbers settle. Reduced motion resolves immediately (no count-up).
+	useEffect(() => {
+		if (prefersReducedMotion()) {
+			setStatsDone(true);
+			return undefined;
+		}
+		if (!started) return undefined;
+
+		const doneTimer = setTimeout(
+			() => setStatsDone(true),
+			COUNT_START_DELAY + COUNT_DURATION + SHUFFLE_AFTER_STATS
+		);
+		return () => clearTimeout(doneTimer);
+	}, [started]);
 
 	return (
 		<section id="home" className={cx('component')}>
@@ -197,9 +196,7 @@ export default function HomeHero() {
 								style={{ animationDelay: `${LINE_BASE_DELAY + li * LINE_STAGGER}s` }}
 							>
 								{line.map((word, wi) => (
-									<React.Fragment key={`${li}-${wi}`}>
-										{renderIntroWord(word)}{' '}
-									</React.Fragment>
+									<React.Fragment key={`${li}-${wi}`}>{renderIntroWord(word)} </React.Fragment>
 								))}
 							</span>
 						))}
@@ -230,7 +227,7 @@ export default function HomeHero() {
 
 				<div className={cx('stats')} ref={statsRef}>
 					{STATS.map((stat) => (
-						<Stat key={stat.label} {...stat} rowRef={statsRef} />
+						<Stat key={stat.label} {...stat} started={started} />
 					))}
 				</div>
 			</div>

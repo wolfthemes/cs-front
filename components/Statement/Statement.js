@@ -14,7 +14,7 @@ const LEAD =
 	'I build robust WordPress products that solve real business needs and deliver lasting value. My work goes beyond clean interfaces — it combines thoughtful engineering, performance, and usability to create websites people enjoy using.';
 
 const SUPPORT =
-	'I started in the late 00\'s by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.';
+	"I started in the late 00's by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.";
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -28,13 +28,7 @@ const LINE_STAGGER = 0.11; // seconds between each line's slide-up
 // `startIndex` continues the stagger across paragraphs so the whole block reads
 // as one cascade; `onMeasured` reports the line count so the next paragraph can
 // pick up where this one left off.
-function RevealParagraph({
-	as: Tag = 'p',
-	text,
-	className: cls,
-	startIndex = 0,
-	onMeasured,
-}) {
+function RevealParagraph({ as: Tag = 'p', text, className: cls, startIndex = 0, onMeasured }) {
 	const ref = useRef(null);
 	const [lines, setLines] = useState(null);
 
@@ -55,10 +49,12 @@ function RevealParagraph({
 
 		const measure = () => {
 			if (cancelled || !el.parentNode) return;
-			const temp = document.createElement('p');
+			// Clone as the SAME tag the paragraph renders as (e.g. h2 for the
+			// headline) so element-selector typography (font-size, line-height,
+			// letter-spacing) matches and the words wrap at the real width.
+			const temp = document.createElement(Tag);
 			temp.className = el.className;
-			temp.style.cssText =
-				'position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;';
+			temp.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;';
 			temp.style.width = `${el.clientWidth}px`;
 			// Collapse runs of whitespace so a stray double space can't create an
 			// empty token (which would otherwise skew the line grouping).
@@ -150,7 +146,7 @@ function RevealParagraph({
 								{line}
 							</span>
 						</span>
-					  ))
+					))
 				: text}
 		</Tag>
 	);

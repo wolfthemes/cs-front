@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './ShuffleText.module.scss';
 
@@ -35,7 +35,10 @@ export default function ShuffleText({
 	stagger = 55, // ms between one glyph locking and the next (the L→R sweep)
 	tick = 40, // ms between random-letter swaps while scrambling
 }) {
-	const final = Array.from(String(text));
+	// The target characters. Memoized so it's stable across renders (it drives the
+	// per-frame setDisplay and is a dependency of `run`). Future work: write glyphs
+	// straight to the DOM via a ref to avoid a re-render per scramble frame.
+	const final = useMemo(() => Array.from(String(text)), [text]);
 	const [display, setDisplay] = useState(final);
 	const rafRef = useRef(null);
 	const runningRef = useRef(false);
@@ -59,11 +62,7 @@ export default function ShuffleText({
 				lastSwap = now;
 			}
 
-			setDisplay(
-				final.map((ch, i) =>
-					ch === ' ' || elapsed >= lockAt[i] ? ch : rnd[i]
-				)
-			);
+			setDisplay(final.map((ch, i) => (ch === ' ' || elapsed >= lockAt[i] ? ch : rnd[i])));
 
 			if (elapsed < total) {
 				rafRef.current = requestAnimationFrame(frame);
@@ -74,7 +73,7 @@ export default function ShuffleText({
 		};
 
 		rafRef.current = requestAnimationFrame(frame);
-	}, [text, shuffleDuration, stagger, tick]);
+	}, [final, shuffleDuration, stagger, tick]);
 
 	// Fire once on mount, `autoPlayDelay` ms after the page settles.
 	useEffect(() => {
@@ -97,12 +96,7 @@ export default function ShuffleText({
 	}, [play, run]);
 
 	return (
-		<span
-			className={cx('shuffle')}
-			aria-label={text}
-			onMouseEnter={run}
-			onFocus={run}
-		>
+		<span className={cx('shuffle')} aria-label={text} onMouseEnter={run} onFocus={run}>
 			<span className={cx('ghost')} aria-hidden="true">
 				{text}
 			</span>
