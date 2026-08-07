@@ -10,6 +10,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 
 .component {
 	position: relative;
+	background-color: rgba(0, 0, 0, 0.5);
 
 	// Before JS measures the track, reserve one viewport so the layout doesn't
 	// jump; JS overrides this with the real (taller) height.
