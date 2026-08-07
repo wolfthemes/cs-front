@@ -1,0 +1,70 @@
+// Scroll-scrubbed fullscreen video background. The section is tall (its inline
+// `height` sets the scroll distance); the `.pin` wrapper is sticky so the video
+// stays fixed to the viewport for the whole scroll while `currentTime` is
+// driven from scroll progress in JS.
+
+.component {
+	position: relative;
+	width: 100%;
+
+	// Sits at the base of the stack. GrainOverlay is fixed at the max z-index
+	// (2147483000) with mix-blend-mode: screen, so the grain always composites
+	// OVER this video — the intended look — while page sections still layer on
+	// top of it. Never raise this above the grain.
+	z-index: 0;
+}
+
+// Fixed backdrop mode: a full-viewport layer pinned behind everything for the
+// whole page. z-index: -1 keeps it above the app background box but below all
+// normal-flow page content; the grain (max z-index) still composites over it.
+.fixed {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100vh;
+	height: 100svh;
+	z-index: -1;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.pin {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+
+	// Guard against dvh-less browsers; svh/dvh below refine it where supported.
+	height: 100svh;
+	overflow: hidden;
+}
+
+.video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+
+	// Fade in once the source is wired up to avoid a flash of the poster/black
+	// frame before the first seek lands.
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+.loaded .video {
+	opacity: 1;
+}
+
+// Content layered over the video (headings, captions that ride the scrub).
+.overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.video {
+		// No fade dependency on JS timing; just show it.
+		transition: none;
+	}
+}

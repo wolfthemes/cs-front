@@ -15,6 +15,7 @@ import {
 	Playground,
 	Contact,
 	SEO,
+	VideoScrollBackground,
 } from '../components';
 
 export default function Component() {
@@ -59,8 +60,15 @@ export default function Component() {
 			{/* Home uses the site-level SEO defaults so the title/description match
 			    the canonical resume metadata rather than the bare WP site title. */}
 			<SEO />
+			{/* Fixed video backdrop, scrubbed frame-by-frame by whole-page scroll.
+			    Fixed at z-index -1, so it sits behind every section; GrainOverlay
+			    (max z-index, screen blend) composites over it. */}
+			<VideoScrollBackground fixed src="/video/hero-scroll.mp4" />
 			<Header title={siteTitle} description={siteDescription} menuItems={primaryMenu} />
-			<Main>
+			{/* Transparent so the fixed video backdrop shows through. Main paints
+			    an opaque black by default (also on body), which would hide the
+			    z-index:-1 video; the front page lets the footage be the ground. */}
+			<Main style={{ backgroundColor: 'transparent' }}>
 				<HomeHero />
 				<GalleryBanner />
 				<Statement />

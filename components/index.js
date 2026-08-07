@@ -22,5 +22,6 @@ export { HomeHero } from './HomeHero';
 export { Statement } from './Statement';
 export { Playground } from './Playground';
 export { Signature } from './Signature';
+export { VideoScrollBackground } from './VideoScrollBackground';
 export { Post } from './Post';
 export { SEO } from './SEO';
