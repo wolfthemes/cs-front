@@ -1,0 +1,31 @@
+.wrap {
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow: hidden;
+}
+
+// The DOM image: the layout source of truth and the fallback that shows before
+// the texture loads and whenever WebGL/reduced-motion opts out.
+.img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// The WebGL layer sits exactly over the image and fades in only once the
+// texture is ready, so there is no flash of an empty canvas.
+.canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	pointer-events: none;
+}
+
+.ready {
+	opacity: 1;
+}

@@ -11,6 +11,7 @@ export { Footer } from './Footer';
 export { FormatDate } from './FormatDate';
 export { GalleryBanner } from './GalleryBanner';
 export { GrainOverlay } from './GrainOverlay';
+export { HoverDistortImage } from './HoverDistortImage';
 export { Header } from './Header';
 export { Heading } from './Heading';
 export { Main } from './Main';
