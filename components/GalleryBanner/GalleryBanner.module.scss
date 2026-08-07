@@ -8,6 +8,9 @@
 	z-index: 2147483001;
 	height: 100vh;
 	overflow: hidden;
+
+	// Breathing room between the hero and the tilted marquee.
+	margin-top: clamp(4rem, 10vh, 9rem);
 }
 
 .gallery-banner {
