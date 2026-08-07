@@ -1,5 +1,7 @@
 .gallery-clip {
 	position: relative;
+	display: flex;
+	align-items: center;
 
 	// Sit the whole gallery above the grain overlay (z 2147483000 in
 	// GrainOverlay), so the grain doesn't speckle over the marquee.
@@ -10,17 +12,20 @@
 
 .gallery-banner {
 	position: relative; // positioning context for the WebGL overlay canvas
-	height: 100vh;
+	width: 100%;
+
+	// Keep the oblique tilt, but shrink the banner by the tilt's vertical lift so
+	// its rotated bounds fit inside the straight-edged viewport clip instead of
+	// cropping the top/bottom row images. Rotating a full-width strip by θ lifts
+	// its corners by width·sin θ ≈ 5.2vw at 3°, so we reserve ~7vw of headroom
+	// (split top/bottom by the centered clip). The cap is generous so even ultra-
+	// wide screens keep enough slack; the floor stops it eating the rows on mobile.
+	height: calc(100vh - clamp(5rem, 7vw, 12rem));
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	padding-top: 80px;
-
-	// Oblique tilt — disabled for now (it complicates the WebGL plane sync, which
-	// is axis-aligned). Re-enable by uncommenting; the .gallery-clip parent still
-	// trims the overflow the scale would create.
-	transform: rotate(-3deg) scale(1.12);
+	transform: rotate(-3deg);
 	transform-origin: center;
 }
 
@@ -67,7 +72,8 @@
 	flex-shrink: 0;
 	height: 100%; // images sized by row height; width follows aspect ratio
 	margin: 0;
-	background: #1a1a1a; // placeholder chip colour while the image loads
+
+	// background: #1a1a1a; // placeholder chip colour while the image loads
 
 	img {
 		display: block;
