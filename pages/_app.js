@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Script from 'next/script';
 import { FaustProvider } from '@faustwp/core';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { GeistPixelSquare, GeistPixelGrid, GeistPixelCircle } from 'geist/font/pixel';
@@ -77,6 +78,7 @@ export default function MyApp({ Component, pageProps }) {
 			<div className={`app-shell ${fontVariables}`}>
 				<Component {...pageProps} key={router.asPath} />
 				<GrainOverlay />
+				<SpeedInsights />
 			</div>
 		</FaustProvider>
 	);
