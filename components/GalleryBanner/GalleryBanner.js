@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from 'react';
+import { getImageProps } from 'next/image';
 import className from 'classnames/bind';
 import styles from './GalleryBanner.module.scss';
 import { getScrollVelocity } from '../../lib/scroll';
 
 let cx = className.bind(styles);
+
+// The tiles are sized by row height (~30vh, landscape ~1.8:1), so their rendered
+// width is roughly 40vw on desktop and ~70vw on narrow screens. Feed that to the
+// optimizer as `sizes` so it serves a right-sized WebP/AVIF instead of the raw
+// ~1600px original (each tile was 2–3× oversized per dimension).
+const TILE_SIZES = '(max-width: 768px) 70vw, 40vw';
+const TILE_QUALITY = 70;
 
 // Seconds for one full loop of a row at rest. The marquee always drifts at this
 // baseline; page scroll speeds it up (see the boost below).
@@ -85,17 +93,19 @@ const ROWS = [
 
 function MarqueeItem({ image, duplicate }) {
 	const href = deriveHref(image.file);
-	const img = (
-		<img
-			src={`/gallery/${image.file}`}
-			width={image.width}
-			height={image.height}
-			// The duplicate set is decorative — blank alt so it isn't announced twice.
-			alt={duplicate ? '' : deriveAlt(image.file)}
-			loading="lazy"
-			decoding="async"
-		/>
-	);
+	// Route the local original through Next's image optimizer: right-sized,
+	// modern-format srcSet on the same <img> the marquee measures (width/height
+	// stay intrinsic so the layout reservation and loop period are unchanged).
+	const { props: optimized } = getImageProps({
+		src: `/gallery/${image.file}`,
+		width: image.width,
+		height: image.height,
+		sizes: TILE_SIZES,
+		quality: TILE_QUALITY,
+		// The duplicate set is decorative — blank alt so it isn't announced twice.
+		alt: duplicate ? '' : deriveAlt(image.file),
+	});
+	const img = <img {...optimized} loading="lazy" decoding="async" />;
 
 	return (
 		<figure
