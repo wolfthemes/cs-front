@@ -15,13 +15,13 @@
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	padding-top: 20px;
+	padding-top: 80px;
 
 	// Oblique tilt — disabled for now (it complicates the WebGL plane sync, which
 	// is axis-aligned). Re-enable by uncommenting; the .gallery-clip parent still
 	// trims the overflow the scale would create.
-	// transform: rotate(-3deg) scale(1.12);
-	// transform-origin: center;
+	transform: rotate(-3deg) scale(1.12);
+	transform-origin: center;
 }
 
 .marquee-row {

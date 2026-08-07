@@ -1,12 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import className from 'classnames/bind';
 import styles from './GalleryBanner.module.scss';
+import { getScrollVelocity } from '../../lib/scroll';
 
 let cx = className.bind(styles);
 
-// Seconds for one full loop at rest — matches the CSS baseline (slow). The
-// marquee drifts at this steady speed; scroll no longer boosts it.
+// Seconds for one full loop of a row at rest. The marquee always drifts at this
+// baseline; page scroll speeds it up (see the boost below).
 const BASE_DURATION = 200;
+
+// Scroll coupling, all off the shared Lenis value (getScrollVelocity). Lenis
+// velocity (px/frame) is normalised into 0..1, eased into `boost`, and used to
+// scale each row's speed by up to (1 + BOOST_GAIN)×. Easing is what keeps it
+// smooth — the raw velocity is spiky, so we never apply it directly.
+const SCROLL_NORM = 40; // px/frame that maps to a full boost
+const BOOST_EASE = 0.06; // how fast the boost rises/decays (0..1) — lower = smoother
+const BOOST_GAIN = 4; // extra row speed at full boost (×)
+
+const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
 
 // Each preview URL is encoded in the image filename: `slug--path.ext` maps to
 // `${PREVIEW_BASE}/slug/path`, where `--` stands in for the `/`. Inner single
@@ -118,7 +129,7 @@ function MarqueeRow({ direction, images }) {
 				{images.map((image, i) => (
 					<MarqueeItem key={`real-${i}`} image={image} />
 				))}
-				{/* Identical duplicate set — makes the -50% loop seamless. */}
+				{/* Identical duplicate set — makes the loop seamless. */}
 				{images.map((image, i) => (
 					<MarqueeItem key={`dup-${i}`} image={image} duplicate />
 				))}
@@ -130,18 +141,19 @@ function MarqueeRow({ direction, images }) {
 export default function GalleryBanner() {
 	const sectionRef = useRef(null);
 
+	// Transform marquee whose speed rides the shared Lenis scroll velocity. Just
+	// translateX on the compositor — no WebGL — so it stays smooth and cheap.
 	useEffect(() => {
 		const section = sectionRef.current;
 		if (!section) return undefined;
 
-		// Respect reduced-motion: leave the (paused) CSS animation in place and
-		// don't drive anything.
+		// Reduced motion: leave the (paused) CSS animation in place, drive nothing.
 		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (reduce) return undefined;
 
-		// The seamless loop distance is the offset of the first duplicated figure:
-		// real-set width + one gap. Item widths come from the img width/height
-		// attributes, so this is stable even before the images finish loading.
+		// Seamless loop distance = offset of the first duplicated figure (real-set
+		// width + one gap). Stable before images load since item widths come from
+		// the width/height attributes.
 		const measurePeriod = (el) => {
 			const count = Number(el.dataset.count) || 0;
 			const first = el.children[0];
@@ -151,6 +163,7 @@ export default function GalleryBanner() {
 
 		const tracks = Array.from(section.querySelectorAll('[data-direction]')).map((el) => {
 			el.style.animation = 'none'; // take over from the CSS marquee
+			el.style.willChange = 'transform';
 			return {
 				el,
 				dir: el.dataset.direction === 'left' ? 1 : -1,
@@ -169,18 +182,24 @@ export default function GalleryBanner() {
 		let raf = 0;
 		let last = performance.now();
 		let visible = false;
+		let boost = 0; // eased scroll boost, 0..1
 		const frame = (now) => {
 			const dt = Math.min((now - last) / 1000, 0.05); // clamp after tab switches
 			last = now;
 
+			// Ease toward the current (normalised) Lenis velocity — never apply the
+			// raw spiky value, which is what makes scroll-driven marquees jump.
+			const sv = clamp01(Math.abs(getScrollVelocity()) / SCROLL_NORM);
+			boost += (sv - boost) * BOOST_EASE;
+
+			const factor = 1 + boost * BOOST_GAIN;
 			tracks.forEach((t) => {
 				if (t.period <= 0) return;
-				// Steady drift at the baseline speed — no scroll-driven boost.
-				const speed = t.period / BASE_DURATION; // px/s
+				const speed = (t.period / BASE_DURATION) * factor; // px/s
 				t.pos = (t.pos + speed * dt) % t.period;
 				// dir 1 (left) slides content left; dir -1 (right) slides it right.
 				const x = t.dir === 1 ? -t.pos : t.pos - t.period;
-				t.el.style.transform = `translateX(${x}px)`;
+				t.el.style.transform = `translate3d(${x}px, 0, 0)`;
 			});
 
 			// Stop when scrolled away or the tab is hidden; the observer restarts it.
@@ -218,49 +237,14 @@ export default function GalleryBanner() {
 			tracks.forEach((t) => {
 				t.el.style.animation = '';
 				t.el.style.transform = '';
+				t.el.style.willChange = '';
 			});
-		};
-	}, []);
-
-	// WebGL image layer (velocity chromatic aberration + grain via the user's
-	// lib/fragment.glsl). Local images, so no CORS; loaded client-only and skipped
-	// for reduced motion. Flip the flag to disable.
-	useEffect(() => {
-		const MARQUEE_SHADER_ENABLED = true;
-		const section = sectionRef.current;
-
-		const reduce =
-			typeof window !== 'undefined' &&
-			window.matchMedia &&
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (!MARQUEE_SHADER_ENABLED || !section || reduce) return undefined;
-
-		let effect;
-		let cancelled = false;
-
-		import('../../lib/ImagePlaneEffect').then(({ default: ImagePlaneEffect }) => {
-			if (cancelled) return;
-			// Gallery marquee: subtle vertical shimmer. Lighter than the carousel —
-			// the hover lens stays, but the scroll/idle distortion and grain are dialed
-			// down so the always-moving banner reads calm.
-			effect = new ImagePlaneEffect(section, {
-				selector: 'img',
-				dir: [0, 1],
-				hover: false, // no cursor lens on the passive banner
-				scrollGain: 0.2,
-				grain: 0.02,
-			});
-		});
-
-		return () => {
-			cancelled = true;
-			if (effect) effect.dispose();
 		};
 	}, []);
 
 	return (
-		// Straight-edged clip so the oblique banner can't spill onto neighbours or
-		// add a horizontal scrollbar.
+		// Straight-edged clip so the banner can't spill onto neighbours or add a
+		// horizontal scrollbar.
 		<div className={cx('gallery-clip')}>
 			<section ref={sectionRef} className={cx('gallery-banner')} aria-labelledby="gallery-title">
 				<h2 id="gallery-title" className="sr-only">

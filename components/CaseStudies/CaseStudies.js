@@ -197,10 +197,13 @@ export default function CaseStudies() {
 				// stands down while the GL layer is active): the crop slides within
 				// each frame as the card travels across the viewport.
 				parallax: 0.06,
-				// Tamer than the defaults: maxVelo caps the hover aberration, scrollGain
-				// scales the scroll-driven distortion. Lower these to calm it further.
-				maxVelo: 0.012,
-				scrollGain: 0.25,
+				// More velocity, less RGB: push the scroll-driven distortion/bend
+				// harder while keeping the chromatic fringe subtle. maxVelo caps the
+				// hover aberration; scrollGain scales the scroll distortion; chroma is
+				// the RGB channel-split strength (below the 0.6 default).
+				maxVelo: 0.02,
+				scrollGain: 0.45,
+				chroma: 0.25,
 				// WP media is cross-origin and would taint the WebGL texture. Route it
 				// through Next's same-origin image optimizer so the texture is clean.
 				textureSrc: (img) =>

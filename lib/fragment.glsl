@@ -8,6 +8,7 @@ uniform float uAmount;
 uniform float uScrollVelo;
 uniform vec2 uDir;     // displacement axis: [1,0] horizontal, [0,1] vertical
 uniform float uGrain;  // grain strength
+uniform float uChroma; // RGB channel-split strength (velocity-scaled)
 
 varying vec2 vUv;
 
@@ -37,11 +38,22 @@ void main() {
   float s = uScrollVelo;
 
   // Displace along uDir only (horizontal or vertical), so the warp follows the
-  // section's motion axis instead of smearing diagonally. Sampling all three
-  // channels at the SAME displaced UV keeps the liquid velocity distortion but
-  // drops the RGB channel split (chromatic aberration).
-  newUV += (c * uVelo + s) * uDir;
-  vec4 newColor = vec4(texture2D(tMap, newUV).rgb, 1.);
+  // section's motion axis instead of smearing diagonally.
+  float disp = c * uVelo + s;
+  newUV += disp * uDir;
+
+  // Very slight chromatic aberration: split the R/B samples a hair along the
+  // motion axis, scaled by the same velocity magnitude so it vanishes when the
+  // image is at rest (crisp) and only fringes while it moves — the "flexible /
+  // 3D" cue. `s` is signed (scroll/marquee direction); the hover circle (c) adds
+  // its own gated split under the cursor.
+  vec2 off = (abs(s) + c * uVelo) * uChroma * uDir;
+  vec4 newColor = vec4(
+    texture2D(tMap, newUV + off).r,
+    texture2D(tMap, newUV).g,
+    texture2D(tMap, newUV - off).b,
+    1.0
+  );
 
   newUV.y *= random(vec2(newUV.y, uAmount));
   newColor.rgb += random(newUV) * uGrain;
