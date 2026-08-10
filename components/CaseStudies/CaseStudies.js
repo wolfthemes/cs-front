@@ -1,11 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import Link from 'next/link';
+import { getImageProps } from 'next/image';
 import className from 'classnames/bind';
 import styles from './CaseStudies.module.scss';
 import { onScrollFrame } from '../../lib/scroll';
 
 let cx = className.bind(styles);
+
+// Card width is clamp(260px, 40vw, 560px) (see .card) — feed that to the
+// optimizer so it serves a right-sized WebP/AVIF instead of the raw WP
+// upload (some of these were 1.7-1.9MB PNGs at full original size).
+const CARD_SIZES = '(max-width: 768px) 70vw, 40vw';
+const CARD_QUALITY = 70;
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -19,6 +26,20 @@ const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 // position (0..1; lower = smoother, more lag).
 const PARALLAX = 40;
 const TRACK_EASE = 0.12;
+
+// Routes the WP-hosted featured image through Next's optimizer instead of
+// serving the raw upload (some originals were 1.7-1.9MB PNGs).
+function CardImage({ image, alt }) {
+	const { props: optimized } = getImageProps({
+		src: image.sourceUrl,
+		alt,
+		width: image.mediaDetails?.width || 1600,
+		height: image.mediaDetails?.height || 900,
+		sizes: CARD_SIZES,
+		quality: CARD_QUALITY,
+	});
+	return <img {...optimized} loading="lazy" decoding="async" />;
+}
 
 function Card({ work }) {
 	const image = work.featuredImage?.node;
@@ -38,14 +59,7 @@ function Card({ work }) {
 			>
 				<div className={cx('media')}>
 					{image ? (
-						<img
-							src={image.sourceUrl}
-							alt={image.altText || work.title}
-							width={image.mediaDetails?.width}
-							height={image.mediaDetails?.height}
-							loading="lazy"
-							decoding="async"
-						/>
+						<CardImage image={image} alt={image.altText || work.title} />
 					) : (
 						// No featured image set — show the title on a plain block so the
 						// card still reads as a project.

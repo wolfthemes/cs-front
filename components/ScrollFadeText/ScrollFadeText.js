@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import className from 'classnames/bind';
 import styles from './ScrollFadeText.module.scss';
+import { onScrollFrame } from '../../lib/scroll';
 
 let cx = className.bind(styles);
 
@@ -61,11 +62,7 @@ export default function ScrollFadeText({
 			return undefined;
 		}
 
-		let raf = 0;
-		let ticking = false;
-
 		const update = () => {
-			ticking = false;
 			const rect = el.getBoundingClientRect();
 			const vh = window.innerHeight || document.documentElement.clientHeight;
 
@@ -92,20 +89,11 @@ export default function ScrollFadeText({
 			}
 		};
 
-		const onScroll = () => {
-			if (ticking) return;
-			ticking = true;
-			raf = requestAnimationFrame(update);
-		};
-
-		update();
-		window.addEventListener('scroll', onScroll, { passive: true });
-		window.addEventListener('resize', onScroll, { passive: true });
-		return () => {
-			cancelAnimationFrame(raf);
-			window.removeEventListener('scroll', onScroll);
-			window.removeEventListener('resize', onScroll);
-		};
+		// Shares the app's Lenis rAF (same loop VideoScrollBackground etc. use)
+		// instead of a second independent scroll+rAF pair — running two rAF loops
+		// at once is what was making the video scrub jank. This one fires every
+		// frame the loop is alive, so it naturally tracks resizes too.
+		return onScrollFrame(update);
 	}, [charCount, minOpacity, band, startOffset]);
 
 	// Running index across all words so each char maps to one entry in charRefs.
