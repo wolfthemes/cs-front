@@ -52,13 +52,13 @@ const GET_POST_QUERY = gql`
 `;
 
 export default function Component(props) {
+	const { post } = useFaustQuery(GET_POST_QUERY);
+	const { generalSettings, headerMenuItems, footerMenuItems } = useFaustQuery(GET_LAYOUT_QUERY);
+
 	// Loading state for previews
 	if (props.loading) {
 		return <>Loading...</>;
 	}
-
-	const { post } = useFaustQuery(GET_POST_QUERY);
-	const { generalSettings, headerMenuItems, footerMenuItems } = useFaustQuery(GET_LAYOUT_QUERY);
 
 	const { title: siteTitle, description: siteDescription } = generalSettings;
 	const primaryMenu = headerMenuItems?.nodes ?? [];

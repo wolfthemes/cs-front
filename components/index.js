@@ -18,6 +18,7 @@ export { Heading } from './Heading';
 export { Main } from './Main';
 export { NavigationMenu } from './NavigationMenu';
 export { PostInfo } from './PostInfo';
+export { SafeHtml } from './SafeHtml';
 export { SkipNavigationLink } from './SkipNavigationLink';
 export { Hero } from './Hero';
 export { HomeHero } from './HomeHero';

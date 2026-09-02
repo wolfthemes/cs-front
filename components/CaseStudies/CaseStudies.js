@@ -5,6 +5,7 @@ import { getImageProps } from 'next/image';
 import className from 'classnames/bind';
 import styles from './CaseStudies.module.scss';
 import { onScrollFrame } from '../../lib/scroll';
+import { SafeHtml } from '../SafeHtml';
 
 let cx = className.bind(styles);
 
@@ -73,9 +74,7 @@ function Card({ work }) {
 					</h3>
 					<span className={cx('card-cta')}>{ctaLabel} →</span>
 				</div>
-				{work.excerpt && (
-					<div className={cx('card-excerpt')} dangerouslySetInnerHTML={{ __html: work.excerpt }} />
-				)}
+				{work.excerpt && <SafeHtml className={cx('card-excerpt')} html={work.excerpt} />}
 				{work.workSkills?.nodes?.length > 0 && (
 					<ul className={cx('tags')} aria-label="Tech used">
 						{work.workSkills.nodes.map((skill) => (

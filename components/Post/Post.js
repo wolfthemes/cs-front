@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FeaturedImage } from '../FeaturedImage';
 import { PostInfo } from '../PostInfo';
+import { SafeHtml } from '../SafeHtml';
 import styles from './Post.module.scss';
 
 export default function Post({ title, content, date, author, uri, featuredImage }) {
@@ -24,7 +25,7 @@ export default function Post({ title, content, date, author, uri, featuredImage 
 				</a>
 			</Link>
 			<PostInfo date={date} author={author} className={styles.postInfo} />
-			<div className={styles.content} dangerouslySetInnerHTML={{ __html: content }} />
+			<SafeHtml className={styles.content} html={content} />
 		</article>
 	);
 }

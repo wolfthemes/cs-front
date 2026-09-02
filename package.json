@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "faust build",
+    "dev": "npm run check:schema && next dev --webpack",
+    "build": "faust build --webpack",
     "generate": "faust generatePossibleTypes",
     "stylesheet": "faust generateGlobalStylesheet",
     "start": "faust start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "check:schema": "node scripts/check-schema.js",
     "lint:styles": "stylelint \"**/*.scss\"",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -23,25 +24,26 @@
     "classnames": "^2.5.1",
     "geist": "^1.7.2",
     "graphql": "^16.8.1",
+    "isomorphic-dompurify": "^2.30.0",
     "lenis": "^1.3.25",
     "motion": "^12.43.0",
-    "next": "^14.2.21",
+    "next": "^16.3.3",
     "ogl": "^1.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.77.3"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.35",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.3",
+    "eslint-config-prettier": "^10.1.8",
     "next-secure-headers": "^2.2.0",
     "prettier": "^3.3.3",
     "stylelint": "^16.9.0",
     "stylelint-config-standard-scss": "^13.1.0"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=20.9",
     "npm": ">=8"
   }
 }

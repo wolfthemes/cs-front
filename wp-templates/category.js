@@ -29,6 +29,7 @@ export default function Component(props) {
 					<Container>
 						{posts.edges.map((post) => (
 							<Post
+								key={post.node.id}
 								title={post.node.title}
 								content={post.node.content}
 								date={post.node.date}
