@@ -21,9 +21,9 @@ const BASE_DURATION = 200;
 // velocity (px/frame) is normalised into 0..1, eased into `boost`, and used to
 // scale each row's speed by up to (1 + BOOST_GAIN)×. Easing is what keeps it
 // smooth — the raw velocity is spiky, so we never apply it directly.
-const SCROLL_NORM = 40; // px/frame that maps to a full boost
-const BOOST_EASE = 0.06; // how fast the boost rises/decays (0..1) — lower = smoother
-const BOOST_GAIN = 4; // extra row speed at full boost (×)
+const SCROLL_NORM = 25; // px/frame that maps to a full boost — lower = boosts on lighter scrolls
+const BOOST_EASE = 0.1; // how fast the boost rises/decays (0..1) — lower = smoother
+const BOOST_GAIN = 8; // extra row speed at full boost (×)
 
 const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
 
