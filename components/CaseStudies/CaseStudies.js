@@ -227,10 +227,10 @@ export default function CaseStudies() {
 				maxVelo: 0.02,
 				scrollGain: 0.45,
 				chroma: 0.25,
-				// WP media is cross-origin and would taint the WebGL texture. Route it
-				// through Next's same-origin image optimizer so the texture is clean.
-				textureSrc: (img) =>
-					`/_next/image?url=${encodeURIComponent(img.currentSrc || img.src)}&w=1920&q=75`,
+				// CardImage already renders through next/image, so img.src/currentSrc
+				// is already a same-origin, CORS-clean /_next/image URL — no need to
+				// route it through the optimizer a second time (the default textureSrc
+				// reads img.currentSrc/src directly).
 			});
 			if (effect.planes && effect.planes.length) glActiveRef.current = true;
 		});

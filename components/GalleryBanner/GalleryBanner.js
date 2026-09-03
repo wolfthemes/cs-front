@@ -82,7 +82,7 @@ const ROWS = [
 	{
 		direction: 'right',
 		images: [
-			{ file: 'soundkraft--home.jpg', width: 1707, height: 904 },
+			{ file: 'soundkraft--main-home.jpg', width: 1707, height: 904 },
 			{ file: 'morvan--vertical-presentation.jpg', width: 1600, height: 900 },
 			{ file: 'phase--interactive-links.jpg', width: 858, height: 480 },
 			{ file: 'nu--portfolio-gallery.jpg', width: 640, height: 350 },
