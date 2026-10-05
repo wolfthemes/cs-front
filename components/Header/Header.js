@@ -3,6 +3,8 @@ import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { Container, NavigationMenu, SkipNavigationLink } from '../../components';
 import { getScrollY, scrollTo } from '../../lib/scroll';
+import { useRouter } from 'next/router';
+import { useCopy } from '../../lib/i18n';
 import styles from './Header.module.scss';
 
 let cx = classNames.bind(styles);
@@ -69,6 +71,10 @@ function scrollToSection(target) {
 
 export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 	const [isNavShown, setIsNavShown] = useState(false);
+	const { locale } = useRouter();
+	const { menu } = useCopy();
+	const other = locale === 'fr' ? 'en' : 'fr';
+	const items = menuItems?.map((item) => ({ ...item, label: menu[sectionIdFor(item.path)] ?? item.label }));
 
 	// Turn every menu item into a one-page scroll link: if a section with the
 	// matching id exists on the page, smooth-scroll to it instead of navigating.
@@ -81,7 +87,7 @@ export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 		event.preventDefault();
 		setIsNavShown(false);
 		scrollToSection(target);
-		window.history.replaceState(null, '', id === 'home' ? '/' : `#${id}`);
+		window.history.replaceState(null, '', id === 'home' ? window.location.pathname : `#${id}`);
 	};
 
 	return (
@@ -106,9 +112,22 @@ export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 					</button>
 					<NavigationMenu
 						className={cx(['primary-navigation', isNavShown ? 'show' : undefined])}
-						menuItems={menuItems}
+						menuItems={items}
 						onItemClick={handleItemClick}
 					/>
+					{/* NEXT_LOCALE records the explicit choice so geo redirect (proxy.js) stops overriding it. */}
+					<Link
+						href="/"
+						locale={other}
+						className={cx('lang')}
+						hrefLang={other}
+						onClick={() => {
+							document.cookie = `NEXT_LOCALE=${other}; path=/; max-age=31536000; samesite=lax`;
+						}}
+					>
+						<span className={cx({ current: locale !== 'fr' })}>EN</span> |{' '}
+						<span className={cx({ current: locale === 'fr' })}>FR</span>
+					</Link>
 				</div>
 			</Container>
 		</header>

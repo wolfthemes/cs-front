@@ -46,8 +46,10 @@ module.exports = withFaust({
 		],
 	},
 	i18n: {
-		locales: ['en'],
+		locales: ['en', 'fr'],
 		defaultLocale: 'en',
+		// Detection is geo-based in proxy.js; Next's Accept-Language redirect would fight it.
+		localeDetection: false,
 	},
 	async headers() {
 		return [

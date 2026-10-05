@@ -1,50 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Playground.module.scss';
+import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
 
-// Static, hand-curated columns (edit freely). Read left-to-right as the stack
-// goes architecture -> frontend, so a recruiter can see exactly which tools are
-// on the table. `glyph` names one of the small decorative marks below.
-const COLUMNS = [
-	{
-		title: 'Architecture & Backend',
-		glyph: 'stack',
-		items: [
-			'Headless WordPress (Faust / Next.js)',
-			'WPGraphQL, REST API',
-			'OOP / PSR-4',
-			'Composer',
-			'WP-CLI',
-			'Multisite',
-		],
-	},
-	{
-		title: 'Infrastructure & DevOps',
-		glyph: 'grid',
-		items: [
-			'Linux / nginx',
-			'Docker, WP-Env, WP VIP',
-			'Bedrock',
-			'CI/CD (GitHub Actions)',
-			'DigitalOcean, Vercel',
-			'CDN',
-		],
-	},
-	{
-		title: 'Frontend & Interaction',
-		glyph: 'chevrons',
-		items: [
-			'React / Next.js',
-			'Gutenberg / FSE',
-			'SCSS / CSS3',
-			'Scroll-driven animation (GSAP)',
-			'Performance / Core Web Vitals',
-			'AI-assisted workflow (Claude Code)',
-		],
-	},
-];
+// Column titles/items live in lib/i18n.js; `glyph` names one of the marks below.
+const GLYPHS = ['stack', 'grid', 'chevrons'];
 
 // Per-column reveal cadence.
 const COL_STAGGER = 0.12; // seconds between columns
@@ -108,6 +70,7 @@ function Column({ column, index }) {
 }
 
 export default function Playground() {
+	const { playground } = useCopy();
 	const sectionRef = useRef(null);
 	const [revealed, setRevealed] = useState(false);
 
@@ -146,13 +109,17 @@ export default function Playground() {
 			<div className={cx('head')}>
 				<p className={cx('eyebrow')}>~/playground</p>
 				<h2 id="playground-title" className={cx('title')}>
-					From architecture to the frontend.
+					{playground.title}
 				</h2>
 			</div>
 
 			<div className={cx('columns')}>
-				{COLUMNS.map((column, i) => (
-					<Column key={column.title} column={column} index={i} />
+				{playground.columns.map((title, i) => (
+					<Column
+						key={GLYPHS[i]}
+						column={{ title, glyph: GLYPHS[i], items: playground.items[i] }}
+						index={i}
+					/>
 				))}
 			</div>
 		</section>

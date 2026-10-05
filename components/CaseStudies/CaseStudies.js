@@ -6,6 +6,7 @@ import className from 'classnames/bind';
 import styles from './CaseStudies.module.scss';
 import { onScrollFrame } from '../../lib/scroll';
 import { SafeHtml } from '../SafeHtml';
+import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
 
@@ -43,13 +44,14 @@ function CardImage({ image, alt }) {
 }
 
 function Card({ work }) {
+	const { viewProject } = useCopy();
 	const image = work.featuredImage?.node;
 	// An explicit work_link_url (e.g. a live demo or external product page) wins
 	// over the internal post URI, for both the image link and the CTA. When it's
 	// set the destination is off-site, so open it in a new tab.
 	const href = work.workLinkUrl || work.uri || '#';
 	const isExternal = Boolean(work.workLinkUrl);
-	const ctaLabel = work.workLinkText || 'View project';
+	const ctaLabel = work.workLinkText || viewProject;
 	return (
 		<article className={cx('card')}>
 			<Link

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useCopy } from '../../lib/i18n';
 import { getImageProps } from 'next/image';
 import className from 'classnames/bind';
 import styles from './GalleryBanner.module.scss';
@@ -252,13 +253,15 @@ export default function GalleryBanner() {
 		};
 	}, []);
 
+	const { gallery } = useCopy();
+
 	return (
 		// Straight-edged clip so the banner can't spill onto neighbours or add a
 		// horizontal scrollbar.
 		<div className={cx('gallery-clip')}>
 			<section ref={sectionRef} className={cx('gallery-banner')} aria-labelledby="gallery-title">
 				<h2 id="gallery-title" className="sr-only">
-					Selected work
+					{gallery}
 				</h2>
 				{ROWS.map((row, i) => (
 					<MarqueeRow key={i} direction={row.direction} images={row.images} />

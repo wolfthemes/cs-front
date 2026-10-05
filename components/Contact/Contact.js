@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Contact.module.scss';
+import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
 
 const EMAIL = 'constantin@saguin.com';
-const TITLE = "Let's build something worth shipping.";
 
 // Reveal timing (seconds). The title reveals line by line; the lead follows the
 // last line and the button lands last.
@@ -56,6 +56,8 @@ function measureLines(el, text) {
 // brand and hero. Signals freelance + full-time remote availability and is
 // recruiter-friendly. Content reveals once scrolled into view.
 export default function Contact() {
+	const { contact } = useCopy();
+	const TITLE = contact.title;
 	const ref = useRef(null);
 	const titleRef = useRef(null);
 	const [visible, setVisible] = useState(false);
@@ -71,7 +73,7 @@ export default function Contact() {
 		}
 		setLines(measureLines(el, TITLE));
 		return undefined;
-	}, []);
+	}, [TITLE]);
 
 	useEffect(() => {
 		const node = ref.current;
@@ -129,8 +131,7 @@ export default function Contact() {
 				</h2>
 
 				<p className={cx('lead', 'reveal')} style={{ transitionDelay: `${leadDelay}s` }}>
-					Senior full-time remote roles and select contract work. Based in France (CEST), working
-					across EU and US time zones.
+					{contact.lead}
 				</p>
 
 				<div
@@ -138,7 +139,7 @@ export default function Contact() {
 					style={{ transitionDelay: `${actionsDelay}s` }}
 				>
 					<a className={cx('primary')} href={`mailto:${EMAIL}`}>
-						<span className={cx('primary-label')}>Get in touch</span>
+						<span className={cx('primary-label')}>{contact.cta}</span>
 						<svg
 							className={cx('primary-arrow')}
 							width="16"

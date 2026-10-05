@@ -3,22 +3,16 @@ import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 // import HeroCircle from './HeroCircle'; // ellipse disabled for now
 import { ShuffleText } from '../../components';
+import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
 
-const INTRO_LINES = [
-	"Founder of WolfThemes, I've been building commercial",
-	'WordPress products used by more than 36,000 customers worldwide.',
-	'Today, I focus on engineering modern, scalable web',
-	'applications designed for performance and longevity.',
-];
-
 // Words carry the class of any styled term (WolfThemes/WordPress use accent
 // fonts; "engineering" the pixel font).
-const wordClass = (word) => {
+const wordClass = (word, shuffle) => {
 	if (word.includes('WordPress')) return 'wordpress';
 	if (word.includes('WolfThemes')) return 'wolfthemes';
-	if (word === 'engineering') return 'engineering';
+	if (word === shuffle) return 'engineering';
 	return undefined;
 };
 
@@ -29,9 +23,9 @@ const LINE_STAGGER = 0.12; // seconds between lines
 // animates to; `decimals` keeps the display stable (e.g. 4.5), `suffix` is the
 // static accent unit that never animates.
 const STATS = [
-	{ value: 14, decimals: 0, suffix: 'y', label: 'Professional experience' },
-	{ value: 36, decimals: 0, suffix: 'k+', label: 'Installs in production' },
-	{ value: 4.5, decimals: 1, suffix: '/5', label: 'Average rating (1,600+ reviews)' },
+	{ value: 14, decimals: 0, suffix: 'y' },
+	{ value: 36, decimals: 0, suffix: 'k+' },
+	{ value: 4.5, decimals: 1, suffix: '/5' },
 ];
 
 const COUNT_DURATION = 1400; // ms
@@ -102,6 +96,7 @@ function Stat({ value, decimals, suffix, label, started }) {
 }
 
 export default function HomeHero() {
+	const { hero } = useCopy();
 	const statsRef = useRef(null);
 	// One observer for the whole stats row: `started` triggers all three counters,
 	// `statsDone` (below) gates the "engineering" shuffle after they land.
@@ -109,13 +104,13 @@ export default function HomeHero() {
 	const [statsDone, setStatsDone] = useState(false);
 	const introLines = useMemo(
 		() =>
-			INTRO_LINES.map((line) =>
+			hero.intro.map((line) =>
 				line.split(/\s+/).map((text) => ({
 					text,
-					classKey: wordClass(text),
+					classKey: wordClass(text, hero.shuffle),
 				}))
 			),
-		[]
+		[hero]
 	);
 
 	const renderIntroWord = (word) => {
@@ -179,12 +174,12 @@ export default function HomeHero() {
 	return (
 		<section id="home" className={cx('component')}>
 			<h1 className={cx('title')}>
-				Senior{' '}
+				{hero.title[0]}
 				<span className={cx('circled')}>
-					Web
+					{hero.title[1]}
 					{/* <HeroCircle /> disabled for now */}
-				</span>{' '}
-				Engineer
+				</span>
+				{hero.title[2]}
 			</h1>
 			<div className={cx('bottom')}>
 				<div className={cx('bottom-left')}>
@@ -204,7 +199,7 @@ export default function HomeHero() {
 
 					<div className={cx('cta')}>
 						<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
-							<span className={cx('cta-label')}>Let&apos;s connect</span>
+							<span className={cx('cta-label')}>{hero.cta}</span>
 							<svg
 								className={cx('cta-arrow')}
 								width="16"
@@ -226,8 +221,8 @@ export default function HomeHero() {
 				</div>
 
 				<div className={cx('stats')} ref={statsRef}>
-					{STATS.map((stat) => (
-						<Stat key={stat.label} {...stat} started={started} />
+					{STATS.map((stat, i) => (
+						<Stat key={i} {...stat} label={hero.stats[i]} started={started} />
 					))}
 				</div>
 			</div>

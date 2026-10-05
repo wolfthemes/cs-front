@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useCopy } from '../../lib/i18n';
 
 // Person structured data (schema.org/Person) for the site owner. This is a
 // personal resume site, so a single stable Person graph describes the whole
@@ -102,10 +104,12 @@ const SITE = {
 };
 
 export default function SEO({ title, description, imageUrl, url }) {
-	const metaTitle = title || SITE.title;
-	const metaDescription = description || SITE.description;
+	const { seo } = useCopy();
+	const { locale } = useRouter();
+	const metaTitle = title || seo.title;
+	const metaDescription = description || seo.description;
 	const metaImage = imageUrl || SITE.image;
-	const metaUrl = url || SITE.url;
+	const metaUrl = url || (locale === 'fr' ? `${SITE.url}/fr` : SITE.url);
 
 	return (
 		<Head>
@@ -116,10 +120,13 @@ export default function SEO({ title, description, imageUrl, url }) {
 			<meta name="author" content={SITE.author} />
 			<meta name="robots" content="index, follow" />
 			<link rel="canonical" href={metaUrl} />
+			<link rel="alternate" hrefLang="en" href={SITE.url} />
+			<link rel="alternate" hrefLang="fr" href={`${SITE.url}/fr`} />
+			<link rel="alternate" hrefLang="x-default" href={SITE.url} />
 
 			<meta property="og:type" content="website" />
 			<meta property="og:site_name" content={SITE.name} />
-			<meta property="og:locale" content={SITE.locale} />
+			<meta property="og:locale" content={seo.locale} />
 			<meta property="og:url" content={metaUrl} />
 			<meta property="og:title" content={metaTitle} />
 			<meta property="og:description" content={metaDescription} />

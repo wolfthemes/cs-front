@@ -49,6 +49,8 @@
 .primary-navigation {
 	display: none;
 	width: 100%;
+	margin-left: auto; // push the menu next to the language toggle, not centered
+	margin-right: 1rem; // breathing room before the language toggle
 
 	&.show {
 		display: block;
@@ -57,5 +59,23 @@
 	@media (min-width: $breakpoint-small) {
 		display: block;
 		width: auto;
+	}
+}
+
+.lang {
+	font-family: var(--font-geist-mono), source-code-pro, Menlo, monospace;
+	font-size: 0.6875rem;
+	letter-spacing: 0.04em;
+	text-decoration: none;
+	color: var(--wpe--header--color);
+	opacity: 0.7;
+	white-space: nowrap;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	.current {
+		color: $c-accent;
 	}
 }

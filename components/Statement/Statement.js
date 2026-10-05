@@ -2,19 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './Statement.module.scss';
 import { ScrollFadeText, Signature } from '../../components';
+import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
-
-// Placeholder copy. The big headline reveals line-by-line as it enters view; the
-// paragraphs below sit offset to the right (see layout ref).
-const HEADLINE =
-	'From scaling modern infrastructures to engineering smooth interactive experiences, I build modern websites designed for longevity and performance.';
-
-const LEAD =
-	'I build robust WordPress products that solve real business needs and deliver lasting value. My work goes beyond clean interfaces — it combines thoughtful engineering, performance, and usability to create websites people enjoy using.';
-
-const SUPPORT =
-	"I started in the late 00's by designing MySpace profiles for bands.  Now I create full web solutions. I love to work with musicians, labels, artists, associations and small businesses.";
 
 const prefersReducedMotion = () =>
 	typeof window !== 'undefined' &&
@@ -153,6 +143,7 @@ function RevealParagraph({ as: Tag = 'p', text, className: cls, startIndex = 0, 
 }
 
 export default function Statement() {
+	const { about } = useCopy();
 	// Line count of the lead paragraph, so the support paragraph continues the
 	// cascade of the line-reveal below the headline.
 	const [leadLineCount, setLeadLineCount] = useState(0);
@@ -162,13 +153,13 @@ export default function Statement() {
 
 	return (
 		<section id="about" className={cx('component')}>
-			<p className={cx('eyebrow')}>~/about</p>
+			<p className={cx('eyebrow')}>{about.eyebrow}</p>
 			{/* Headline: letters light up one by one as it scrolls through view. */}
-			<ScrollFadeText as="h2" text={HEADLINE} className={cx('headline')} />
+			<ScrollFadeText as="h2" text={about.headline} className={cx('headline')} />
 
 			<div className={cx('body')}>
-				<RevealParagraph text={LEAD} className="lead" onMeasured={handleLeadMeasured} />
-				<RevealParagraph text={SUPPORT} className="support" startIndex={leadLineCount} />
+				<RevealParagraph text={about.lead} className="lead" onMeasured={handleLeadMeasured} />
+				<RevealParagraph text={about.support} className="support" startIndex={leadLineCount} />
 			</div>
 
 			<Signature className={cx('signature')} />
