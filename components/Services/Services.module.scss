@@ -14,7 +14,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 }
 
 .hero {
-	padding: clamp(4rem, 12vw, 9rem) 0 clamp(4rem, 8vw, 6rem);
+	padding: clamp(4rem, 12vw, 9rem) 0 0;
 }
 
 .section {
@@ -158,7 +158,10 @@ $edge: clamp(1rem, 5vw, 5rem);
 	flex-wrap: wrap;
 	gap: 1.5rem clamp(2rem, 6vw, 5rem);
 	margin-top: clamp(3rem, 7vw, 5rem);
-	padding-top: clamp(1.5rem, 3vw, 2rem);
+
+	// Equal space above/below so the stats sit centred between the hero rule
+	// and the next section's top rule.
+	padding: clamp(2rem, 4vw, 3rem) 0;
 	border-top: var(--wpe--border--light);
 }
 
