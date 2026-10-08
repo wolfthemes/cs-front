@@ -13,7 +13,7 @@ const PERSON_SCHEMA = {
 	email: 'constantin@saguin.com',
 	jobTitle: 'Senior WordPress Engineer',
 	description:
-		'Senior WordPress engineer with 14 years of experience. Founder of WolfThemes.',
+		'Senior WordPress engineer with 15 years of experience. Founder of WolfThemes.',
 	address: {
 		'@type': 'PostalAddress',
 		addressLocality: 'Alsace',
@@ -92,7 +92,7 @@ const SITE = {
 	name: 'Constantin Saguin',
 	title: 'Constantin Saguin — Senior WordPress Engineer',
 	description:
-		'Senior WordPress engineer with 14 years shipping production systems. Founder of WolfThemes. Open to senior full-time remote roles and select contract work.',
+		'Senior WordPress engineer with 15 years shipping production systems. Founder of WolfThemes. Open to senior full-time remote roles and select contract work.',
 	// 1200×630 social card served from /public. Add the asset to keep previews rich.
 	image: 'https://constantin.saguin.com/assets/img/og.png',
 	imageWidth: '1200',

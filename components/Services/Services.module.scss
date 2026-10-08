@@ -1,0 +1,392 @@
+@import 'styles/breakpoints';
+@import 'styles/tokens';
+
+// Services landing page. Same visual vocabulary as the home sections (mono
+// eyebrow, big tight headings, white pill CTA, hairline dividers) on a plain
+// black ground — no video backdrop.
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.component {
+	max-width: var(--wpe--container--max-width);
+	margin: 0 auto;
+	padding: 0 $edge;
+}
+
+.hero {
+	padding: clamp(4rem, 12vw, 9rem) 0 clamp(4rem, 8vw, 6rem);
+}
+
+.section {
+	padding: clamp(4rem, 9vw, 8rem) 0;
+	border-top: var(--wpe--border--light);
+	opacity: 0;
+	transform: translateY(1.5rem);
+	transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+	&.is-in {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.eyebrow {
+	margin: 0 0 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
+	color: $c-accent;
+}
+
+.hero-title {
+	margin: 0;
+	max-width: 16ch;
+	font-size: clamp(2.75rem, 8vw, 6.5rem);
+	line-height: 1;
+	letter-spacing: -0.04em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.hero-lead,
+.lead {
+	margin: clamp(1.25rem, 3vw, 2rem) 0 0;
+	max-width: 52ch;
+	font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.title {
+	margin: 0;
+	max-width: 22ch;
+	font-size: clamp(2rem, 4.5vw, 3.75rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1.25rem 1.75rem;
+	margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+// White pill, same as the hero / contact CTA.
+.primary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.85rem 1.8rem;
+	border-radius: 100px;
+	background-color: $c-base;
+	color: $c-ink;
+	font-weight: fw(medium);
+	letter-spacing: -0.01em;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: opacity 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 0.85;
+
+		.arrow {
+			transform: translateX(0.2rem);
+		}
+	}
+}
+
+// Outlined pill for the per-offer CTA so the single filled button stays primary.
+.ghost {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.3rem;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 100px;
+	color: $c-base;
+	font-weight: fw(medium);
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background-color 0.2s ease-out, color 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		background-color: $c-base;
+		color: $c-ink;
+
+		.arrow {
+			transform: translateX(0.2rem);
+		}
+	}
+}
+
+.arrow {
+	flex-shrink: 0;
+	transition: transform 0.2s ease-out;
+}
+
+.secondary,
+.email {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.7);
+	text-decoration: none;
+	text-underline-offset: 4px;
+
+	&:hover,
+	&:focus-visible {
+		color: $c-base;
+		text-decoration: underline;
+	}
+}
+
+.note {
+	margin: 1.25rem 0 0;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5rem clamp(2rem, 6vw, 5rem);
+	margin-top: clamp(3rem, 7vw, 5rem);
+	padding-top: clamp(1.5rem, 3vw, 2rem);
+	border-top: var(--wpe--border--light);
+}
+
+.stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.stat-value {
+	font-size: clamp(2rem, 4vw, 3rem);
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.stat-suffix {
+	color: $c-accent;
+}
+
+.stat-label {
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+// Offers: one hairline-separated row each (number | details | price + CTA).
+.offers {
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+	border-top: var(--wpe--border--light);
+}
+
+.offer {
+	display: grid;
+	grid-template-columns: 4rem minmax(0, 1fr) minmax(12rem, 16rem);
+	gap: 1.5rem clamp(1.5rem, 3vw, 3rem);
+	padding: clamp(2rem, 4vw, 3rem) 0;
+	border-bottom: var(--wpe--border--light);
+}
+
+.offer-index {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.offer-title {
+	margin: 0;
+	font-size: clamp(1.4rem, 2.4vw, 2rem);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.offer-text {
+	margin: 0.9rem 0 0;
+	max-width: 56ch;
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.points {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	margin: 1.25rem 0 0;
+	padding: 0;
+	list-style: none;
+	font-weight: fw(medium);
+	color: rgba(255, 255, 255, 0.85);
+
+	li::before {
+		content: '→ ';
+		color: $c-accent;
+	}
+}
+
+.offer-side {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1.25rem;
+}
+
+.price {
+	margin: 0;
+	font-size: clamp(1.75rem, 3vw, 2.5rem);
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.price-from {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	font-weight: fw(medium);
+	letter-spacing: 0;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+// Shared 3-up / 2-up grids for process + differentiators.
+.grid {
+	display: grid;
+	gap: clamp(2rem, 4vw, 3rem);
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.steps {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.why {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.step-index {
+	display: block;
+	margin-bottom: 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: $c-accent;
+}
+
+.item-title {
+	margin: 0;
+	font-size: clamp(1.2rem, 2vw, 1.6rem);
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.item-text {
+	margin: 0.75rem 0 0;
+	max-width: 46ch;
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+// FAQ: native <details>, no JS.
+.faq {
+	margin-top: clamp(2.5rem, 5vw, 4rem);
+	border-top: var(--wpe--border--light);
+}
+
+.faq-item {
+	border-bottom: var(--wpe--border--light);
+
+	summary {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1.5rem 0;
+		cursor: pointer;
+		list-style: none;
+		font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+		font-weight: fw(medium);
+		letter-spacing: -0.01em;
+		color: $c-base;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&::after {
+			content: '+';
+			font-family: var(--font-geist-mono), monospace;
+			color: $c-accent;
+		}
+	}
+
+	&[open] summary::after {
+		content: '−';
+	}
+
+	p {
+		margin: 0;
+		padding: 0 0 1.75rem;
+		max-width: 62ch;
+		line-height: 1.55;
+		color: rgba(255, 255, 255, 0.7);
+	}
+}
+
+.final {
+	padding-bottom: clamp(6rem, 12vw, 10rem);
+}
+
+.final-title {
+	margin: 0;
+	max-width: 14ch;
+	font-size: clamp(2.5rem, 7vw, 5.5rem);
+	line-height: 1.02;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+@media (width <= 48rem) {
+	.offer {
+		grid-template-columns: 1fr;
+	}
+
+	.steps,
+	.why {
+		grid-template-columns: 1fr;
+	}
+
+	.primary {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.section {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	.arrow {
+		transition: none;
+	}
+}

@@ -71,10 +71,30 @@ function scrollToSection(target) {
 
 export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 	const [isNavShown, setIsNavShown] = useState(false);
-	const { locale } = useRouter();
+	const { locale, asPath } = useRouter();
 	const { menu } = useCopy();
 	const other = locale === 'fr' ? 'en' : 'fr';
-	const items = menuItems?.map((item) => ({ ...item, label: menu[sectionIdFor(item.path)] ?? item.label }));
+	// The WP menu has no Services entry: add one (before Contact) on every page.
+	const base = menuItems ?? [];
+	const withServices = base.some((item) => sectionIdFor(item.path) === 'services')
+		? base
+		: [
+				...base.filter((item) => sectionIdFor(item.path) !== 'contact'),
+				{
+					...(base[0] ?? {}),
+					id: 'services',
+					path: '/services',
+					label: 'Services',
+					parentId: null,
+					target: null,
+					cssClasses: [],
+					__typename: 'MenuItem',
+				},
+				...base.filter((item) => sectionIdFor(item.path) === 'contact'),
+			];
+	const items =
+		menuItems &&
+		withServices.map((item) => ({ ...item, label: menu[sectionIdFor(item.path)] ?? item.label }));
 
 	// Turn every menu item into a one-page scroll link: if a section with the
 	// matching id exists on the page, smooth-scroll to it instead of navigating.
@@ -117,7 +137,7 @@ export default function Header({ title = 'Headless by WP Engine', menuItems }) {
 					/>
 					{/* NEXT_LOCALE records the explicit choice so geo redirect (proxy.js) stops overriding it. */}
 					<Link
-						href="/"
+						href={asPath.split('#')[0]}
 						locale={other}
 						className={cx('lang')}
 						hrefLang={other}

@@ -23,7 +23,7 @@ const LINE_STAGGER = 0.12; // seconds between lines
 // animates to; `decimals` keeps the display stable (e.g. 4.5), `suffix` is the
 // static accent unit that never animates.
 const STATS = [
-	{ value: 14, decimals: 0, suffix: 'y' },
+	{ value: 15, decimals: 0, suffix: 'y' },
 	{ value: 36, decimals: 0, suffix: 'k+' },
 	{ value: 4.5, decimals: 1, suffix: '/5' },
 ];
@@ -81,7 +81,7 @@ function Stat({ value, decimals, suffix, label, started }) {
 		<div className={cx('stat')}>
 			<span className={cx('stat-value')}>
 				{/* Reserve the final value's width so the digit count growing
-				    (e.g. 0 -> 14) can't shift the suffix during the count-up. */}
+				    (e.g. 0 -> 15) can't shift the suffix during the count-up. */}
 				<span
 					className={cx('stat-num')}
 					style={{ '--stat-num-width': `${value.toFixed(decimals).length}ch` }}
