@@ -12,8 +12,7 @@ const PERSON_SCHEMA = {
 	url: 'https://constantin.saguin.com/',
 	email: 'constantin@saguin.com',
 	jobTitle: 'Senior WordPress Engineer',
-	description:
-		'Senior WordPress engineer with 15 years of experience. Founder of WolfThemes.',
+	description: 'Senior WordPress engineer with 15 years of experience. Founder of WolfThemes.',
 	address: {
 		'@type': 'PostalAddress',
 		addressLocality: 'Alsace',
@@ -105,11 +104,13 @@ const SITE = {
 
 export default function SEO({ title, description, imageUrl, url }) {
 	const { seo } = useCopy();
-	const { locale } = useRouter();
+	const { locale, asPath } = useRouter();
+	// Same page in each language: /x <-> /fr/x (home is '' so it stays /fr).
+	const path = asPath.split(/[?#]/)[0].replace(/\/+$/, '');
 	const metaTitle = title || seo.title;
 	const metaDescription = description || seo.description;
 	const metaImage = imageUrl || SITE.image;
-	const metaUrl = url || (locale === 'fr' ? `${SITE.url}/fr` : SITE.url);
+	const metaUrl = url || `${SITE.url}${locale === 'fr' ? '/fr' : ''}${path}`;
 
 	return (
 		<Head>
@@ -120,9 +121,9 @@ export default function SEO({ title, description, imageUrl, url }) {
 			<meta name="author" content={SITE.author} />
 			<meta name="robots" content="index, follow" />
 			<link rel="canonical" href={metaUrl} />
-			<link rel="alternate" hrefLang="en" href={SITE.url} />
-			<link rel="alternate" hrefLang="fr" href={`${SITE.url}/fr`} />
-			<link rel="alternate" hrefLang="x-default" href={SITE.url} />
+			<link rel="alternate" hrefLang="en" href={`${SITE.url}${path}`} />
+			<link rel="alternate" hrefLang="fr" href={`${SITE.url}/fr${path}`} />
+			<link rel="alternate" hrefLang="x-default" href={`${SITE.url}${path}`} />
 
 			<meta property="og:type" content="website" />
 			<meta property="og:site_name" content={SITE.name} />

@@ -9,30 +9,13 @@ import styles from './Header.module.scss';
 
 let cx = classNames.bind(styles);
 
-// Normalise a path for comparison, matching NavigationMenu's own logic so
-// "/about/" and "/about" both resolve to the same item.
-function normalizePath(value) {
-	const path = (value ?? '').split('?')[0].split('#')[0];
-	return path.replace(/\/+$/, '') || '/';
-}
-
-// The front page is a single scroller: each menu item points at a section
-// rendered on it. Map a menu path's slug to the matching section id (with a few
-// aliases so "Work"/"Case Studies" both land on the case-studies block).
-const SECTION_ALIASES = {
-	'': 'home',
-	work: 'case-studies',
-	works: 'case-studies',
-	project: 'case-studies',
-	projects: 'case-studies',
-	'case-study': 'case-studies',
-	'case-studies': 'case-studies',
-};
-
-function sectionIdFor(path) {
-	const slug = normalizePath(path).replace(/^\//, '').split('/').pop();
-	return SECTION_ALIASES[slug] ?? slug;
-}
+// Fixed three-item menu. `section` is the on-page element id the item scrolls
+// to when it exists on the current page; otherwise the link navigates normally.
+const NAV = [
+	{ key: 'home', path: '/', section: 'home' },
+	{ key: 'services', path: '/services', section: 'services' },
+	{ key: 'contact', path: '/#contact', section: 'contact' },
+];
 
 // Absolute page Y that lands a section at its resting position, honouring the
 // target's scroll-margin-top (the about section pulls itself down with a
@@ -69,39 +52,27 @@ function scrollToSection(target) {
 	});
 }
 
-export default function Header({ title = 'Headless by WP Engine', menuItems }) {
+export default function Header({ title = 'Headless by WP Engine' }) {
 	const [isNavShown, setIsNavShown] = useState(false);
 	const { locale, asPath } = useRouter();
-	const { menu } = useCopy();
+	const { nav } = useCopy();
 	const other = locale === 'fr' ? 'en' : 'fr';
-	// The WP menu has no Services entry: add one (before Contact) on every page.
-	const base = menuItems ?? [];
-	const withServices = base.some((item) => sectionIdFor(item.path) === 'services')
-		? base
-		: [
-				...base.filter((item) => sectionIdFor(item.path) !== 'contact'),
-				{
-					...(base[0] ?? {}),
-					id: 'services',
-					path: '/services',
-					label: 'Services',
-					parentId: null,
-					target: null,
-					cssClasses: [],
-					__typename: 'MenuItem',
-				},
-				...base.filter((item) => sectionIdFor(item.path) === 'contact'),
-			];
-	const items =
-		menuItems &&
-		withServices.map((item) => ({ ...item, label: menu[sectionIdFor(item.path)] ?? item.label }));
+	const items = NAV.map((item) => ({
+		...item,
+		id: item.key,
+		label: nav[item.key],
+		parentId: null,
+		target: null,
+		cssClasses: [],
+		__typename: 'MenuItem',
+		menu: { node: { name: 'Primary' } },
+	}));
 
-	// Turn every menu item into a one-page scroll link: if a section with the
-	// matching id exists on the page, smooth-scroll to it instead of navigating.
-	// Items with no matching section keep their normal link behaviour.
+	// One-page scroll link: if the item's section exists on this page,
+	// smooth-scroll to it instead of navigating.
 	const handleItemClick = (item, event) => {
 		if (typeof document === 'undefined') return;
-		const id = sectionIdFor(item?.path);
+		const id = item?.section;
 		const target = id && document.getElementById(id);
 		if (!target) return;
 		event.preventDefault();

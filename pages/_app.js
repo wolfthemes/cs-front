@@ -77,7 +77,8 @@ export default function MyApp({ Component, pageProps }) {
 			)}
 			<div className={`app-shell ${fontVariables}`}>
 				<Component {...pageProps} key={router.asPath} />
-				<GrainOverlay />
+				{/* Grain is part of the home look; the conversion page stays clean. */}
+				{router.pathname !== '/services' && <GrainOverlay />}
 				<SpeedInsights />
 			</div>
 		</FaustProvider>

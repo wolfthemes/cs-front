@@ -43,7 +43,7 @@ export default function NavigationMenu({ menuItems, className, onItemClick }) {
 						return null;
 					}
 
-					const isActive = path && normalizePath(path) === currentPath;
+					const isActive = path && !path.includes('#') && normalizePath(path) === currentPath;
 
 					return (
 						<li key={id} className={`${cxFromWp(cssClasses)} ${cx({ active: isActive })}`.trim()}>

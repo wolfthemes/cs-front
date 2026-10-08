@@ -199,6 +199,11 @@ $edge: clamp(1rem, 5vw, 5rem);
 	gap: 1.5rem clamp(1.5rem, 3vw, 3rem);
 	padding: clamp(2rem, 4vw, 3rem) 0;
 	border-bottom: var(--wpe--border--light);
+
+	// The next section draws its own top rule; avoid a double divider.
+	&:last-child {
+		border-bottom: 0;
+	}
 }
 
 .offer-index {
@@ -312,6 +317,10 @@ $edge: clamp(1rem, 5vw, 5rem);
 
 .faq-item {
 	border-bottom: var(--wpe--border--light);
+
+	&:last-child {
+		border-bottom: 0;
+	}
 
 	summary {
 		display: flex;
