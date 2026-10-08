@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 // import HeroCircle from './HeroCircle'; // ellipse disabled for now
+import Link from 'next/link';
 import { ShuffleText } from '../../components';
 import { useCopy } from '../../lib/i18n';
 
@@ -96,7 +97,7 @@ function Stat({ value, decimals, suffix, label, started }) {
 }
 
 export default function HomeHero() {
-	const { hero } = useCopy();
+	const { hero, cv } = useCopy();
 	const statsRef = useRef(null);
 	// One observer for the whole stats row: `started` triggers all three counters,
 	// `statsDone` (below) gates the "engineering" shuffle after they land.
@@ -198,7 +199,7 @@ export default function HomeHero() {
 					</p>
 
 					<div className={cx('cta')}>
-						<a className={cx('cta-button')} href="mailto:constantin@saguin.com">
+						<Link className={cx('cta-button')} href="/services">
 							<span className={cx('cta-label')}>{hero.cta}</span>
 							<svg
 								className={cx('cta-arrow')}
@@ -216,6 +217,9 @@ export default function HomeHero() {
 									strokeLinejoin="round"
 								/>
 							</svg>
+						</Link>
+						<a className={cx('cta-button', 'cta-secondary')} href={cv}>
+							<span className={cx('cta-label')}>{hero.cv}</span>
 						</a>
 					</div>
 				</div>

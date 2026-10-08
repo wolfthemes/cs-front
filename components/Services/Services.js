@@ -40,7 +40,7 @@ function Arrow() {
 // pre-filled mailto), process, differentiators, FAQ, closing CTA. No video
 // backdrop; sections fade up once on scroll (CSS handles reduced motion).
 export default function Services() {
-	const { services: c, hero } = useCopy();
+	const { services: c, cv } = useCopy();
 	const rootRef = useRef(null);
 
 	useEffect(() => {
@@ -178,6 +178,12 @@ export default function Services() {
 						{EMAIL}
 					</a>
 				</div>
+				<p className={cx('note')}>
+					{c.final.hire}{' '}
+					<a className={cx('email')} href={cv}>
+						{c.final.hireCta}
+					</a>
+				</p>
 			</section>
 		</div>
 	);
