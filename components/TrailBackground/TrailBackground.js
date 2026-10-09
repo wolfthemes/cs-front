@@ -28,6 +28,7 @@ const FRAG = /* glsl */ `precision highp float;
 	uniform float uRange;
 	uniform float uProgress;
 	uniform float uStrength;
+	uniform vec4 uBounds; // route bounding box (map units), padded
 	uniform vec2 uPath[${N}];
 	varying vec2 vUv;
 
@@ -118,6 +119,8 @@ const FRAG = /* glsl */ `precision highp float;
 		float dashAlong = 0.0;
 		float wp = 0.0;
 		vec2 head = uPath[0];
+		// The 127-segment loop is the expensive part: only pixels near the route run it.
+		if (p.x > uBounds.x && p.x < uBounds.z && p.y > uBounds.y && p.y < uBounds.w) {
 		for (int i = 0; i < ${N - 1}; i++) {
 			float fi = float(i);
 			vec2 a = uPath[i];
@@ -142,6 +145,7 @@ const FRAG = /* glsl */ `precision highp float;
 			vec2 top = uPath[${N - 1}];
 			float d = length(p - top) / px;
 			wp = max(wp, max(ring(d, 8.0) * 0.8, (1.0 - smoothstep(3.0, 4.0, d)) * step(${(N - 1).toFixed(1)}, tp)));
+		}
 		}
 		float dash = step(0.5, fract(dashAlong * 260.0));
 		float ahead = (1.0 - smoothstep(px * 0.6, px * 1.4, dAll)) * dash * 0.35;
@@ -294,7 +298,17 @@ export default function TrailBackground({ strength = 0.55 }) {
 				let line = trail.points.map((point) => toMapUv(map, point));
 				line = chaikin(chaikin(line));
 				const route = resample(line, N);
-				renderer = new Renderer({ canvas, dpr: Math.min(window.devicePixelRatio || 1, 1.5) });
+				// Padded bbox so rings/glow near the ends still render.
+				const xs = route.filter((_, i) => i % 2 === 0);
+				const ys = route.filter((_, i) => i % 2 === 1);
+				const pad = 0.03;
+				const bounds = [
+					Math.min(...xs) - pad,
+					Math.min(...ys) - pad,
+					Math.max(...xs) + pad,
+					Math.max(...ys) + pad,
+				];
+				renderer = new Renderer({ canvas, dpr: 1 });
 				const gl = renderer.gl;
 
 				const rgba = new Uint8Array(map.w * map.h * 4);
@@ -333,6 +347,7 @@ export default function TrailBackground({ strength = 0.55 }) {
 						uProgress: { value: 0 },
 						uStrength: { value: strength },
 						uPath: { value: route },
+						uBounds: { value: bounds },
 					},
 				});
 				const mesh = new Mesh(gl, { geometry: new Triangle(gl), program });
