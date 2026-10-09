@@ -5,6 +5,7 @@ import styles from './HomeHero.module.scss';
 import Link from 'next/link';
 import { ShuffleText } from '../../components';
 import { useCopy } from '../../lib/i18n';
+import { track } from '../../lib/track';
 
 let cx = className.bind(styles);
 
@@ -44,14 +45,17 @@ const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 // Count a single number from 0 to `value` once `started` flips true (driven by a
 // single shared observer in HomeHero, so the three stats don't each watch the row).
 function useCountUp(value, decimals, started) {
-	const [display, setDisplay] = useState(0);
+	const [display, setDisplay] = useState(value); // real value for SSR / no-JS / crawlers
 
 	useEffect(() => {
 		if (prefersReducedMotion()) {
 			setDisplay(value);
 			return undefined;
 		}
-		if (!started) return undefined;
+		if (!started) {
+			setDisplay(0);
+			return undefined;
+		}
 
 		let rafId;
 		let startTs;
@@ -199,7 +203,11 @@ export default function HomeHero() {
 					</p>
 
 					<div className={cx('cta')}>
-						<Link className={cx('cta-button')} href="/services">
+						<Link
+							className={cx('cta-button')}
+							href="/services"
+							onClick={() => track('cta_click', { location: 'hero', target: 'services' })}
+						>
 							<span className={cx('cta-label')}>{hero.cta}</span>
 							<svg
 								className={cx('cta-arrow')}
@@ -223,10 +231,20 @@ export default function HomeHero() {
 							href={cv}
 							target="_blank"
 							rel="noopener noreferrer"
+							onClick={() => track('cv_download', { location: 'hero' })}
 						>
 							<span className={cx('cta-label')}>{hero.cv}</span>
 						</a>
 					</div>
+					<p className={cx('hire')}>
+						{hero.hire}{' '}
+						<Link
+							href={{ pathname: '/contact', query: { topic: hero.hireTopic } }}
+							onClick={() => track('cta_click', { location: 'hero', target: 'hiring' })}
+						>
+							{hero.hireCta} →
+						</Link>
+					</p>
 				</div>
 
 				<div className={cx('stats')} ref={statsRef}>

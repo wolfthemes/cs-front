@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames/bind';
 import styles from './ContactForm.module.scss';
 import { useCopy } from '../../lib/i18n';
+import { track } from '../../lib/track';
 
 let cx = classNames.bind(styles);
 
@@ -11,9 +12,12 @@ const EMAIL = 'constantin@saguin.com';
 // Posts to /api/contact. `website` is a honeypot: hidden from people, filled by
 // bots, and silently dropped server-side.
 export default function ContactForm() {
-	const { contactPage: c } = useCopy();
+	const { contactPage: c, hero } = useCopy();
 	const { query, locale } = useRouter();
 	const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+
+	// Recruiters arrive via ?topic=Hiring (hero link): the budget field is for clients.
+	const isHiring = query.topic === hero.hireTopic;
 
 	const onSubmit = async (event) => {
 		event.preventDefault();
@@ -26,6 +30,7 @@ export default function ContactForm() {
 				body: JSON.stringify({ ...data, locale }),
 			});
 			setStatus(res.ok ? 'sent' : 'error');
+			if (res.ok) track('contact_submit', { audience: isHiring ? 'employer' : 'client' });
 		} catch {
 			setStatus('error');
 		}
@@ -62,14 +67,16 @@ export default function ContactForm() {
 						defaultValue={typeof query.topic === 'string' ? query.topic : c.defaultTopic}
 					/>
 				</label>
-				<label className={cx('field')}>
-					<span>{c.labels.budget}</span>
-					<select name="budget" defaultValue={c.budgets[0]}>
-						{c.budgets.map((b) => (
-							<option key={b}>{b}</option>
-						))}
-					</select>
-				</label>
+				{!isHiring && (
+					<label className={cx('field')}>
+						<span>{c.labels.budget}</span>
+						<select name="budget" defaultValue={c.budgets[0]}>
+							{c.budgets.map((b) => (
+								<option key={b}>{b}</option>
+							))}
+						</select>
+					</label>
+				)}
 			</div>
 			<label className={cx('field')}>
 				<span>{c.labels.message}</span>

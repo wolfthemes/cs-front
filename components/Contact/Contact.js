@@ -3,6 +3,7 @@ import Link from 'next/link';
 import className from 'classnames/bind';
 import styles from './Contact.module.scss';
 import { useCopy } from '../../lib/i18n';
+import { track } from '../../lib/track';
 
 let cx = className.bind(styles);
 
@@ -137,7 +138,11 @@ export default function Contact() {
 				</p>
 
 				<div className={cx('actions', 'reveal')} style={{ transitionDelay: `${actionsDelay}s` }}>
-					<Link className={cx('primary')} href="/contact">
+					<Link
+						className={cx('primary')}
+						href="/contact"
+						onClick={() => track('cta_click', { location: 'home_contact' })}
+					>
 						<span className={cx('primary-label')}>{contact.cta}</span>
 						<svg
 							className={cx('primary-arrow')}

@@ -218,6 +218,23 @@
 	animation-delay: 1.05s;
 }
 
+// Employer line under the CTAs; fades in with them.
+.hire {
+	margin: 0;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+	opacity: 0;
+	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	animation-delay: 1.15s;
+
+	a {
+		color: $c-base;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+}
+
 // White pill matching the nav CTA.
 .cta-button {
 	display: inline-flex;
@@ -328,7 +345,8 @@
 	.title,
 	.line,
 	.stats,
-	.cta {
+	.cta,
+	.hire {
 		animation: none;
 		opacity: 1;
 	}

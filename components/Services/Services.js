@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './Services.module.scss';
 import { useCopy } from '../../lib/i18n';
 import { scrollTo } from '../../lib/scroll';
+import { track } from '../../lib/track';
 
 let cx = classNames.bind(styles);
 
@@ -104,7 +105,11 @@ export default function Services() {
 				<h1 className={cx('hero-title')}>{c.hero.title}</h1>
 				<p className={cx('hero-lead')}>{c.hero.lead}</p>
 				<div className={cx('actions')}>
-					<Link className={cx('primary')} href={contactHref(c.hero.subject)}>
+					<Link
+						className={cx('primary')}
+						href={contactHref(c.hero.subject)}
+						onClick={() => track('cta_click', { location: 'services_hero' })}
+					>
 						<span>{c.hero.cta}</span>
 						<Arrow />
 					</Link>
@@ -154,6 +159,7 @@ export default function Services() {
 								<Link
 									className={cx('ghost')}
 									href={contactHref(`${c.offers.subject} — ${item.title}`)}
+									onClick={() => track('offer_click', { offer: item.title })}
 								>
 									<span>{item.cta ?? c.offers.cta}</span>
 									<Arrow />
@@ -227,14 +233,24 @@ export default function Services() {
 				<h2 className={cx('final-title')}>{c.final.title}</h2>
 				<p className={cx('lead')}>{c.final.lead}</p>
 				<div className={cx('actions')}>
-					<Link className={cx('primary')} href={contactHref(c.final.subject)}>
+					<Link
+						className={cx('primary')}
+						href={contactHref(c.final.subject)}
+						onClick={() => track('cta_click', { location: 'services_final' })}
+					>
 						<span>{c.final.cta}</span>
 						<Arrow />
 					</Link>
 				</div>
 				<p className={cx('note')}>
 					{c.final.hire}{' '}
-					<a className={cx('email')} href={cv} target="_blank" rel="noopener noreferrer">
+					<a
+						className={cx('email')}
+						href={cv}
+						target="_blank"
+						rel="noopener noreferrer"
+						onClick={() => track('cv_download', { location: 'services' })}
+					>
 						{c.final.hireCta}
 					</a>
 				</p>
