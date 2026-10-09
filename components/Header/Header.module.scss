@@ -3,8 +3,29 @@
 
 .component {
 	color: var(--wpe--header--color);
-	position: relative;
-	z-index: 2; // Pull dropdown menus to the foreground to sit above <Main />.
+
+	// Sticky (not fixed) so the header keeps its place in the layout; it slides
+	// out while scrolling down and back in on scroll up (see Header.js).
+	position: sticky;
+	top: 0;
+	z-index: 2147483002; // Above the gallery banner (2147483001) and grain, so it never slides under them.
+	transition:
+		transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+		background-color 0.3s ease-out;
+
+	// Once scrolled, give the menu a soft backdrop so it stays readable over content.
+	&.stuck {
+		background-color: rgba(10, 10, 10, 0.72);
+		backdrop-filter: blur(10px);
+	}
+
+	&.hidden {
+		transform: translateY(-100%);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
 }
 
 .navbar {

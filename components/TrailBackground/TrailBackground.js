@@ -34,32 +34,22 @@ const FRAG = /* glsl */ `precision highp float;
 
 	float texel(vec2 i) {
 		vec2 c = clamp(i, vec2(0.0), uSize - 1.0);
-		return texture2D(uMap, (c + 0.5) / uSize).r;
+		// 16-bit height packed in R (high byte) and G (low byte): no stair-steps.
+		vec4 t = texture2D(uMap, (c + 0.5) / uSize);
+		return (t.r * 255.0 * 256.0 + t.g * 255.0) / 65535.0;
 	}
 
-	// Bilinear with smoothstep weights: C1-continuous, so contours stay round.
+	// Plain bilinear on the dense, pre-smoothed grid. (Smoothstep weights have zero
+	// slope at every cell border, which dents contours once per cell.)
 	float baseHeight(vec2 uv) {
 		vec2 st = uv * uSize - 0.5;
 		vec2 i = floor(st);
 		vec2 f = fract(st);
-		f = f * f * (3.0 - 2.0 * f);
 		return mix(
 			mix(texel(i), texel(i + vec2(1.0, 0.0)), f.x),
 			mix(texel(i + vec2(0.0, 1.0)), texel(i + vec2(1.0, 1.0)), f.x),
 			f.y
 		);
-	}
-
-	float hash(vec2 p) {
-		p = fract(p * vec2(123.34, 456.21));
-		p += dot(p, p + 45.32);
-		return fract(p.x * p.y);
-	}
-	float noise(vec2 p) {
-		vec2 i = floor(p);
-		vec2 f = fract(p);
-		f = f * f * (3.0 - 2.0 * f);
-		return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
 	}
 
 	// x: distance to segment ab, y: position along it (0..1)
@@ -77,7 +67,7 @@ const FRAG = /* glsl */ `precision highp float;
 	}
 
 	float height(vec2 p) {
-		return baseHeight(p) + (noise(p * uSize * 0.9) - 0.5) * 0.008;
+		return baseHeight(p);
 	}
 
 	float ring(float d, float r) {
@@ -95,8 +85,8 @@ const FRAG = /* glsl */ `precision highp float;
 		float h = height(p);
 		float k = uRange / 40.0;
 		float v = h * k; // minor contour every 40 m
-		float aa = (abs(height(p + vec2(px, 0.0)) - height(p - vec2(px, 0.0))) +
-			abs(height(p + vec2(0.0, px)) - height(p - vec2(0.0, px)))) * 0.5 * k;
+		// Forward differences: how much v changes per screen pixel (2 lookups, not 4).
+		float aa = (abs(height(p + vec2(px, 0.0)) - h) + abs(height(p + vec2(0.0, px)) - h)) * k;
 		float minor = lineAA(v, aa, 1.1);
 		float major = lineAA(v / 5.0, aa / 5.0, 1.8); // every 200 m
 		// Nearly flat ground (plains) only has quantisation noise: fade it out.
@@ -168,10 +158,15 @@ const FRAG = /* glsl */ `precision highp float;
 
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
-// Two 3x3 box-blur passes: rounder, calmer contours than the raw 450 m grid.
-function smooth({ w, h, data }) {
+// Organic, rounded contours (like a generated noise map) need a smooth height
+// field: blur the raw ~325 m grid hard with 3x3 box passes, then upsample it with
+// Catmull-Rom (bicubic) to a dense grid so the contour lines have no kinks.
+const BLUR_PASSES = 6;
+const UPSAMPLE = 3;
+
+function blur({ w, h, data }, passes) {
 	let src = data;
-	for (let pass = 0; pass < 2; pass++) {
+	for (let pass = 0; pass < passes; pass++) {
 		const out = new Array(src.length);
 		for (let y = 0; y < h; y++) {
 			for (let x = 0; x < w; x++) {
@@ -187,6 +182,41 @@ function smooth({ w, h, data }) {
 		src = out;
 	}
 	return src;
+}
+
+// Catmull-Rom weights for the 4 neighbours around fractional position t.
+const catmullRom = (t) => [
+	-0.5 * t ** 3 + t ** 2 - 0.5 * t,
+	1.5 * t ** 3 - 2.5 * t ** 2 + 1,
+	-1.5 * t ** 3 + 2 * t ** 2 + 0.5 * t,
+	0.5 * t ** 3 - 0.5 * t ** 2,
+];
+
+// Separable bicubic upsample of a w x h grid to ((w-1)k+1) x ((h-1)k+1).
+function upsample(data, w, h, k) {
+	const W = (w - 1) * k + 1;
+	const H = (h - 1) * k + 1;
+	const rows = new Float32Array(W * h);
+	for (let y = 0; y < h; y++) {
+		for (let X = 0; X < W; X++) {
+			const i = Math.floor(X / k);
+			const wt = catmullRom((X % k) / k);
+			let v = 0;
+			for (let n = 0; n < 4; n++) v += wt[n] * data[y * w + clamp(i - 1 + n, 0, w - 1)];
+			rows[y * W + X] = v;
+		}
+	}
+	const out = new Float32Array(W * H);
+	for (let Y = 0; Y < H; Y++) {
+		const j = Math.floor(Y / k);
+		const wt = catmullRom((Y % k) / k);
+		for (let X = 0; X < W; X++) {
+			let v = 0;
+			for (let n = 0; n < 4; n++) v += wt[n] * rows[clamp(j - 1 + n, 0, h - 1) * W + X];
+			out[Y * W + X] = v;
+		}
+	}
+	return { w: W, h: H, data: out };
 }
 
 // public/data/trail.json holds the route as [lat, lon] points. Convert to map
@@ -275,7 +305,9 @@ function frameRoute(route, aspect, footerFrac) {
 	};
 }
 
-export default function TrailBackground({ strength = 0.55 }) {
+// animated=false: the plain topographic map for the other pages (no trail, no
+// scroll-driven drawing); it only repaints on resize.
+export default function TrailBackground({ animated = true, strength = animated ? 0.55 : 0.28 }) {
 	const canvasRef = useRef(null);
 
 	useEffect(() => {
@@ -294,7 +326,8 @@ export default function TrailBackground({ strength = 0.55 }) {
 		])
 			.then(([{ Renderer, Program, Mesh, Triangle, Texture }, raw, trail]) => {
 				if (cancelled) return;
-				const map = { ...raw, data: smooth(raw) };
+				const map = { ...raw };
+				const dense = upsample(blur(raw, BLUR_PASSES), raw.w, raw.h, UPSAMPLE);
 				let line = trail.points.map((point) => toMapUv(map, point));
 				line = chaikin(chaikin(line));
 				const route = resample(line, N);
@@ -308,18 +341,25 @@ export default function TrailBackground({ strength = 0.55 }) {
 					Math.max(...xs) + pad,
 					Math.max(...ys) + pad,
 				];
-				renderer = new Renderer({ canvas, dpr: 1 });
+				renderer = new Renderer({
+					canvas,
+					// At least 1.5x: supersampled, so lines stay smooth at 100% browser zoom.
+					dpr: Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2),
+				});
 				const gl = renderer.gl;
 
-				const rgba = new Uint8Array(map.w * map.h * 4);
-				map.data.forEach((val, i) => {
-					rgba[i * 4] = Math.round(val);
+				// 16-bit heights: high byte in R, low byte in G.
+				const rgba = new Uint8Array(dense.w * dense.h * 4);
+				dense.data.forEach((val, i) => {
+					const v = Math.round(clamp(val / 255, 0, 1) * 65535);
+					rgba[i * 4] = v >> 8;
+					rgba[i * 4 + 1] = v & 255;
 					rgba[i * 4 + 3] = 255;
 				});
 				const texture = new Texture(gl, {
 					image: rgba,
-					width: map.w,
-					height: map.h,
+					width: dense.w,
+					height: dense.h,
 					generateMipmaps: false,
 					minFilter: gl.NEAREST,
 					magFilter: gl.NEAREST,
@@ -340,14 +380,15 @@ export default function TrailBackground({ strength = 0.55 }) {
 					uniforms: {
 						uMap: { value: texture },
 						uRes: { value: [1, 1] },
-						uSize: { value: [map.w, map.h] },
+						uSize: { value: [dense.w, dense.h] },
 						uCenter: { value: [0.5, 0.5] },
 						uZoom: { value: 1 },
 						uRange: { value: map.max - map.min },
 						uProgress: { value: 0 },
 						uStrength: { value: strength },
-						uPath: { value: route },
-						uBounds: { value: bounds },
+						// Static mode parks the route off-map so no trail, rings or walker are drawn.
+						uPath: { value: animated ? route : new Array(N * 2).fill(-10) },
+						uBounds: { value: animated ? bounds : [-9, -9, -8, -8] },
 					},
 				});
 				const mesh = new Mesh(gl, { geometry: new Triangle(gl), program });
@@ -381,8 +422,10 @@ export default function TrailBackground({ strength = 0.55 }) {
 					raf = requestAnimationFrame(frame);
 					if (document.hidden) return;
 					// Reach the summit when the footer is about to enter the screen.
-					const max = document.documentElement.scrollHeight - window.innerHeight - footerH;
-					const target = max > 0 ? clamp(getScrollY() / max, 0, 1) : 0;
+					const max = animated
+						? document.documentElement.scrollHeight - window.innerHeight - footerH
+						: 0; // static map: skip the per-frame layout read
+					const target = animated && max > 0 ? clamp(getScrollY() / max, 0, 1) : 0;
 					progress = reduce ? target : progress + (target - progress) * 0.1;
 					if (Math.abs(target - progress) < 1e-4) progress = target;
 					// Only redraw when something changed (static map, no idle GPU cost).
@@ -407,7 +450,7 @@ export default function TrailBackground({ strength = 0.55 }) {
 			if (raf) cancelAnimationFrame(raf);
 			if (onResize) window.removeEventListener('resize', onResize);
 		};
-	}, [strength]);
+	}, [strength, animated]);
 
 	return <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />;
 }

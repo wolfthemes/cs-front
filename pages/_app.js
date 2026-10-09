@@ -9,7 +9,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { GeistPixelSquare, GeistPixelGrid, GeistPixelCircle } from 'geist/font/pixel';
 import { EB_Garamond } from 'next/font/google';
-import { GrainOverlay } from '../components';
+import { GrainOverlay, TrailBackground } from '../components';
 import { initSmoothScroll, resizeSmoothScroll } from '../lib/scroll';
 import '@faustwp/core/dist/css/toolbar.css';
 import '../styles/global.scss';
@@ -76,6 +76,11 @@ export default function MyApp({ Component, pageProps }) {
 				</>
 			)}
 			<div className={`app-shell ${fontVariables}`}>
+				{/* Every page but the home (which mounts the animated trail itself) gets
+				    the plain topographic map; /lab pages bring their own backdrops. */}
+				{router.pathname !== '/' && !router.pathname.startsWith('/lab') && (
+					<TrailBackground animated={false} />
+				)}
 				<Component {...pageProps} key={router.asPath} />
 				{/* Grain is part of the home look only; every other page stays clean. */}
 				{router.pathname === '/' && <GrainOverlay />}

@@ -1,4 +1,6 @@
 .component {
 	color: var(--wpe--main--color);
-	background-color: var(--wpe--main--background-color);
+	// Transparent so the fixed topographic background shows through; the page
+	// ground (body) is already black.
+	background-color: transparent;
 }

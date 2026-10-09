@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { Container, NavigationMenu, SkipNavigationLink } from '../../components';
-import { getScrollY, scrollTo } from '../../lib/scroll';
+import { getScrollY, onScrollFrame, scrollTo } from '../../lib/scroll';
 import { useRouter } from 'next/router';
 import { useCopy } from '../../lib/i18n';
 import styles from './Header.module.scss';
@@ -54,6 +54,25 @@ function scrollToSection(target) {
 
 export default function Header({ title = 'Headless by WP Engine' }) {
 	const [isNavShown, setIsNavShown] = useState(false);
+	// Sticky menu that tucks away while scrolling down and returns on scroll up.
+	const [hidden, setHidden] = useState(false);
+	const [stuck, setStuck] = useState(false);
+
+	useEffect(
+		() =>
+			onScrollFrame((y, velocity) => {
+				if (y < 80) {
+					setStuck(false);
+					setHidden(false);
+					return;
+				}
+				setStuck(true);
+				// Ignore tiny jitters so it doesn't flicker.
+				if (velocity > 2) setHidden(true);
+				else if (velocity < -2) setHidden(false);
+			}),
+		[]
+	);
 	const { locale, asPath } = useRouter();
 	const { nav } = useCopy();
 	const other = locale === 'fr' ? 'en' : 'fr';
@@ -82,7 +101,7 @@ export default function Header({ title = 'Headless by WP Engine' }) {
 	};
 
 	return (
-		<header className={cx('component')}>
+		<header className={cx('component', { hidden, stuck })}>
 			<SkipNavigationLink />
 			<Container>
 				<div className={cx('navbar')}>
