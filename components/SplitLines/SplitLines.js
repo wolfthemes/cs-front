@@ -31,7 +31,10 @@ export default function SplitLines({
 	stagger = 0,
 }) {
 	const measureRef = useRef(null);
-	const [lines, setLines] = useState(null);
+	// Groups are stored with the word list they were measured for: if `words`
+	// changes (e.g. language switch) the old indices are stale and must not be used.
+	const [measured, setMeasured] = useState(null);
+	const lines = measured && measured.words === words ? measured.groups : null;
 
 	useEffect(() => {
 		const el = measureRef.current;
@@ -56,7 +59,7 @@ export default function SplitLines({
 				prevLeft = left;
 			});
 			if (current.length) groups.push(current);
-			setLines(groups);
+			setMeasured({ words, groups });
 		};
 
 		measure();
