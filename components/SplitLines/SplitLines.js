@@ -19,9 +19,9 @@ import styles from './SplitLines.module.scss';
 //   baseDelay / stagger (seconds)         — per-line animationDelay, set inline.
 //
 // A hidden, zero-height measuring layer holds the plain words and stays mounted
-// so re-measures (fonts/resize) work. Before the first measure — and with no JS
-// — the words render as one flowing run, so the copy is always present.
-const LINE_TOLERANCE = 4; // px; tops within this count as the same line
+// so re-measures (fonts/resize) work. Before the first measure the words render as one hidden run (still in the DOM
+// for crawlers / screen readers) so there is no flash before the lines animate in.
+const LINE_TOLERANCE = 2; // px of slack when comparing left edges
 
 export default function SplitLines({
 	words,
@@ -40,18 +40,20 @@ export default function SplitLines({
 		const measure = () => {
 			const spans = Array.from(el.children);
 			if (!spans.length) return;
+			// New line = the word's left edge jumps back. Unlike comparing tops, this
+			// is immune to words in taller fonts (serif / brush) sitting at a
+			// different height on the same line.
 			const groups = [];
 			let current = [];
-			let lineTop = null;
+			let prevLeft = -Infinity;
 			spans.forEach((span, i) => {
-				const top = span.offsetTop;
-				if (lineTop !== null && top > lineTop + LINE_TOLERANCE && current.length) {
+				const left = span.getBoundingClientRect().left;
+				if (left < prevLeft - LINE_TOLERANCE && current.length) {
 					groups.push(current);
 					current = [];
-					lineTop = top;
 				}
-				if (lineTop === null || top < lineTop) lineTop = top;
 				current.push(i);
+				prevLeft = left;
 			});
 			if (current.length) groups.push(current);
 			setLines(groups);
@@ -76,34 +78,38 @@ export default function SplitLines({
 
 	return (
 		<>
-			{/* Hidden measuring layer — plain words, kept mounted for re-measures. */}
+			{/* Hidden measuring layer: the same words as plain inline spans separated by real
+			    spaces, so it wraps exactly like the visible copy. Kept mounted for re-measures. */}
 			<span ref={measureRef} aria-hidden="true" className={styles.measure}>
 				{words.map((w, i) => (
-					<span key={i} className={w.className} style={{ display: 'inline-block' }}>
-						{w.text}{' '}
-					</span>
+					<React.Fragment key={i}>
+						<span className={w.className}>{w.text}</span>{' '}
+					</React.Fragment>
 				))}
 			</span>
 
-			{lines
-				? lines.map((group, li) => (
-						<span
-							key={li}
-							className={lineClassName}
-							style={{ animationDelay: `${baseDelay + li * stagger}s` }}
-						>
-							{group.map((wi) => (
-								<React.Fragment key={wi}>
-									{renderWord(words[wi], wi)}{' '}
-								</React.Fragment>
-							))}
-						</span>
-				  ))
-				: words.map((w, i) => (
-						<React.Fragment key={i}>
-							{renderWord(w, i)}{' '}
-						</React.Fragment>
-				  ))}
+			{lines ? (
+				lines.map((group, li) => (
+					<span
+						key={li}
+						className={lineClassName}
+						style={{ animationDelay: `${baseDelay + li * stagger}s` }}
+					>
+						{group.map((wi) => (
+							<React.Fragment key={wi}>{renderWord(words[wi], wi)} </React.Fragment>
+						))}
+					</span>
+				))
+			) : (
+				// Not measured yet (SSR / first paint): keep the copy in the DOM for
+				// crawlers and screen readers, but invisible, so it can't flash before
+				// the lines mount and animate in.
+				<span style={{ visibility: 'hidden' }}>
+					{words.map((w, i) => (
+						<React.Fragment key={i}>{renderWord(w, i)} </React.Fragment>
+					))}
+				</span>
+			)}
 		</>
 	);
 }

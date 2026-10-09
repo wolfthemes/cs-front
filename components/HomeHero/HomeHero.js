@@ -3,7 +3,7 @@ import className from 'classnames/bind';
 import styles from './HomeHero.module.scss';
 // import HeroCircle from './HeroCircle'; // ellipse disabled for now
 import Link from 'next/link';
-import { ShuffleText } from '../../components';
+import { ShuffleText, SplitLines } from '../../components';
 import { useCopy } from '../../lib/i18n';
 import { track } from '../../lib/track';
 
@@ -107,14 +107,14 @@ export default function HomeHero() {
 	// `statsDone` (below) gates the "engineering" shuffle after they land.
 	const [started, setStarted] = useState(false);
 	const [statsDone, setStatsDone] = useState(false);
-	const introLines = useMemo(
+	// One flowing paragraph: SplitLines measures the browser's real line breaks, so
+	// wrapping adapts to any width instead of following hand-split lines.
+	const introWords = useMemo(
 		() =>
-			hero.intro.map((line) =>
-				line.split(/\s+/).map((text) => ({
-					text,
-					classKey: wordClass(text, hero.shuffle),
-				}))
-			),
+			hero.intro.split(/\s+/).map((text) => {
+				const classKey = wordClass(text, hero.shuffle);
+				return { text, classKey, className: classKey && cx(classKey) };
+			}),
 		[hero]
 	);
 
@@ -188,17 +188,13 @@ export default function HomeHero() {
 					{hero.title[2]}
 				</h1>
 				<p className={cx('intro')}>
-					{introLines.map((line, li) => (
-						<span
-							key={li}
-							className={cx('line')}
-							style={{ animationDelay: `${LINE_BASE_DELAY + li * LINE_STAGGER}s` }}
-						>
-							{line.map((word, wi) => (
-								<React.Fragment key={`${li}-${wi}`}>{renderIntroWord(word)} </React.Fragment>
-							))}
-						</span>
-					))}
+					<SplitLines
+						words={introWords}
+						renderWord={renderIntroWord}
+						lineClassName={cx('line')}
+						baseDelay={LINE_BASE_DELAY}
+						stagger={LINE_STAGGER}
+					/>
 				</p>
 			</div>
 			<div className={cx('bottom')}>
