@@ -14,7 +14,7 @@ let cx = classNames.bind(styles);
 const NAV = [
 	{ key: 'home', path: '/', section: 'home' },
 	{ key: 'services', path: '/services', section: 'services' },
-	{ key: 'contact', path: '/#contact', section: 'contact' },
+	{ key: 'contact', path: '/contact', section: null },
 ];
 
 // Absolute page Y that lands a section at its resting position, honouring the

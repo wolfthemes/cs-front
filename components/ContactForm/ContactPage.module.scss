@@ -1,0 +1,35 @@
+@import 'styles/tokens';
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.page {
+	max-width: var(--wpe--container--max-width);
+	margin: 0 auto;
+	padding: clamp(4rem, 10vw, 8rem) $edge clamp(5rem, 10vw, 9rem);
+}
+
+.eyebrow {
+	margin: 0 0 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	text-transform: lowercase;
+	color: $c-accent;
+}
+
+.title {
+	margin: 0;
+	max-width: 16ch;
+	font-size: clamp(2.5rem, 7vw, 5.5rem);
+	line-height: 1.02;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.lead {
+	margin: clamp(1.25rem, 3vw, 2rem) 0 0;
+	max-width: 46ch;
+	font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}

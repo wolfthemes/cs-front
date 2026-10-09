@@ -1,0 +1,114 @@
+@import 'styles/tokens';
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	max-width: 44rem;
+	margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.row {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1.5rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+
+	span {
+		font-family: var(--font-geist-mono), monospace;
+		font-size: fs(sm);
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	input,
+	select,
+	textarea {
+		width: 100%;
+		padding: 0.85rem 1rem;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 0.75rem;
+		background: rgba(255, 255, 255, 0.04);
+		color: $c-base;
+		font: inherit;
+
+		&:focus-visible {
+			outline: 2px solid $c-accent;
+			outline-offset: 2px;
+		}
+	}
+
+	select option {
+		color: #000;
+	}
+
+	textarea {
+		resize: vertical;
+	}
+}
+
+// Honeypot: off-screen, not display:none (some bots skip those).
+.trap {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+.actions {
+	margin-top: 0.5rem;
+}
+
+.submit {
+	padding: 0.85rem 1.8rem;
+	border: 0;
+	border-radius: 100px;
+	background-color: $c-base;
+	color: $c-ink;
+	font: inherit;
+	font-weight: fw(medium);
+	cursor: pointer;
+	transition: opacity 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		opacity: 0.85;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: wait;
+	}
+}
+
+.success {
+	max-width: 44rem;
+	margin: clamp(2rem, 4vw, 3rem) 0 0;
+	font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+	line-height: 1.5;
+	color: $c-base;
+}
+
+.error {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.8);
+
+	a {
+		color: $c-accent;
+	}
+}
+
+@media (width <= 48rem) {
+	.row {
+		grid-template-columns: 1fr;
+	}
+
+	.submit {
+		width: 100%;
+	}
+}

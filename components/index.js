@@ -29,3 +29,4 @@ export { VideoScrollBackground } from './VideoScrollBackground';
 export { Post } from './Post';
 export { SEO } from './SEO';
 export { Services } from './Services';
+export { ContactForm } from './ContactForm';

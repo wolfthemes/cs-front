@@ -25,6 +25,7 @@ There is no test suite. `npm run generate` (and `stylesheet`) hit the WordPress 
 Copy `.env.local.sample` → `.env.local` and set:
 - `NEXT_PUBLIC_WORDPRESS_URL` — the WordPress origin (also whitelisted for `next/image` via `getWpHostname()`).
 - `FAUST_SECRET_KEY` — Faust plugin secret from WP Settings → Faust (required for previews/auth).
+- `SMTP_USER` / `SMTP_PASS` — Migadu mailbox credentials used by `pages/api/contact.js` (contact form, SMTP over `smtp.migadu.com:465`; override host with `SMTP_HOST`). Also set them in Vercel.
 
 The connected WordPress needs the **FaustWP** and **WPGraphQL** plugins.
 

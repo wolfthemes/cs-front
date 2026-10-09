@@ -288,6 +288,33 @@ $edge: clamp(1rem, 5vw, 5rem);
 	grid-template-columns: repeat(2, 1fr);
 }
 
+.quotes {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.quote {
+	margin: 0;
+	font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+	line-height: 1.55;
+	letter-spacing: -0.01em;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.quote-author {
+	margin: 1.25rem 0 0;
+	font-weight: fw(semibold);
+	color: $c-base;
+}
+
+.quote-role {
+	font-weight: fw(medium);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.price-free {
+	color: $c-accent;
+}
+
 .step-index {
 	display: block;
 	margin-bottom: 1.25rem;
@@ -381,7 +408,8 @@ $edge: clamp(1rem, 5vw, 5rem);
 	}
 
 	.steps,
-	.why {
+	.why,
+	.quotes {
 		grid-template-columns: 1fr;
 	}
 
