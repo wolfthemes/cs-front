@@ -15,6 +15,16 @@
 }
 
 // Bottom band: subheading + CTA on the left, stats on the right.
+.top {
+	// Title with the intro right beneath it, centred vertically in the space above
+	// the CTA / stats row (auto margins absorb the free space on both sides).
+	margin-block: auto;
+	display: flex;
+	flex-direction: column;
+	gap: clamp(1.25rem, 2.5vw, 2rem);
+	max-width: min(60rem, 100%);
+}
+
 .bottom {
 	display: flex;
 	align-items: flex-end;

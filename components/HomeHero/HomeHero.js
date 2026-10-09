@@ -178,30 +178,31 @@ export default function HomeHero() {
 
 	return (
 		<section id="home" className={cx('component')}>
-			<h1 className={cx('title')}>
-				{hero.title[0]}
-				<span className={cx('circled')}>
-					{hero.title[1]}
-					{/* <HeroCircle /> disabled for now */}
-				</span>
-				{hero.title[2]}
-			</h1>
+			<div className={cx('top')}>
+				<h1 className={cx('title')}>
+					{hero.title[0]}
+					<span className={cx('circled')}>
+						{hero.title[1]}
+						{/* <HeroCircle /> disabled for now */}
+					</span>
+					{hero.title[2]}
+				</h1>
+				<p className={cx('intro')}>
+					{introLines.map((line, li) => (
+						<span
+							key={li}
+							className={cx('line')}
+							style={{ animationDelay: `${LINE_BASE_DELAY + li * LINE_STAGGER}s` }}
+						>
+							{line.map((word, wi) => (
+								<React.Fragment key={`${li}-${wi}`}>{renderIntroWord(word)} </React.Fragment>
+							))}
+						</span>
+					))}
+				</p>
+			</div>
 			<div className={cx('bottom')}>
 				<div className={cx('bottom-left')}>
-					<p className={cx('intro')}>
-						{introLines.map((line, li) => (
-							<span
-								key={li}
-								className={cx('line')}
-								style={{ animationDelay: `${LINE_BASE_DELAY + li * LINE_STAGGER}s` }}
-							>
-								{line.map((word, wi) => (
-									<React.Fragment key={`${li}-${wi}`}>{renderIntroWord(word)} </React.Fragment>
-								))}
-							</span>
-						))}
-					</p>
-
 					<div className={cx('cta')}>
 						<Link
 							className={cx('cta-button')}
