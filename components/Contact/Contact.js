@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import className from 'classnames/bind';
 import styles from './Contact.module.scss';
 import { useCopy } from '../../lib/i18n';
 
 let cx = className.bind(styles);
-
-const EMAIL = 'constantin@saguin.com';
 
 // Reveal timing (seconds). The title reveals line by line; the lead follows the
 // last line and the button lands last.
@@ -29,7 +28,10 @@ function measureLines(el, text) {
 	temp.style.width = `${el.clientWidth}px`;
 	const words = text.split(' ');
 	temp.innerHTML = words
-		.map((w) => `<span style="display:inline-block">${w.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`)
+		.map(
+			(w) =>
+				`<span style="display:inline-block">${w.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`
+		)
 		.join(' ');
 	el.parentNode.appendChild(temp);
 
@@ -126,7 +128,7 @@ export default function Contact() {
 								>
 									{line}
 								</span>
-						  ))
+							))
 						: TITLE}
 				</h2>
 
@@ -134,11 +136,8 @@ export default function Contact() {
 					{contact.lead}
 				</p>
 
-				<div
-					className={cx('actions', 'reveal')}
-					style={{ transitionDelay: `${actionsDelay}s` }}
-				>
-					<a className={cx('primary')} href={`mailto:${EMAIL}`}>
+				<div className={cx('actions', 'reveal')} style={{ transitionDelay: `${actionsDelay}s` }}>
+					<Link className={cx('primary')} href="/contact">
 						<span className={cx('primary-label')}>{contact.cta}</span>
 						<svg
 							className={cx('primary-arrow')}
@@ -156,7 +155,7 @@ export default function Contact() {
 								strokeLinejoin="round"
 							/>
 						</svg>
-					</a>
+					</Link>
 				</div>
 			</div>
 		</section>

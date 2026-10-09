@@ -7,7 +7,6 @@ import { scrollTo } from '../../lib/scroll';
 
 let cx = classNames.bind(styles);
 
-const EMAIL = 'constantin@saguin.com';
 const STATS = [
 	{ value: '15', suffix: 'y' },
 	{ value: '36', suffix: 'k+' },
@@ -232,13 +231,10 @@ export default function Services() {
 						<span>{c.final.cta}</span>
 						<Arrow />
 					</Link>
-					<a className={cx('email')} href={`mailto:${EMAIL}`}>
-						{EMAIL}
-					</a>
 				</div>
 				<p className={cx('note')}>
 					{c.final.hire}{' '}
-					<a className={cx('email')} href={cv}>
+					<a className={cx('email')} href={cv} target="_blank" rel="noopener noreferrer">
 						{c.final.hireCta}
 					</a>
 				</p>

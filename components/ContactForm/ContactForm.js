@@ -92,6 +92,9 @@ export default function ContactForm() {
 					{c.error} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
 				</p>
 			)}
+			<p className={cx('alt')}>
+				{c.preferEmail} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+			</p>
 		</form>
 	);
 }

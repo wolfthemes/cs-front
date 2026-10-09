@@ -218,7 +218,12 @@ export default function HomeHero() {
 								/>
 							</svg>
 						</Link>
-						<a className={cx('cta-button', 'cta-secondary')} href={cv}>
+						<a
+							className={cx('cta-button', 'cta-secondary')}
+							href={cv}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							<span className={cx('cta-label')}>{hero.cv}</span>
 						</a>
 					</div>

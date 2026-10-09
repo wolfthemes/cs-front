@@ -94,6 +94,22 @@
 	color: $c-base;
 }
 
+.alt {
+	margin: 0;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+
+	a {
+		color: rgba(255, 255, 255, 0.85);
+		text-underline-offset: 4px;
+
+		&:hover,
+		&:focus-visible {
+			color: $c-base;
+		}
+	}
+}
+
 .error {
 	margin: 0;
 	color: rgba(255, 255, 255, 0.8);
