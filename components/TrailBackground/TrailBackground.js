@@ -235,7 +235,7 @@ function resample(points, n) {
 	return out;
 }
 
-const TOP_MARGIN = 0.11; // clear space above the route (fraction of screen height)
+const TOP_MARGIN = 0.065; // clear space above the route (fraction of screen height)
 const RIGHT_BIAS = 0.12; // how far right of centre the route sits (fraction of screen width)
 
 // Frame the whole route on screen: as large as fits, kept right of the text, and
