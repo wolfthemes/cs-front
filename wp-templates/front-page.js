@@ -15,7 +15,8 @@ import {
 	Playground,
 	Contact,
 	SEO,
-	VideoScrollBackground,
+	TrailBackground,
+	// VideoScrollBackground, // statue scroll video, parked: see /lab/bg for the shader alternative
 } from '../components';
 
 export default function Component() {
@@ -63,7 +64,8 @@ export default function Component() {
 			{/* Fixed video backdrop, scrubbed frame-by-frame by whole-page scroll.
 			    Fixed at z-index -1, so it sits behind every section; GrainOverlay
 			    (max z-index, screen blend) composites over it. */}
-			<VideoScrollBackground fixed src="/video/hero-scroll.mp4" />
+			{/* <VideoScrollBackground fixed src="/video/hero-scroll.mp4" /> */}
+			<TrailBackground />
 			<Header title={siteTitle} description={siteDescription} menuItems={primaryMenu} />
 			{/* Transparent so the fixed video backdrop shows through. Main paints
 			    an opaque black by default (also on body), which would hide the

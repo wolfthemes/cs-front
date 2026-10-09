@@ -26,6 +26,8 @@ export { Statement } from './Statement';
 export { Playground } from './Playground';
 export { Signature } from './Signature';
 export { VideoScrollBackground } from './VideoScrollBackground';
+export { ShaderBackground } from './ShaderBackground';
+export { TrailBackground } from './TrailBackground';
 export { Post } from './Post';
 export { SEO } from './SEO';
 export { Services } from './Services';

@@ -34,9 +34,9 @@
 }
 
 .body {
-	// Offset the paragraph block toward the right, under the headline.
+	// Left-aligned under the headline: the trail background runs down the right.
 	margin-top: 6rem;
-	margin-left: auto;
+	margin-left: 0;
 	max-width: 42rem;
 	display: flex;
 	flex-direction: column;
@@ -93,7 +93,7 @@
 // Hand-signed sign-off closing the about section — aligned with the body block
 // and left-aligned under the last paragraph.
 .signature {
-	margin: 3.5rem 0 0 auto;
+	margin: 3.5rem 0 0;
 	max-width: 42rem;
 }
 
