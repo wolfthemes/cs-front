@@ -10,7 +10,7 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistPixelSquare, GeistPixelGrid, GeistPixelCircle } from 'geist/font/pixel';
 import { EB_Garamond } from 'next/font/google';
 import { GrainOverlay, TrailBackground } from '../components';
-import { initSmoothScroll, resizeSmoothScroll } from '../lib/scroll';
+import { initSmoothScroll, resizeSmoothScroll, scrollTo } from '../lib/scroll';
 import '@faustwp/core/dist/css/toolbar.css';
 import '../styles/global.scss';
 
@@ -53,6 +53,19 @@ export default function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		resizeSmoothScroll();
 	}, [router.asPath]);
+
+	// New page = top of the page. Lenis keeps its own scroll target, so Next's
+	// default scroll reset doesn't stick (a page opened from the bottom of the
+	// previous one would land at the same offset). Hash links keep their anchor.
+	useEffect(() => {
+		const toTop = (url) => {
+			if (url.includes('#')) return;
+			scrollTo(0, { immediate: true, force: true });
+			window.scrollTo(0, 0);
+		};
+		router.events.on('routeChangeComplete', toTop);
+		return () => router.events.off('routeChangeComplete', toTop);
+	}, [router.events]);
 
 	return (
 		<FaustProvider pageProps={pageProps}>
