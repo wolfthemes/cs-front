@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import classNames from 'classnames/bind';
 import styles from './Services.module.scss';
 import { useCopy } from '../../lib/i18n';
@@ -14,34 +15,45 @@ const STATS = [
 	{ value: '4.5', suffix: '/5' },
 ];
 
-// Published Upwork testimonials, kept in their original language.
+// Published Upwork testimonials; the non-original language is a translation.
 const TESTIMONIALS = [
 	{
-		lang: 'en',
 		author: 'Jean-François W.',
-		quote:
-			'Constantin has developed our wine e-commerce website and has followed our brief properly: the site has an elegant design corresponding with our brand, has no problems in the checkout process, and boasts a product catalog manageable from our side. He evidently possesses expertise in WooCommerce and pays attention to things like performance and mobile experience, which are very critical for e-commerce. He was very responsive throughout the project and delivered what we expected.',
+		role: { en: 'Wine Merchant', fr: 'Négociant en vins' },
+		quote: {
+			en: 'Constantin has developed our wine e-commerce website and has followed our brief properly: the site has an elegant design corresponding with our brand, has no problems in the checkout process, and boasts a product catalog manageable from our side. He evidently possesses expertise in WooCommerce and pays attention to things like performance and mobile experience, which are very critical for e-commerce. He was very responsive throughout the project and delivered what we expected.',
+			fr: "Constantin a développé notre site e-commerce de vin en suivant correctement notre brief : le site a un design élégant, fidèle à notre marque, aucun problème dans le processus de paiement, et un catalogue produits que nous pouvons gérer nous-mêmes. Il maîtrise manifestement WooCommerce et prête attention à la performance et à l'expérience mobile, deux points essentiels pour l'e-commerce. Il s'est montré très réactif tout au long du projet et a livré ce que nous attendions.",
+		},
 	},
 	{
-		lang: 'en',
 		author: 'Edward S.',
-		role: 'Musician, Filmmaker & Creative Producer',
-		quote:
-			'My company, Ton-Up, Inc., has exclusively used WordPress themes designed by Constantin on all of our websites since 2016. The design aesthetic and quality of his themes are exceptional, creating a compelling web presence that delivers results. Constantin is great to work with; He is reliable, responsive, and goes above and beyond to help. I highly recommend him.',
+		role: {
+			en: 'Musician, Filmmaker & Creative Producer',
+			fr: 'Musicien, réalisateur & producteur créatif',
+		},
+		quote: {
+			en: 'My company, Ton-Up, Inc., has exclusively used WordPress themes designed by Constantin on all of our websites since 2016. The design aesthetic and quality of his themes are exceptional, creating a compelling web presence that delivers results. Constantin is great to work with; He is reliable, responsive, and goes above and beyond to help. I highly recommend him.',
+			fr: "Mon entreprise, Ton-Up, Inc., utilise exclusivement des thèmes WordPress conçus par Constantin sur tous nos sites depuis 2016. L'esthétique et la qualité de ses thèmes sont exceptionnelles et donnent une présence web convaincante qui produit des résultats. Constantin est un plaisir à côtoyer : il est fiable, réactif et va toujours au-delà pour aider. Je le recommande vivement.",
+		},
 	},
 	{
-		lang: 'fr',
 		author: 'Solène L.',
-		role: 'Direction artistique / Graphisme / Communication',
-		quote:
-			"Constantin m'a beaucoup aidée sur mon thème WordPress. Il a toujours été très réactif, patient et disponible. À chaque problème rencontré, il prenait le temps de chercher une solution et de m'expliquer les choses clairement. Je le recommande sans hésiter à toute personne qui cherche un développeur WordPress fiable !",
+		role: {
+			en: 'Art Direction / Graphic Design / Communication',
+			fr: 'Direction artistique / Graphisme / Communication',
+		},
+		quote: {
+			en: 'Constantin helped me a lot with my WordPress theme. He was always very responsive, patient and available. Whenever I ran into a problem, he took the time to look for a solution and explain things clearly. I recommend him without hesitation to anyone looking for a reliable WordPress developer!',
+			fr: "Constantin m'a beaucoup aidée sur mon thème WordPress. Il a toujours été très réactif, patient et disponible. À chaque problème rencontré, il prenait le temps de chercher une solution et de m'expliquer les choses clairement. Je le recommande sans hésiter à toute personne qui cherche un développeur WordPress fiable !",
+		},
 	},
 	{
-		lang: 'en',
 		author: 'Naomi M.',
-		role: 'Professional Voice Actor',
-		quote:
-			"I loved working with Constantin! He was knowledgeable and had great customer service. Not only did he handle all of my requests with ease, he was also really responsive to any emails. I'd hire him again in a heartbeat. Highly recommended!",
+		role: { en: 'Professional Voice Actor', fr: 'Comédienne voix professionnelle' },
+		quote: {
+			en: "I loved working with Constantin! He was knowledgeable and had great customer service. Not only did he handle all of my requests with ease, he was also really responsive to any emails. I'd hire him again in a heartbeat. Highly recommended!",
+			fr: "J'ai adoré travailler avec Constantin ! Il est compétent et très attentif à ses clients. Non seulement il a traité toutes mes demandes sans difficulté, mais il répondait aussi très vite à chaque e-mail. Je referais appel à lui sans hésiter. Vivement recommandé !",
+		},
 	},
 ];
 
@@ -74,6 +86,7 @@ function Arrow() {
 // backdrop; sections fade up once on scroll (CSS handles reduced motion).
 export default function Services() {
 	const { services: c, cv } = useCopy();
+	const lang = useRouter().locale === 'fr' ? 'fr' : 'en';
 	const rootRef = useRef(null);
 
 	useEffect(() => {
@@ -176,12 +189,10 @@ export default function Services() {
 				<ul className={cx('grid', 'quotes')}>
 					{TESTIMONIALS.map((t) => (
 						<li key={t.author}>
-							<blockquote className={cx('quote')} lang={t.lang}>
-								“{t.quote}”
-							</blockquote>
+							<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
 							<p className={cx('quote-author')}>
 								{t.author}
-								{t.role && <span className={cx('quote-role')}> · {t.role}</span>}
+								{t.role && <span className={cx('quote-role')}> · {t.role[lang]}</span>}
 							</p>
 						</li>
 					))}
