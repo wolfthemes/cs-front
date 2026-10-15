@@ -14,7 +14,7 @@ const COLUMNS = {
 	],
 	'Infrastructure & DevOps': [
 		'Linux / nginx',
-		'Docker, WP-Env, WP VIP',
+		'Docker, WP-Env',
 		'Bedrock',
 		'CI/CD (GitHub Actions)',
 	],
