@@ -231,7 +231,7 @@ export default function Services() {
 					</ol>
 				</section>
 
-				<section className={cx('section')} data-reveal>
+				<section className={cx('section', 'centered')} data-reveal>
 					<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
 					<h2 className={cx('title')}>{c.reassure.title}</h2>
 					<ul className={cx('cards')}>
@@ -250,7 +250,7 @@ export default function Services() {
 					</ul>
 				</section>
 
-				<section className={cx('section')} data-reveal>
+				<section className={cx('section', 'solid')} data-reveal>
 					<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
 					<h2 className={cx('title')}>{c.why.title}</h2>
 					<dl className={cx('spec')}>
