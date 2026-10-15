@@ -4,13 +4,13 @@ import classNames from 'classnames/bind';
 import styles from './Engineering.module.scss';
 import { Playground } from '../Playground';
 import { StatBand } from '../StatBand';
-import { LayersIcon, GaugeIcon, PipelineIcon, PackageIcon, ArrowIcon } from './icons';
+import { LayersIcon, GaugeIcon, PipelineIcon, PackageIcon, SparklesIcon, ArrowIcon } from './icons';
 import { useCopy } from '../../lib/i18n';
 import { track } from '../../lib/track';
 
 let cx = classNames.bind(styles);
 
-const PRINCIPLE_ICONS = [LayersIcon, GaugeIcon, PipelineIcon, PackageIcon];
+const PRINCIPLE_ICONS = [LayersIcon, GaugeIcon, PipelineIcon, SparklesIcon, PackageIcon];
 const contactHref = (topic) => ({ pathname: '/contact', query: { topic, for: 'team' } });
 
 // Recruiter / tech-lead page: the technical proof that would be noise on the
@@ -110,16 +110,6 @@ export default function Engineering() {
 			<Playground />
 
 			<section className={cx('section', 'solid')} data-reveal>
-				<p className={cx('eyebrow')}>{c.roles.eyebrow}</p>
-				<h2 className={cx('title')}>{c.roles.title}</h2>
-				<ul className={cx('roles')}>
-					{c.roles.items.map((role) => (
-						<li key={role}>{role}</li>
-					))}
-				</ul>
-			</section>
-
-			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.architecture.eyebrow}</p>
 				<h2 className={cx('title')}>{c.architecture.title}</h2>
 				<ol className={cx('flow')}>

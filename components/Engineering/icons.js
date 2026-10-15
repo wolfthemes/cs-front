@@ -60,3 +60,10 @@ export const ArrowIcon = ({ className }) => (
 		/>
 	</svg>
 );
+
+export const SparklesIcon = () => (
+	<svg {...base}>
+		<path d="m11 3 1.8 4.7L17.5 9.5l-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z" />
+		<path d="m18 15 .7 1.8 1.8.7-1.8.7L18 20l-.7-1.8-1.8-.7 1.8-.7z" />
+	</svg>
+);

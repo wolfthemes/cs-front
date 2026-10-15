@@ -181,22 +181,6 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.7);
 }
 
-.roles {
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-	margin: clamp(2rem, 4vw, 3rem) 0 0;
-	padding: 0;
-	list-style: none;
-	font-size: clamp(1.05rem, 1.6vw, 1.3rem);
-	color: rgba(255, 255, 255, 0.85);
-
-	li::before {
-		content: '→ ';
-		color: $c-accent;
-	}
-}
-
 .final {
 	text-align: left;
 }
@@ -280,7 +264,7 @@ $solid: #151515;
 // Principles: four quiet cards, one line icon each.
 .cards {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(6, 1fr);
 	gap: clamp(1rem, 2vw, 1.5rem);
 	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
 	padding: 0;
@@ -296,6 +280,8 @@ $solid: #151515;
 }
 
 .card {
+	// Five cards: three on the first row, two wider ones on the second.
+	grid-column: span 2;
 	padding: clamp(1.5rem, 3vw, 2.25rem);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 1.25rem;
@@ -304,9 +290,26 @@ $solid: #151515;
 		border-color 0.25s ease-out,
 		background-color 0.25s ease-out;
 
+	&:nth-child(n + 4) {
+		grid-column: span 3;
+	}
+
 	&:hover {
 		border-color: color-mix(in srgb, #{$c-accent} 40%, transparent);
 		background-color: rgba(255, 255, 255, 0.05);
+	}
+
+	@media (width <= 64rem) {
+		grid-column: auto;
+
+		&:nth-child(n + 4) {
+			grid-column: auto;
+		}
+
+		// Odd one out spans the full width on the two-column layout.
+		&:last-child {
+			grid-column: 1 / -1;
+		}
 	}
 }
 
