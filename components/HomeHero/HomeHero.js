@@ -231,15 +231,6 @@ export default function HomeHero() {
 							<span className={cx('cta-label')}>{hero.pro}</span>
 						</Link>
 					</div>
-					<p className={cx('hire')}>
-						{hero.hire}{' '}
-						<Link
-							href={{ pathname: '/contact', query: { topic: hero.hireTopic, for: 'team' } }}
-							onClick={() => track('cta_click', { location: 'hero', target: 'hiring' })}
-						>
-							{hero.hireCta} →
-						</Link>
-					</p>
 				</div>
 
 				<div className={cx('stats')} ref={statsRef}>
