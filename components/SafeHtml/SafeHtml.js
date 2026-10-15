@@ -1,12 +1,12 @@
-import DOMPurify from 'isomorphic-dompurify';
+import sanitizeHtml from 'sanitize-html';
 
+// Pure-JS sanitizer (no jsdom): defaults already drop script/style/iframe/form/object/embed
+// and inline style attributes; classes are kept so WordPress markup still styles.
 const SANITIZE_OPTIONS = {
-	USE_PROFILES: { html: true },
-	FORBID_TAGS: ['form', 'iframe', 'object', 'embed', 'script', 'style'],
-	FORBID_ATTR: ['style'],
+	allowedAttributes: { ...sanitizeHtml.defaults.allowedAttributes, '*': ['class'] },
 };
 
 export default function SafeHtml({ as: Tag = 'div', html = '', ...props }) {
-	const sanitizedHtml = DOMPurify.sanitize(html, SANITIZE_OPTIONS);
+	const sanitizedHtml = sanitizeHtml(html, SANITIZE_OPTIONS);
 	return <Tag {...props} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
 }
