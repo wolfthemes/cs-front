@@ -1,0 +1,137 @@
+@import 'styles/tokens';
+
+// "Recent work" proof strip: thumbnails of real projects, 4-up on desktop,
+// 2-up on narrow screens. Fades in on mount (the data arrives after hydration,
+// so it cannot rely on the page's scroll-reveal observer).
+
+.component {
+	padding: clamp(3rem, 7vw, 5.5rem) 0;
+	border-top: var(--wpe--border--light);
+	animation: fade-in 0.6s ease-out both;
+}
+
+.eyebrow {
+	margin: 0 0 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	letter-spacing: 0.02em;
+	text-transform: lowercase;
+	color: $c-accent;
+}
+
+.title {
+	margin: 0;
+	font-size: clamp(2rem, 4.5vw, 3.75rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: clamp(1rem, 2vw, 1.5rem);
+	margin: clamp(2rem, 4vw, 3rem) 0 0;
+	padding: 0;
+	list-style: none;
+
+	@media (width <= 48rem) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+	color: $c-base;
+	text-decoration: none;
+}
+
+.media {
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	border-radius: 0.9rem;
+	background-color: rgba(255, 255, 255, 0.06);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+}
+
+.card:hover img,
+.card:focus-visible img {
+	transform: scale(1.05);
+}
+
+.caption {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+
+.name {
+	font-weight: fw(medium);
+	letter-spacing: -0.01em;
+}
+
+.year {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.card:hover .name,
+.card:focus-visible .name {
+	text-decoration: underline;
+	text-underline-offset: 0.25em;
+}
+
+.all {
+	display: inline-block;
+	margin-top: clamp(1.5rem, 3vw, 2rem);
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.7);
+	text-decoration: none;
+
+	&:hover,
+	&:focus-visible {
+		color: $c-base;
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.component {
+		animation: none;
+	}
+
+	.media img {
+		transition: none;
+	}
+
+	.card:hover img,
+	.card:focus-visible img {
+		transform: none;
+	}
+}

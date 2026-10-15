@@ -6,6 +6,7 @@ import styles from './Services.module.scss';
 import { useCopy } from '../../lib/i18n';
 import { scrollTo } from '../../lib/scroll';
 import { track } from '../../lib/track';
+import { WorkStrip } from '../WorkStrip';
 import { MailIcon, QuoteIcon, RocketIcon, ShieldIcon, SlidersIcon, KeyIcon } from './icons';
 
 let cx = classNames.bind(styles);
@@ -148,6 +149,8 @@ export default function Services() {
 					))}
 				</div>
 			</section>
+
+			<WorkStrip />
 
 			<section id="offers" className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.offers.eyebrow}</p>

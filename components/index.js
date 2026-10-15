@@ -31,6 +31,7 @@ export { TrailBackground } from './TrailBackground';
 export { Post } from './Post';
 export { SEO } from './SEO';
 export { Services } from './Services';
+export { WorkStrip } from './WorkStrip';
 export { ContactForm } from './ContactForm';
 export { Engineering } from './Engineering';
 export { Paths } from './Paths';
