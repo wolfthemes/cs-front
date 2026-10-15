@@ -36,7 +36,7 @@ export default function NavigationMenu({ menuItems, className, onItemClick }) {
 		return (
 			<ul className={cx('menu')}>
 				{items.map((item) => {
-					const { id, path, label, target, children, cssClasses } = item;
+					const { id, path, label, target, children, cssClasses, cta } = item;
 
 					// @TODO - Remove guard clause after ghost menu items are no longer appended to array.
 					if (!item.hasOwnProperty('__typename')) {
@@ -46,7 +46,10 @@ export default function NavigationMenu({ menuItems, className, onItemClick }) {
 					const isActive = path && !path.includes('#') && normalizePath(path) === currentPath;
 
 					return (
-						<li key={id} className={`${cxFromWp(cssClasses)} ${cx({ active: isActive })}`.trim()}>
+						<li
+							key={id}
+							className={`${cxFromWp(cssClasses)} ${cx({ active: isActive, cta })}`.trim()}
+						>
 							<Link
 								href={path ?? ''}
 								target={target || undefined}

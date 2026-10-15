@@ -9,13 +9,14 @@ import styles from './Header.module.scss';
 
 let cx = classNames.bind(styles);
 
-// Fixed three-item menu. `section` is the on-page element id the item scrolls
+// Fixed four-item menu. `section` is the on-page element id the item scrolls
 // to when it exists on the current page; otherwise the link navigates normally.
+// `cta` items are always highlighted (see NavigationMenu).
 const NAV = [
 	{ key: 'home', path: '/', section: 'home' },
 	{ key: 'services', path: '/services', section: 'services' },
 	{ key: 'engineering', path: '/engineering', section: null },
-	{ key: 'contact', path: '/contact', section: null },
+	{ key: 'contact', path: '/contact', section: null, cta: true },
 ];
 
 // Absolute page Y that lands a section at its resting position, honouring the

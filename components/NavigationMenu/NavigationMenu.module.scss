@@ -97,8 +97,21 @@
 		}
 	}
 
-	// Active item — filled white pill with dark text.
+	// Active item — subtle light pill, so it never competes with the CTA.
 	.active > a {
+		background-color: rgba(255, 255, 255, 0.16);
+		color: $c-base;
+
+		&:hover,
+		&:focus {
+			background-color: rgba(255, 255, 255, 0.22);
+			color: $c-base;
+		}
+	}
+
+	// CTA item (e.g. Contact) — always a filled white pill with dark text,
+	// whether or not it is the current page.
+	.cta > a {
 		background-color: $c-base;
 		color: $c-ink;
 
@@ -106,6 +119,7 @@
 		&:focus {
 			background-color: $c-base;
 			color: $c-ink;
+			opacity: 0.85;
 		}
 	}
 
