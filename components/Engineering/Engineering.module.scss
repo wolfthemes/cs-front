@@ -122,17 +122,24 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .secondary,
 .link {
+	padding-bottom: 0.2em;
 	color: $c-base;
-	text-decoration: underline;
-	text-underline-offset: 0.25em;
+	text-decoration: none;
+
+	// Faint resting underline, with a gold line that draws left to right on hover.
+	background:
+		linear-gradient($c-accent, $c-accent) 0 100% / 0 1px no-repeat,
+		linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35)) 0 100% / 100% 1px no-repeat;
 	transition:
 		color 0.2s ease-out,
-		text-underline-offset 0.2s ease-out;
+		background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 
 	&:hover,
 	&:focus-visible {
 		color: $c-accent;
-		text-underline-offset: 0.45em;
+		background-size:
+			100% 1px,
+			100% 1px;
 	}
 }
 
@@ -188,8 +195,19 @@ $solid: #151515;
 	clip-path: inset(0 -100vmax);
 }
 
-.solid + .section {
+.solid + .section,
+.accent + .section {
 	border-top: 0;
+}
+
+// Highlight slide (AI section): the solid slide with a gold tint.
+$accent-slide: color-mix(in srgb, #{$c-accent} 7%, #151515);
+
+.accent {
+	border-top: 0;
+	background-color: $accent-slide;
+	box-shadow: 0 0 0 100vmax $accent-slide;
+	clip-path: inset(0 -100vmax);
 }
 
 // Availability panel in the hero: the screening facts at a glance.
@@ -370,6 +388,11 @@ $solid: #151515;
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.secondary,
+	.link {
+		transition: color 0.2s ease-out;
+	}
+
 	.arrow {
 		transition: none;
 	}
@@ -380,5 +403,68 @@ $solid: #151515;
 
 	.card {
 		transition: none;
+	}
+}
+
+// AI section: heading + lead + tags on the left, four numbered practices on the right.
+.ai {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+	gap: 3rem clamp(2rem, 6vw, 6rem);
+
+	@media (width <= 48rem) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.ai-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		padding: 0.3rem 0.85rem;
+		border: 1px solid color-mix(in srgb, #{$c-accent} 45%, transparent);
+		border-radius: 100px;
+		font-family: var(--font-geist-mono), monospace;
+		font-size: fs(sm);
+		color: $c-accent;
+	}
+}
+
+.ai-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: ai;
+}
+
+.ai-item {
+	display: grid;
+	grid-template-columns: 2.5rem minmax(0, 1fr);
+	gap: 0.25rem 1rem;
+	padding: clamp(1.25rem, 2.5vw, 1.75rem) 0;
+	border-top: var(--wpe--border--light);
+
+	&:last-child {
+		border-bottom: var(--wpe--border--light);
+	}
+
+	// Gold mono numeral in the first column.
+	&::before {
+		counter-increment: ai;
+		content: counter(ai, decimal-leading-zero);
+		grid-row: span 2;
+		font-family: var(--font-geist-mono), monospace;
+		font-size: fs(sm);
+		color: $c-accent;
+	}
+
+	.item-title,
+	.item-text {
+		grid-column: 2;
 	}
 }
