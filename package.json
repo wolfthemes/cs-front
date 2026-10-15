@@ -31,8 +31,8 @@
     "ogl": "^1.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sanitize-html": "^2.18.1",
-    "sass": "^1.77.3"
+    "sass": "^1.77.3",
+    "xss": "^1.0.15"
   },
   "devDependencies": {
     "eslint": "^9.39.5",

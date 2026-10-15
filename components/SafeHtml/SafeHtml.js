@@ -1,12 +1,19 @@
-import sanitizeHtml from 'sanitize-html';
+import { FilterXSS, getDefaultWhiteList } from 'xss';
 
-// Pure-JS sanitizer (no jsdom): defaults already drop script/style/iframe/form/object/embed
-// and inline style attributes; classes are kept so WordPress markup still styles.
-const SANITIZE_OPTIONS = {
-	allowedAttributes: { ...sanitizeHtml.defaults.allowedAttributes, '*': ['class'] },
-};
+// xss is CommonJS with CJS-only deps: Vercel's runtime cannot require() ESM-only
+// packages (jsdom, sanitize-html's htmlparser2 both crashed every page). Unknown tags
+// are dropped, script/style bodies removed, inline styles and event handlers never
+// allowed; classes are kept so WordPress markup still styles.
+const whiteList = Object.fromEntries(
+	Object.entries(getDefaultWhiteList()).map(([tag, attrs]) => [tag, [...attrs, 'class']])
+);
+
+const filter = new FilterXSS({
+	whiteList,
+	stripIgnoreTag: true,
+	stripIgnoreTagBody: ['script', 'style', 'iframe', 'object', 'embed', 'form'],
+});
 
 export default function SafeHtml({ as: Tag = 'div', html = '', ...props }) {
-	const sanitizedHtml = sanitizeHtml(html, SANITIZE_OPTIONS);
-	return <Tag {...props} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+	return <Tag {...props} dangerouslySetInnerHTML={{ __html: filter.process(html) }} />;
 }
