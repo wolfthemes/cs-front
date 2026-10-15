@@ -14,6 +14,7 @@ let cx = classNames.bind(styles);
 const NAV = [
 	{ key: 'home', path: '/', section: 'home' },
 	{ key: 'services', path: '/services', section: 'services' },
+	{ key: 'engineering', path: '/engineering', section: null },
 	{ key: 'contact', path: '/contact', section: null },
 ];
 
