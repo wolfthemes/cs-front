@@ -123,7 +123,9 @@ export default function Engineering() {
 					<Link
 						className={cx('link')}
 						href="/services"
-						onClick={() => track('cta_click', { location: 'engineering_final', target: 'services' })}
+						onClick={() =>
+							track('cta_click', { location: 'engineering_final', target: 'services' })
+						}
 					>
 						{c.final.clientCta}
 					</Link>
