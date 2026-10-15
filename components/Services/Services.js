@@ -221,7 +221,7 @@ export default function Services() {
 				</ul>
 			</section>
 
-			<section className={cx('section')} data-reveal>
+			<section className={cx('section', 'centered')} data-reveal>
 				<p className={cx('eyebrow')}>{c.process.eyebrow}</p>
 				<h2 className={cx('title')}>{c.process.title}</h2>
 				<ol className={cx('stepper')}>

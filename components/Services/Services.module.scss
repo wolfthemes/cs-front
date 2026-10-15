@@ -491,6 +491,15 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	}
 }
 
+// Centred section head (process).
+.centered {
+	text-align: center;
+
+	.title {
+		margin-inline: auto;
+	}
+}
+
 // Process: horizontal stepper. Icon nodes joined by a dashed connector + arrowhead.
 .stepper {
 	--node: 3.5rem;
@@ -606,6 +615,11 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 	.tags {
 		margin-top: 1.25rem;
+	}
+
+	// The next section draws its own top rule; avoid a double divider.
+	&:last-child {
+		border-bottom: 0;
 	}
 
 	dd {
