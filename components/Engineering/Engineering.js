@@ -41,7 +41,13 @@ export default function Engineering() {
 		<div ref={rootRef} className={cx('component')}>
 			<section className={cx('hero')}>
 				<p className={cx('eyebrow')}>{c.hero.eyebrow}</p>
-				<h1 className={cx('hero-title')}>{c.hero.title}</h1>
+				<h1 className={cx('hero-title')}>
+					{c.hero.title.map((line) => (
+						<span key={line} className={cx('hero-title-line')}>
+							{line}
+						</span>
+					))}
+				</h1>
 				<p className={cx('hero-lead')}>{c.hero.lead}</p>
 				<div className={cx('actions')}>
 					<a

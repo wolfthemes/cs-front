@@ -47,12 +47,15 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .hero-title {
 	margin: 0;
-	max-width: 16ch;
 	font-size: clamp(2.75rem, 8vw, 6.5rem);
 	line-height: 1;
 	letter-spacing: -0.04em;
 	font-weight: fw(bold);
 	color: $c-base;
+}
+
+.hero-title-line {
+	display: block;
 }
 
 .title {
