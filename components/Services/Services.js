@@ -264,10 +264,17 @@ export default function Services() {
 				<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
 				<h2 className={cx('title')}>{c.why.title}</h2>
 				<dl className={cx('spec')}>
-					{c.why.items.map(([title, text]) => (
+					{c.why.items.map(([title, text, proof]) => (
 						<div key={title} className={cx('spec-row')}>
 							<dt>{title}</dt>
-							<dd>{text}</dd>
+							<dd>
+								{text}
+								<ul className={cx('tags', 'tags-gold')}>
+									{proof.map((tag) => (
+										<li key={tag}>{tag}</li>
+									))}
+								</ul>
+							</dd>
 						</div>
 					))}
 				</dl>

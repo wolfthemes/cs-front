@@ -468,6 +468,11 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.4);
 }
 
+.tags.tags-gold li {
+	border-color: color-mix(in srgb, #{$c-accent} 40%, transparent);
+	color: $c-accent;
+}
+
 .tags {
 	display: flex;
 	flex-wrap: wrap;
@@ -501,13 +506,19 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .step {
 	position: relative;
+	text-align: center;
 
+	.item-text {
+		margin-inline: auto;
+	}
+
+	// Connector runs from this node's right edge to the next node's left edge.
 	&:not(:last-child)::after {
 		content: '';
 		position: absolute;
 		top: calc(var(--node) / 2);
-		left: calc(var(--node) + 0.75rem);
-		right: calc(0px - var(--step-gap) + 0.75rem);
+		left: calc(50% + var(--node) / 2 + 0.75rem);
+		width: calc(100% + var(--step-gap) - var(--node) - 1.5rem);
 		height: 1px;
 		background: repeating-linear-gradient(
 			90deg,
@@ -520,7 +531,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 		content: '';
 		position: absolute;
 		top: calc(var(--node) / 2 - 4px);
-		right: calc(0px - var(--step-gap) + 0.75rem);
+		left: calc(150% + var(--step-gap) - var(--node) / 2 - 0.75rem - 8px);
 		width: 8px;
 		height: 8px;
 		border-top: 1px solid $c-accent;
@@ -531,6 +542,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .step-node {
 	display: grid;
+	margin-inline: auto;
 	place-items: center;
 	width: var(--node);
 	height: var(--node);
@@ -580,11 +592,20 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	border-bottom: var(--wpe--border--light);
 
 	dt {
+		transition: color 0.2s ease-out;
 		font-size: clamp(1.25rem, 2.2vw, 1.8rem);
 		line-height: 1.15;
 		letter-spacing: -0.02em;
 		font-weight: fw(bold);
 		color: $c-base;
+	}
+
+	&:hover dt {
+		color: $c-accent;
+	}
+
+	.tags {
+		margin-top: 1.25rem;
 	}
 
 	dd {
@@ -612,33 +633,21 @@ $edge: 1rem; // matches Header and HomeHero side padding
 		position: static;
 	}
 
-	// Stepper turns vertical: icon column with a dashed line running down it.
+	// Stepper turns vertical: centred, with a short dashed line between steps.
 	.stepper {
 		grid-template-columns: 1fr;
 		gap: 2.5rem;
 	}
 
 	.step {
-		padding-left: calc(var(--node) + 1.25rem);
-
-		.step-node {
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-
-		.step-index {
-			margin-top: 0;
-		}
-
 		&:not(:last-child)::before {
 			display: none;
 		}
 
 		&:not(:last-child)::after {
-			inset: calc(var(--node) + 0.5rem) auto calc(0px - 2.5rem + 0.5rem) calc(var(--node) / 2);
+			inset: calc(100% + 0.75rem) auto auto 50%;
 			width: 1px;
-			height: auto;
+			height: calc(2.5rem - 1.5rem);
 			background: repeating-linear-gradient(
 				180deg,
 				color-mix(in srgb, #{$c-accent} 60%, transparent) 0 6px,
