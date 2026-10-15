@@ -109,17 +109,18 @@
 		}
 	}
 
-	// CTA item (e.g. Contact) — always a filled white pill with dark text,
-	// whether or not it is the current page.
+	// CTA item (e.g. Contact) — always highlighted in the gold accent, whether or
+	// not it is the current page. Deliberately not a white fill, so it never
+	// competes with a page's own primary button.
 	.cta > a {
-		background-color: $c-base;
-		color: $c-ink;
+		background-color: color-mix(in srgb, #{$c-accent} 14%, transparent);
+		box-shadow: inset 0 0 0 1px $c-accent;
+		color: $c-accent;
 
 		&:hover,
 		&:focus {
-			background-color: $c-base;
+			background-color: $c-accent;
 			color: $c-ink;
-			opacity: 0.85;
 		}
 	}
 
