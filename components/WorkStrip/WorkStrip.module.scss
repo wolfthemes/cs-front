@@ -95,22 +95,6 @@
 	text-underline-offset: 0.25em;
 }
 
-.all {
-	display: inline-block;
-	margin-top: clamp(1.5rem, 3vw, 2rem);
-	font-family: var(--font-geist-mono), monospace;
-	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.7);
-	text-decoration: none;
-
-	&:hover,
-	&:focus-visible {
-		color: $c-base;
-		text-decoration: underline;
-		text-underline-offset: 4px;
-	}
-}
-
 @keyframes fade-in {
 	from {
 		opacity: 0;

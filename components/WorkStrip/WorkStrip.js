@@ -68,9 +68,6 @@ export default function WorkStrip() {
 					);
 				})}
 			</ul>
-			<Link className={cx('all')} href="/#case-studies">
-				{c.all} →
-			</Link>
 		</section>
 	);
 }
