@@ -1,7 +1,7 @@
 @import 'styles/breakpoints';
 @import 'styles/tokens';
 
-$edge: clamp(1rem, 5vw, 5rem);
+$edge: 1rem; // matches Header and HomeHero side padding
 
 .component {
 	max-width: var(--wpe--container--max-width);

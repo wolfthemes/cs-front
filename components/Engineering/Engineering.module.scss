@@ -4,7 +4,7 @@
 // Engineering page: recruiter / tech-lead profile. Same visual vocabulary as
 // Services (mono eyebrow, tight headings, white pill CTA, hairline dividers).
 
-$edge: clamp(1rem, 5vw, 5rem);
+$edge: 1rem; // matches Header and HomeHero side padding
 
 .component {
 	max-width: var(--wpe--container--max-width);

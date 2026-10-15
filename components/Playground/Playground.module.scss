@@ -5,7 +5,7 @@
 // concrete tools. Columns reveal with a staggered fade-in on scroll; reduced
 // motion shows everything static.
 
-$edge: clamp(1rem, 5vw, 5rem);
+$edge: 1rem; // matches Header and HomeHero side padding
 
 .component {
 	padding: clamp(6rem, 12vw, 11rem) $edge;

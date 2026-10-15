@@ -3,7 +3,7 @@
 // Closing contact CTA. Terminal-styled label + prompt echo the header brand;
 // the big statement and availability copy sit left-aligned like the reference.
 
-$edge: clamp(1rem, 5vw, 5rem);
+$edge: 1rem; // matches Header and HomeHero side padding
 
 .component {
 	padding: clamp(5rem, 12vh, 9rem) 0 clamp(6rem, 14vh, 10rem);
