@@ -109,14 +109,20 @@ export default function HomeHero() {
 	const [statsDone, setStatsDone] = useState(false);
 	// One flowing paragraph: SplitLines measures the browser's real line breaks, so
 	// wrapping adapts to any width instead of following hand-split lines.
-	const introWords = useMemo(
-		() =>
-			hero.intro.split(/\s+/).map((text) => {
-				const classKey = wordClass(text, hero.shuffle);
-				return { text, classKey, className: classKey && cx(classKey) };
-			}),
-		[hero]
-	);
+	const introWords = useMemo(() => {
+		const tokens = hero.intro.split(/\s+/);
+		const phrase = hero.shuffle.split(/\s+/);
+		const words = [];
+		for (let i = 0; i < tokens.length; i += 1) {
+			// A multi-word shuffle target (e.g. "sites web") is kept as one unit.
+			const isPhrase = phrase.length > 1 && phrase.every((part, k) => tokens[i + k] === part);
+			const text = isPhrase ? phrase.join(' ') : tokens[i];
+			if (isPhrase) i += phrase.length - 1;
+			const classKey = wordClass(text, hero.shuffle);
+			words.push({ text, classKey, className: classKey && cx(classKey) });
+		}
+		return words;
+	}, [hero]);
 
 	const renderIntroWord = (word) => {
 		if (word.classKey === 'engineering') {
