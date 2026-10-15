@@ -14,7 +14,7 @@ const STATS = [
 	{ value: '4.5', suffix: '/5' },
 ];
 
-const contactHref = (topic) => ({ pathname: '/contact', query: { topic } });
+const contactHref = (topic) => ({ pathname: '/contact', query: { topic, for: 'team' } });
 
 // Recruiter / tech-lead page: the technical proof that would be noise on the
 // client-facing pages. Sections fade up once on scroll (CSS handles reduced motion).

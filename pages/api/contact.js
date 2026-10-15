@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 
 const TO = 'constantin@saguin.com';
+const AUDIENCES = { client: 'Client', team: 'Team' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Strip CR/LF so user input can never inject mail headers.
@@ -26,6 +27,10 @@ export default async function handler(req, res) {
 	const email = oneLine(body.email, 200);
 	const topic = oneLine(body.topic, 150);
 	const budget = oneLine(body.budget, 50);
+	const company = oneLine(body.company, 100);
+	// Allow-list: anything else is recorded as unspecified.
+	const audience = Object.hasOwn(AUDIENCES, body.audience) ? body.audience : 'unspecified';
+	const tag = AUDIENCES[audience] ?? 'Unspecified';
 	const message = String(body.message ?? '')
 		.trim()
 		.slice(0, 5000);
@@ -37,7 +42,15 @@ export default async function handler(req, res) {
 	const { SMTP_HOST = 'smtp.migadu.com', SMTP_USER, SMTP_PASS } = process.env;
 	// Local dev without credentials: log the message instead of failing.
 	if ((!SMTP_USER || !SMTP_PASS) && process.env.NODE_ENV !== 'production') {
-		console.log('Contact form (dev, not sent):', { name, email, topic, budget, message });
+		console.log('Contact form (dev, not sent):', {
+			name,
+			email,
+			topic,
+			audience,
+			company,
+			budget,
+			message,
+		});
 		return res.status(200).json({ ok: true });
 	}
 	if (!SMTP_USER || !SMTP_PASS) {
@@ -56,8 +69,8 @@ export default async function handler(req, res) {
 			from: `"Website contact form" <${SMTP_USER}>`,
 			to: TO,
 			replyTo: `"${name.replace(/"/g, '')}" <${email}>`,
-			subject: `[Site] ${topic}`,
-			text: `Name: ${name}\nEmail: ${email}\nBudget: ${budget}\nLanguage: ${oneLine(body.locale, 5)}\n\n${message}\n`,
+			subject: `[Site · ${tag}] ${topic}`,
+			text: `Name: ${name}\nEmail: ${email}\nAudience: ${audience}\n${company ? `Company: ${company}\n` : ''}${budget ? `Budget: ${budget}\n` : ''}Language: ${oneLine(body.locale, 5)}\n\n${message}\n`,
 		});
 		return res.status(200).json({ ok: true });
 	} catch (error) {

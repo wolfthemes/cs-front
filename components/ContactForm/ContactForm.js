@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import classNames from 'classnames/bind';
 import styles from './ContactForm.module.scss';
@@ -8,16 +8,21 @@ import { track } from '../../lib/track';
 let cx = classNames.bind(styles);
 
 const EMAIL = 'constantin@saguin.com';
+const AUDIENCES = ['client', 'team'];
 
 // Posts to /api/contact. `website` is a honeypot: hidden from people, filled by
 // bots, and silently dropped server-side.
 export default function ContactForm() {
-	const { contactPage: c, hero } = useCopy();
-	const { query, locale } = useRouter();
+	const { contactPage: c } = useCopy();
+	const { query, locale, isReady } = useRouter();
 	const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+	// '' until chosen: links pre-select it with ?for=client|team, direct visits must pick.
+	const [audience, setAudience] = useState('');
 
-	// Recruiters arrive via ?topic=Hiring (hero link): the budget field is for clients.
-	const isHiring = query.topic === hero.hireTopic;
+	// Static page: the query is empty on first render, so apply ?for= once it is ready.
+	useEffect(() => {
+		if (isReady && AUDIENCES.includes(query.for)) setAudience(query.for);
+	}, [isReady, query.for]);
 
 	const onSubmit = async (event) => {
 		event.preventDefault();
@@ -30,7 +35,7 @@ export default function ContactForm() {
 				body: JSON.stringify({ ...data, locale }),
 			});
 			setStatus(res.ok ? 'sent' : 'error');
-			if (res.ok) track('contact_submit', { audience: isHiring ? 'employer' : 'client' });
+			if (res.ok) track('contact_submit', { audience });
 		} catch {
 			setStatus('error');
 		}
@@ -46,6 +51,22 @@ export default function ContactForm() {
 
 	return (
 		<form className={cx('form')} onSubmit={onSubmit}>
+			<fieldset className={cx('choice')}>
+				<legend>{c.labels.audience}</legend>
+				{AUDIENCES.map((value) => (
+					<label key={value} className={cx('pill', { 'is-checked': audience === value })}>
+						<input
+							type="radio"
+							name="audience"
+							value={value}
+							required
+							checked={audience === value}
+							onChange={() => setAudience(value)}
+						/>
+						{c.audiences[value]}
+					</label>
+				))}
+			</fieldset>
 			<div className={cx('row')}>
 				<label className={cx('field')}>
 					<span>{c.labels.name}</span>
@@ -60,6 +81,7 @@ export default function ContactForm() {
 				<label className={cx('field')}>
 					<span>{c.labels.topic}</span>
 					<input
+						key={query.topic}
 						name="topic"
 						type="text"
 						required
@@ -67,7 +89,7 @@ export default function ContactForm() {
 						defaultValue={typeof query.topic === 'string' ? query.topic : c.defaultTopic}
 					/>
 				</label>
-				{!isHiring && (
+				{audience === 'client' && (
 					<label className={cx('field')}>
 						<span>{c.labels.budget}</span>
 						<select name="budget" defaultValue={c.budgets[0]}>
@@ -77,9 +99,15 @@ export default function ContactForm() {
 						</select>
 					</label>
 				)}
+				{audience === 'team' && (
+					<label className={cx('field')}>
+						<span>{c.labels.company}</span>
+						<input name="company" type="text" maxLength={100} autoComplete="organization" />
+					</label>
+				)}
 			</div>
 			<label className={cx('field')}>
-				<span>{c.labels.message}</span>
+				<span>{audience === 'team' ? c.labels.messageTeam : c.labels.message}</span>
 				<textarea name="message" required minLength={10} maxLength={5000} rows={7} />
 			</label>
 			<input

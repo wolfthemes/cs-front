@@ -58,7 +58,7 @@ const TESTIMONIALS = [
 ];
 
 // CTAs open the contact form with the topic pre-filled.
-const contactHref = (topic) => ({ pathname: '/contact', query: { topic } });
+const contactHref = (topic) => ({ pathname: '/contact', query: { topic, for: 'client' } });
 
 function Arrow() {
 	return (

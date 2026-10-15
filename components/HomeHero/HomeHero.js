@@ -234,7 +234,7 @@ export default function HomeHero() {
 					<p className={cx('hire')}>
 						{hero.hire}{' '}
 						<Link
-							href={{ pathname: '/contact', query: { topic: hero.hireTopic } }}
+							href={{ pathname: '/contact', query: { topic: hero.hireTopic, for: 'team' } }}
 							onClick={() => track('cta_click', { location: 'hero', target: 'hiring' })}
 						>
 							{hero.hireCta} →
