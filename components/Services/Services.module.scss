@@ -7,6 +7,10 @@
 
 $edge: 1rem; // matches Header and HomeHero side padding
 
+// Solid slide background: covers the fixed topographic map so alternating
+// solid / see-through sections give the page a scrolling rhythm.
+$solid: #151515;
+
 .component {
 	max-width: var(--wpe--container--max-width);
 	margin: 0 auto;
@@ -14,7 +18,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 }
 
 .hero {
-	padding: clamp(4rem, 12vw, 9rem) 0 0;
+	padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 5.5rem);
 }
 
 .section {
@@ -28,6 +32,20 @@ $edge: 1rem; // matches Header and HomeHero side padding
 		opacity: 1;
 		transform: none;
 	}
+}
+
+// Full-bleed solid band behind a section: the shadow + clip extend the colour past
+// the centred container without widening the layout.
+.solid {
+	border-top: 0;
+	background-color: $solid;
+	box-shadow: 0 0 0 100vmax $solid;
+	clip-path: inset(0 -100vmax);
+}
+
+// A section that follows a solid one starts flush against it: no hairline.
+.solid + .section {
+	border-top: 0;
 }
 
 .eyebrow {
@@ -153,41 +171,6 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.5);
 }
 
-.stats {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1.5rem clamp(2rem, 6vw, 5rem);
-	margin-top: clamp(3rem, 7vw, 5rem);
-
-	// Equal space above/below so the stats sit centred between the hero rule
-	// and the next section's top rule.
-	padding: clamp(2rem, 4vw, 3rem) 0;
-	border-top: var(--wpe--border--light);
-}
-
-.stat {
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-}
-
-.stat-value {
-	font-size: clamp(2rem, 4vw, 3rem);
-	line-height: 1;
-	letter-spacing: -0.03em;
-	font-weight: fw(bold);
-	color: $c-base;
-}
-
-.stat-suffix {
-	color: $c-accent;
-}
-
-.stat-label {
-	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.6);
-}
-
 // Offers: one hairline-separated row each (number | details | price + CTA).
 .offers {
 	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
@@ -291,6 +274,48 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	line-height: 1.55;
 	letter-spacing: -0.01em;
 	color: rgba(255, 255, 255, 0.85);
+}
+
+.quote-card {
+	position: relative;
+	padding: clamp(1.5rem, 3vw, 2.25rem);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1.25rem;
+	background-color: rgba(255, 255, 255, 0.04);
+	opacity: 0;
+	transform: translateY(1.25rem);
+	transition:
+		opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i, 0) * 0.12s),
+		transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i, 0) * 0.12s),
+		border-color 0.25s ease-out,
+		background-color 0.25s ease-out;
+
+	// Large decorative opening mark.
+	&::before {
+		content: '“';
+		position: absolute;
+		top: 0.4rem;
+		right: 1.5rem;
+		font-size: 5rem;
+		line-height: 1;
+		color: color-mix(in srgb, #{$c-accent} 35%, transparent);
+	}
+
+	&:hover {
+		border-color: color-mix(in srgb, #{$c-accent} 45%, transparent);
+		background-color: rgba(255, 255, 255, 0.06);
+		transform: translateY(-4px);
+	}
+}
+
+// Cards rise in one after another once their section is revealed.
+.is-in .quote-card {
+	opacity: 1;
+	transform: none;
+
+	&:hover {
+		transform: translateY(-4px);
+	}
 }
 
 .testimonial {
@@ -631,8 +656,105 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	}
 }
 
+// Stat band: three giant figures between text sections.
+.band {
+	padding: clamp(3.5rem, 8vw, 7rem) 0;
+	border-top: var(--wpe--border--light);
+}
+
+.band-list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2.5rem clamp(1.5rem, 4vw, 3rem);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.band-stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.band-value {
+	font-size: clamp(3.5rem, 11vw, 9.5rem);
+	line-height: 0.95;
+	letter-spacing: -0.05em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.band-suffix {
+	color: $c-accent;
+}
+
+.band-label {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+// Marquee of reassurance keywords above the FAQ (decorative, aria-hidden).
+.marquee {
+	overflow: hidden;
+	padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+	border-block: var(--wpe--border--light);
+}
+
+.marquee-track {
+	display: flex;
+	width: max-content;
+	animation: marquee 50s linear infinite;
+}
+
+.marquee-set {
+	display: flex;
+	flex-shrink: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: center;
+		padding-right: clamp(1.5rem, 3vw, 3rem);
+		font-size: clamp(2rem, 5.5vw, 4.5rem);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+		font-weight: fw(bold);
+		white-space: nowrap;
+		color: transparent;
+		-webkit-text-stroke: 1px rgba(255, 255, 255, 0.55);
+
+		// Solid white on every other word; gold star between all of them.
+		&:nth-child(even) {
+			color: $c-base;
+			-webkit-text-stroke: 0;
+		}
+
+		&::after {
+			content: '✦';
+			margin-left: clamp(1.5rem, 3vw, 3rem);
+			font-size: 0.45em;
+			color: $c-accent;
+			-webkit-text-stroke: 0;
+		}
+	}
+}
+
+@keyframes marquee {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
 @media (width <= 48rem) {
 	.offer {
+		grid-template-columns: 1fr;
+	}
+
+	.band-list {
 		grid-template-columns: 1fr;
 	}
 
@@ -677,6 +799,22 @@ $edge: 1rem; // matches Header and HomeHero side padding
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.quote-card {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	.marquee-track {
+		flex-wrap: wrap;
+		width: auto;
+		animation: none;
+	}
+
+	.marquee-set:last-child {
+		display: none;
+	}
+
 	.section {
 		opacity: 1;
 		transform: none;

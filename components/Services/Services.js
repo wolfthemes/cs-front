@@ -7,15 +7,10 @@ import { useCopy } from '../../lib/i18n';
 import { scrollTo } from '../../lib/scroll';
 import { track } from '../../lib/track';
 import { WorkStrip } from '../WorkStrip';
+import StatBand from './StatBand';
 import { MailIcon, QuoteIcon, RocketIcon, ShieldIcon, SlidersIcon, KeyIcon } from './icons';
 
 let cx = classNames.bind(styles);
-
-const STATS = [
-	{ value: '15', suffix: 'y' },
-	{ value: '36', suffix: 'k+' },
-	{ value: '4.5', suffix: '/5' },
-];
 
 // Published Upwork testimonials; the non-original language is a translation.
 const TESTIMONIALS = [
@@ -137,22 +132,13 @@ export default function Services() {
 					</a>
 				</div>
 				<p className={cx('note')}>{c.hero.note}</p>
-				<div className={cx('stats')}>
-					{STATS.map((stat, i) => (
-						<div key={i} className={cx('stat')}>
-							<span className={cx('stat-value')}>
-								{stat.value}
-								<span className={cx('stat-suffix')}>{stat.suffix}</span>
-							</span>
-							<span className={cx('stat-label')}>{c.stats[i]}</span>
-						</div>
-					))}
-				</div>
 			</section>
 
 			<WorkStrip />
 
-			<section id="offers" className={cx('section')} data-reveal>
+			<StatBand />
+
+			<section id="offers" className={cx('section', 'solid')} data-reveal>
 				<p className={cx('eyebrow')}>{c.offers.eyebrow}</p>
 				<h2 className={cx('title')}>{c.offers.title}</h2>
 				<p className={cx('lead')}>{c.offers.lead}</p>
@@ -205,8 +191,8 @@ export default function Services() {
 				<p className={cx('eyebrow')}>{c.proof.eyebrow}</p>
 				<h2 className={cx('title')}>{c.proof.title}</h2>
 				<ul className={cx('grid', 'quotes')}>
-					{TESTIMONIALS.map((t) => (
-						<li key={t.author}>
+					{TESTIMONIALS.map((t, i) => (
+						<li key={t.author} className={cx('quote-card')} style={{ '--i': i }}>
 							<figure className={cx('testimonial')}>
 								<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
 								<figcaption className={cx('quote-caption')}>
@@ -224,7 +210,7 @@ export default function Services() {
 				</ul>
 			</section>
 
-			<section className={cx('section', 'centered')} data-reveal>
+			<section className={cx('section', 'centered', 'solid')} data-reveal>
 				<p className={cx('eyebrow')}>{c.process.eyebrow}</p>
 				<h2 className={cx('title')}>{c.process.title}</h2>
 				<ol className={cx('stepper')}>
@@ -282,6 +268,18 @@ export default function Services() {
 					))}
 				</dl>
 			</section>
+
+			<div className={cx('marquee')} aria-hidden="true">
+				<div className={cx('marquee-track')}>
+					{[0, 1].map((copy) => (
+						<ul key={copy} className={cx('marquee-set')}>
+							{c.marquee.map((word) => (
+								<li key={word}>{word}</li>
+							))}
+						</ul>
+					))}
+				</div>
+			</div>
 
 			<section className={cx('section', 'faq-section')} data-reveal>
 				<div className={cx('faq-head')}>
