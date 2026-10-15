@@ -7,7 +7,7 @@ import { useCopy } from '../../lib/i18n';
 import { scrollTo } from '../../lib/scroll';
 import { track } from '../../lib/track';
 import { WorkStrip } from '../WorkStrip';
-import StatBand from './StatBand';
+import { StatBand } from '../StatBand';
 import { MailIcon, QuoteIcon, RocketIcon } from './icons';
 
 let cx = classNames.bind(styles);
@@ -136,7 +136,7 @@ export default function Services() {
 
 				<WorkStrip />
 
-				<StatBand />
+				<StatBand labels={c.stats} />
 
 				<section id="offers" className={cx('section', 'solid')} data-reveal>
 					<p className={cx('eyebrow')}>{c.offers.eyebrow}</p>

@@ -1,0 +1,58 @@
+@import 'styles/tokens';
+
+// Stat band: three big figures between text sections (default) or a quieter
+// compact row.
+
+.band {
+	padding: clamp(3.5rem, 8vw, 7rem) 0;
+	border-top: var(--wpe--border--light);
+}
+
+.list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2.5rem clamp(1.5rem, 4vw, 3rem);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	@media (width <= 48rem) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.value {
+	font-size: clamp(2.75rem, 7.5vw, 6.5rem);
+	line-height: 0.95;
+	letter-spacing: -0.05em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.suffix {
+	color: $c-accent;
+}
+
+.label {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.compact {
+	padding: clamp(2rem, 4vw, 3rem) 0;
+
+	.value {
+		font-size: clamp(2rem, 4.5vw, 3.5rem);
+	}
+
+	.stat {
+		gap: 0.4rem;
+	}
+}

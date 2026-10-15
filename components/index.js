@@ -32,6 +32,7 @@ export { Post } from './Post';
 export { SEO } from './SEO';
 export { Services } from './Services';
 export { WorkStrip } from './WorkStrip';
+export { StatBand } from './StatBand';
 export { ContactForm } from './ContactForm';
 export { Engineering } from './Engineering';
 export { Paths } from './Paths';

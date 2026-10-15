@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './Services.module.scss';
+import styles from './StatBand.module.scss';
 import { ShuffleText } from '../ShuffleText';
-import { useCopy } from '../../lib/i18n';
 
 let cx = classNames.bind(styles);
 
@@ -12,10 +11,10 @@ const STATS = [
 	{ value: '4.5', suffix: '/5' },
 ];
 
-// Full-width proof band between the page's text sections. The numbers decode
-// (ShuffleText) once, the first time the band scrolls into view.
-export default function StatBand() {
-	const { services: c } = useCopy();
+// Full-width proof band between a page's text sections. The numbers decode
+// (ShuffleText) once, the first time the band scrolls into view. `labels` are the
+// three captions, in the same order as STATS; `compact` shrinks the figures.
+export default function StatBand({ labels, compact = false }) {
 	const ref = useRef(null);
 	const [seen, setSeen] = useState(false);
 
@@ -35,15 +34,15 @@ export default function StatBand() {
 	}, []);
 
 	return (
-		<section ref={ref} className={cx('band')}>
-			<ul className={cx('band-list')}>
+		<section ref={ref} className={cx('band', { compact })}>
+			<ul className={cx('list')}>
 				{STATS.map((stat, i) => (
-					<li key={i} className={cx('band-stat')}>
-						<span className={cx('band-value')}>
+					<li key={i} className={cx('stat')}>
+						<span className={cx('value')}>
 							<ShuffleText text={stat.value} play={seen} stagger={90} />
-							<span className={cx('band-suffix')}>{stat.suffix}</span>
+							<span className={cx('suffix')}>{stat.suffix}</span>
 						</span>
-						<span className={cx('band-label')}>{c.stats[i]}</span>
+						<span className={cx('label')}>{labels[i]}</span>
 					</li>
 				))}
 			</ul>

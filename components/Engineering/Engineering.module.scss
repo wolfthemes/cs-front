@@ -12,6 +12,10 @@ $edge: 1rem; // matches Header and HomeHero side padding
 }
 
 .hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+	align-items: end;
+	gap: 3rem clamp(2rem, 6vw, 6rem);
 	margin-inline: $edge;
 	padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 6rem);
 }
@@ -52,6 +56,10 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	letter-spacing: -0.04em;
 	font-weight: fw(bold);
 	color: $c-base;
+}
+
+.inset {
+	margin-inline: $edge;
 }
 
 .hero-title-line {
@@ -115,49 +123,6 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.5);
 }
 
-.stats {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 2rem 4rem;
-	margin-top: clamp(2.5rem, 6vw, 4.5rem);
-}
-
-.stat {
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-}
-
-.stat-value {
-	font-size: clamp(2.25rem, 5vw, 3.5rem);
-	line-height: 1;
-	letter-spacing: -0.03em;
-	font-weight: fw(bold);
-	color: $c-base;
-}
-
-.stat-suffix {
-	color: $c-accent;
-}
-
-.stat-label {
-	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.5);
-}
-
-.grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: clamp(2rem, 4vw, 3rem);
-	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
-	padding: 0;
-	list-style: none;
-
-	@media (width <= 48rem) {
-		grid-template-columns: 1fr;
-	}
-}
-
 .item-title {
 	margin: 0;
 	font-size: clamp(1.15rem, 2vw, 1.5rem);
@@ -190,4 +155,199 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .final {
 	text-align: left;
+}
+
+// Full-bleed solid slide behind a section (same trick as Services): the shadow
+// + clip extend the colour past the centred container without widening it.
+$solid: #151515;
+
+.solid {
+	border-top: 0;
+	background-color: $solid;
+	box-shadow: 0 0 0 100vmax $solid;
+	clip-path: inset(0 -100vmax);
+}
+
+.solid + .section {
+	border-top: 0;
+}
+
+// Availability panel in the hero: the screening facts at a glance.
+.panel {
+	padding: clamp(1.5rem, 3vw, 2.25rem);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 1.25rem;
+	background-color: rgba(255, 255, 255, 0.04);
+	backdrop-filter: blur(6px);
+}
+
+.status {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin: 0 0 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: $c-base;
+}
+
+.dot {
+	width: 0.6rem;
+	height: 0.6rem;
+	border-radius: 50%;
+	background-color: #3ddc84;
+	box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.5);
+	animation: ping 2.4s ease-out infinite;
+}
+
+.facts {
+	margin: 0;
+}
+
+.fact {
+	display: grid;
+	grid-template-columns: 6.5rem minmax(0, 1fr);
+	gap: 1rem;
+	padding: 0.85rem 0;
+	border-top: var(--wpe--border--light);
+
+	dt {
+		font-family: var(--font-geist-mono), monospace;
+		font-size: fs(sm);
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	dd {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.88);
+	}
+}
+
+@keyframes ping {
+	70% {
+		box-shadow: 0 0 0 0.6rem rgba(61, 220, 132, 0);
+	}
+
+	100% {
+		box-shadow: 0 0 0 0 rgba(61, 220, 132, 0);
+	}
+}
+
+// Principles: four quiet cards, one line icon each.
+.cards {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: clamp(1rem, 2vw, 1.5rem);
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+
+	@media (width <= 48rem) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.card {
+	padding: clamp(1.5rem, 3vw, 2.25rem);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1.25rem;
+	background-color: rgba(255, 255, 255, 0.03);
+	transition:
+		border-color 0.25s ease-out,
+		background-color 0.25s ease-out;
+
+	&:hover {
+		border-color: color-mix(in srgb, #{$c-accent} 40%, transparent);
+		background-color: rgba(255, 255, 255, 0.05);
+	}
+}
+
+.card-icon {
+	display: inline-grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	margin-bottom: 1.25rem;
+	color: $c-accent;
+}
+
+// Architecture flow: WordPress -> WPGraphQL -> Next.js -> Vercel.
+.flow {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1.5rem;
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.flow-node {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 1.25rem 1.5rem;
+	border: 1px solid color-mix(in srgb, #{$c-accent} 35%, transparent);
+	border-radius: 1rem;
+	background-color: color-mix(in srgb, #{$c-accent} 6%, transparent);
+
+	// Arrow towards the next node.
+	&:not(:last-child)::after {
+		content: '→';
+		position: absolute;
+		top: 50%;
+		right: -1.2rem;
+		transform: translate(50%, -50%);
+		font-family: var(--font-geist-mono), monospace;
+		color: $c-accent;
+	}
+
+	@media (width <= 48rem) {
+		&:not(:last-child)::after {
+			content: '↓';
+			inset: auto auto -1.2rem 50%;
+			transform: translate(-50%, 50%);
+		}
+	}
+}
+
+.flow-name {
+	font-weight: fw(bold);
+	letter-spacing: -0.01em;
+	color: $c-base;
+}
+
+.flow-role {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.55);
+}
+
+.flow + .lead {
+	margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+@media (width <= 48rem) {
+	.hero {
+		grid-template-columns: 1fr;
+	}
+
+	.flow {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+
+	.fact {
+		grid-template-columns: 5.5rem minmax(0, 1fr);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dot {
+		animation: none;
+	}
+
+	.card {
+		transition: none;
+	}
 }

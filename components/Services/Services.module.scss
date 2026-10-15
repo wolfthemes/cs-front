@@ -631,45 +631,6 @@ $solid: #151515;
 	}
 }
 
-// Stat band: three giant figures between text sections.
-.band {
-	padding: clamp(3.5rem, 8vw, 7rem) 0;
-	border-top: var(--wpe--border--light);
-}
-
-.band-list {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 2.5rem clamp(1.5rem, 4vw, 3rem);
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.band-stat {
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-}
-
-.band-value {
-	font-size: clamp(2.75rem, 7.5vw, 6.5rem);
-	line-height: 0.95;
-	letter-spacing: -0.05em;
-	font-weight: fw(bold);
-	color: $c-base;
-}
-
-.band-suffix {
-	color: $c-accent;
-}
-
-.band-label {
-	font-family: var(--font-geist-mono), monospace;
-	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.6);
-}
-
 // Marquee of reassurance keywords above the FAQ (decorative, aria-hidden).
 .marquee {
 	overflow: hidden;
@@ -726,10 +687,6 @@ $solid: #151515;
 
 @media (width <= 48rem) {
 	.offer {
-		grid-template-columns: 1fr;
-	}
-
-	.band-list {
 		grid-template-columns: 1fr;
 	}
 
