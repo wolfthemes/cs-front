@@ -48,8 +48,16 @@ export default function Engineering() {
 					</h1>
 					<p className={cx('hero-lead')}>{c.hero.lead}</p>
 					<div className={cx('actions')}>
-						<a
+						<Link
 							className={cx('primary')}
+							href={contactHref(c.hero.topic)}
+							onClick={() => track('cta_click', { location: 'engineering_hero', target: 'hiring' })}
+						>
+							<span>{c.hero.contact}</span>
+							<ArrowIcon className={cx('arrow')} />
+						</Link>
+						<a
+							className={cx('ghost')}
 							href={cv}
 							target="_blank"
 							rel="noopener noreferrer"
@@ -57,13 +65,6 @@ export default function Engineering() {
 						>
 							{c.hero.cta}
 						</a>
-						<Link
-							className={cx('secondary')}
-							href={contactHref(c.hero.topic)}
-							onClick={() => track('cta_click', { location: 'engineering_hero', target: 'hiring' })}
-						>
-							{c.hero.contact} →
-						</Link>
 					</div>
 				</div>
 

@@ -120,7 +120,24 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	transition: transform 0.2s ease-out;
 }
 
-.secondary,
+// Outlined pill: the secondary action next to the filled primary.
+.ghost {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.95rem 1.75rem;
+	border-radius: 999px;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+	color: $c-base;
+	font-weight: fw(medium);
+	text-decoration: none;
+	transition: box-shadow 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		box-shadow: inset 0 0 0 1px $c-base;
+	}
+}
+
 .link {
 	padding-bottom: 0.2em;
 	color: $c-base;
@@ -377,7 +394,6 @@ $solid: #151515;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.secondary,
 	.link {
 		transition: color 0.2s ease-out;
 	}
