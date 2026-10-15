@@ -13,7 +13,14 @@ export default function ContactPage() {
 
 	return (
 		<>
-			<SEO title={c.seo.title} description={c.seo.description} />
+			<SEO
+				title={c.seo.title}
+				description={c.seo.description}
+				crumb="Contact"
+				schema={[
+					{ '@type': 'ContactPage', about: { '@id': 'https://constantin.saguin.com/#person' } },
+				]}
+			/>
 			<Header title={siteTitle} />
 			<Main>
 				<section className={styles.page}>

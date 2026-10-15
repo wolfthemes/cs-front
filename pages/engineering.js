@@ -14,7 +14,17 @@ export default function EngineeringPage() {
 
 	return (
 		<>
-			<SEO title={engineering.seo.title} description={engineering.seo.description} />
+			<SEO
+				title={engineering.seo.title}
+				description={engineering.seo.description}
+				crumb="Engineering"
+				schema={[
+					{
+						'@type': 'ProfilePage',
+						mainEntity: { '@id': 'https://constantin.saguin.com/#person' },
+					},
+				]}
+			/>
 			<Header title={siteTitle} />
 			<Main>
 				<Engineering />

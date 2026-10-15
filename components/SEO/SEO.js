@@ -6,13 +6,12 @@ import { useCopy } from '../../lib/i18n';
 // personal resume site, so a single stable Person graph describes the whole
 // thing — emitted as JSON-LD so search engines and AI crawlers can read it.
 const PERSON_SCHEMA = {
-	'@context': 'https://schema.org',
 	'@type': 'Person',
+	'@id': 'https://constantin.saguin.com/#person',
 	name: 'Constantin Saguin',
 	url: 'https://constantin.saguin.com/',
 	email: 'constantin@saguin.com',
-	jobTitle: 'Senior WordPress Engineer',
-	description: 'Senior WordPress engineer with 15 years of experience. Founder of WolfThemes.',
+	knowsLanguage: ['en', 'fr'],
 	address: {
 		'@type': 'PostalAddress',
 		addressLocality: 'Alsace',
@@ -98,11 +97,25 @@ const SITE = {
 	imageHeight: '630',
 	locale: 'en_US',
 	author: 'Constantin Saguin',
-	keywords:
-		'WordPress developer, WordPress engineer, WooCommerce developer, PHP developer, WordPress theme developer, ThemeForest author, WolfThemes, freelance WordPress, remote WordPress',
 };
 
-export default function SEO({ title, description, imageUrl, url }) {
+// Per-page schema.org nodes, keyed off the page's path and copy. Breadcrumbs
+// are added for every page but the home page.
+function pageSchema({ path, url, name, extra }) {
+	const nodes = [...extra];
+	if (path) {
+		nodes.push({
+			'@type': 'BreadcrumbList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: SITE.name, item: SITE.url },
+				{ '@type': 'ListItem', position: 2, name, item: url },
+			],
+		});
+	}
+	return nodes;
+}
+
+export default function SEO({ title, description, imageUrl, url, schema = [], crumb }) {
 	const { seo } = useCopy();
 	const { locale, asPath } = useRouter();
 	// Same page in each language: /x <-> /fr/x (home is '' so it stays /fr).
@@ -112,14 +125,23 @@ export default function SEO({ title, description, imageUrl, url }) {
 	const metaImage = imageUrl || SITE.image;
 	const metaUrl = url || `${SITE.url}${locale === 'fr' ? '/fr' : ''}${path}`;
 
+	const graph = [
+		{ ...PERSON_SCHEMA, jobTitle: seo.jobTitle, description: seo.about },
+		...pageSchema({
+			path,
+			url: metaUrl,
+			name: crumb || metaTitle,
+			extra: schema,
+		}),
+	];
+
 	return (
 		<Head>
 			<title>{metaTitle}</title>
 			<meta name="title" content={metaTitle} />
 			<meta name="description" content={metaDescription} />
-			<meta name="keywords" content={SITE.keywords} />
 			<meta name="author" content={SITE.author} />
-			<meta name="robots" content="index, follow" />
+			<meta name="robots" content="index, follow, max-image-preview:large" />
 			<link rel="canonical" href={metaUrl} />
 			<link rel="alternate" hrefLang="en" href={`${SITE.url}${path}`} />
 			<link rel="alternate" hrefLang="fr" href={`${SITE.url}/fr${path}`} />
@@ -143,8 +165,9 @@ export default function SEO({ title, description, imageUrl, url }) {
 
 			<script
 				type="application/ld+json"
-				// eslint-disable-next-line react/no-danger
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }),
+				}}
 			/>
 		</Head>
 	);

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /lab/
+
+Sitemap: https://constantin.saguin.com/sitemap.xml
