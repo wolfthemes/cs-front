@@ -87,29 +87,6 @@ export default function Engineering() {
 				<StatBand labels={c.stats} compact />
 			</div>
 
-			<section className={cx('section', 'accent')} data-reveal>
-				<div className={cx('ai')}>
-					<div>
-						<p className={cx('eyebrow')}>{c.ai.eyebrow}</p>
-						<h2 className={cx('title')}>{c.ai.title}</h2>
-						<p className={cx('lead')}>{c.ai.lead}</p>
-						<ul className={cx('ai-tags')}>
-							{c.ai.tags.map((tag) => (
-								<li key={tag}>{tag}</li>
-							))}
-						</ul>
-					</div>
-					<ol className={cx('ai-list')}>
-						{c.ai.items.map(([title, text]) => (
-							<li key={title} className={cx('ai-item')}>
-								<h3 className={cx('item-title')}>{title}</h3>
-								<p className={cx('item-text')}>{text}</p>
-							</li>
-						))}
-					</ol>
-				</div>
-			</section>
-
 			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.principles.eyebrow}</p>
 				<h2 className={cx('title')}>{c.principles.title}</h2>

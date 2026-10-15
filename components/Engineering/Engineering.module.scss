@@ -195,19 +195,8 @@ $solid: #151515;
 	clip-path: inset(0 -100vmax);
 }
 
-.solid + .section,
-.accent + .section {
+.solid + .section {
 	border-top: 0;
-}
-
-// Highlight slide (AI section): the solid slide with a gold tint.
-$accent-slide: color-mix(in srgb, #{$c-accent} 7%, #151515);
-
-.accent {
-	border-top: 0;
-	background-color: $accent-slide;
-	box-shadow: 0 0 0 100vmax $accent-slide;
-	clip-path: inset(0 -100vmax);
 }
 
 // Availability panel in the hero: the screening facts at a glance.
@@ -403,68 +392,5 @@ $accent-slide: color-mix(in srgb, #{$c-accent} 7%, #151515);
 
 	.card {
 		transition: none;
-	}
-}
-
-// AI section: heading + lead + tags on the left, four numbered practices on the right.
-.ai {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-	gap: 3rem clamp(2rem, 6vw, 6rem);
-
-	@media (width <= 48rem) {
-		grid-template-columns: 1fr;
-	}
-}
-
-.ai-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin: clamp(1.5rem, 3vw, 2rem) 0 0;
-	padding: 0;
-	list-style: none;
-
-	li {
-		padding: 0.3rem 0.85rem;
-		border: 1px solid color-mix(in srgb, #{$c-accent} 45%, transparent);
-		border-radius: 100px;
-		font-family: var(--font-geist-mono), monospace;
-		font-size: fs(sm);
-		color: $c-accent;
-	}
-}
-
-.ai-list {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	counter-reset: ai;
-}
-
-.ai-item {
-	display: grid;
-	grid-template-columns: 2.5rem minmax(0, 1fr);
-	gap: 0.25rem 1rem;
-	padding: clamp(1.25rem, 2.5vw, 1.75rem) 0;
-	border-top: var(--wpe--border--light);
-
-	&:last-child {
-		border-bottom: var(--wpe--border--light);
-	}
-
-	// Gold mono numeral in the first column.
-	&::before {
-		counter-increment: ai;
-		content: counter(ai, decimal-leading-zero);
-		grid-row: span 2;
-		font-family: var(--font-geist-mono), monospace;
-		font-size: fs(sm);
-		color: $c-accent;
-	}
-
-	.item-title,
-	.item-text {
-		grid-column: 2;
 	}
 }
