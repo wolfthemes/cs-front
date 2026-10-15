@@ -6,6 +6,7 @@ import styles from './Services.module.scss';
 import { useCopy } from '../../lib/i18n';
 import { scrollTo } from '../../lib/scroll';
 import { track } from '../../lib/track';
+import { MailIcon, QuoteIcon, RocketIcon, ShieldIcon, SlidersIcon, KeyIcon } from './icons';
 
 let cx = classNames.bind(styles);
 
@@ -56,6 +57,9 @@ const TESTIMONIALS = [
 		},
 	},
 ];
+
+const STEP_ICONS = [MailIcon, QuoteIcon, RocketIcon];
+const REASSURE_ICONS = [ShieldIcon, SlidersIcon, KeyIcon];
 
 // CTAs open the contact form with the topic pre-filled.
 const contactHref = (topic) => ({ pathname: '/contact', query: { topic, for: 'client' } });
@@ -162,9 +166,14 @@ export default function Services() {
 									))}
 								</ul>
 								{item.tech && (
-									<p className={cx('tech')}>
-										<span>{c.offers.under}:</span> {item.tech}
-									</p>
+									<div className={cx('tech')}>
+										<span className={cx('tech-label')}>{c.offers.under}</span>
+										<ul className={cx('tags')}>
+											{item.tech.split(', ').map((tag) => (
+												<li key={tag}>{tag}</li>
+											))}
+										</ul>
+									</div>
 								)}
 							</div>
 							<div className={cx('offer-side')}>
@@ -195,11 +204,18 @@ export default function Services() {
 				<ul className={cx('grid', 'quotes')}>
 					{TESTIMONIALS.map((t) => (
 						<li key={t.author}>
-							<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
-							<p className={cx('quote-author')}>
-								{t.author}
-								{t.role && <span className={cx('quote-role')}> · {t.role[lang]}</span>}
-							</p>
+							<figure className={cx('testimonial')}>
+								<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
+								<figcaption className={cx('quote-caption')}>
+									<span className={cx('avatar')} aria-hidden="true">
+										{t.author[0]}
+									</span>
+									<span>
+										<span className={cx('quote-author')}>{t.author}</span>
+										{t.role && <span className={cx('quote-role')}>{t.role[lang]}</span>}
+									</span>
+								</figcaption>
+							</figure>
 						</li>
 					))}
 				</ul>
@@ -208,46 +224,60 @@ export default function Services() {
 			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.process.eyebrow}</p>
 				<h2 className={cx('title')}>{c.process.title}</h2>
-				<ol className={cx('grid', 'steps')}>
-					{c.process.steps.map(([title, text], i) => (
-						<li key={title}>
-							<span className={cx('step-index')}>{String(i + 1).padStart(2, '0')}</span>
-							<h3 className={cx('item-title')}>{title}</h3>
-							<p className={cx('item-text')}>{text}</p>
-						</li>
-					))}
+				<ol className={cx('stepper')}>
+					{c.process.steps.map(([title, text], i) => {
+						const Icon = STEP_ICONS[i];
+						return (
+							<li key={title} className={cx('step')}>
+								<span className={cx('step-node')}>
+									<Icon />
+								</span>
+								<span className={cx('step-index')}>{String(i + 1).padStart(2, '0')}</span>
+								<h3 className={cx('item-title')}>{title}</h3>
+								<p className={cx('item-text')}>{text}</p>
+							</li>
+						);
+					})}
 				</ol>
 			</section>
 
 			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
 				<h2 className={cx('title')}>{c.reassure.title}</h2>
-				<ul className={cx('grid', 'steps')}>
-					{c.reassure.items.map(([title, text]) => (
-						<li key={title}>
-							<h3 className={cx('item-title')}>{title}</h3>
-							<p className={cx('item-text')}>{text}</p>
-						</li>
-					))}
+				<ul className={cx('cards')}>
+					{c.reassure.items.map(([title, text], i) => {
+						const Icon = REASSURE_ICONS[i];
+						return (
+							<li key={title} className={cx('card')}>
+								<span className={cx('card-icon')}>
+									<Icon />
+								</span>
+								<h3 className={cx('item-title')}>{title}</h3>
+								<p className={cx('item-text')}>{text}</p>
+							</li>
+						);
+					})}
 				</ul>
 			</section>
 
 			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
 				<h2 className={cx('title')}>{c.why.title}</h2>
-				<ul className={cx('grid', 'why')}>
+				<dl className={cx('spec')}>
 					{c.why.items.map(([title, text]) => (
-						<li key={title}>
-							<h3 className={cx('item-title')}>{title}</h3>
-							<p className={cx('item-text')}>{text}</p>
-						</li>
+						<div key={title} className={cx('spec-row')}>
+							<dt>{title}</dt>
+							<dd>{text}</dd>
+						</div>
 					))}
-				</ul>
+				</dl>
 			</section>
 
-			<section className={cx('section')} data-reveal>
-				<p className={cx('eyebrow')}>{c.faq.eyebrow}</p>
-				<h2 className={cx('title')}>{c.faq.title}</h2>
+			<section className={cx('section', 'faq-section')} data-reveal>
+				<div className={cx('faq-head')}>
+					<p className={cx('eyebrow')}>{c.faq.eyebrow}</p>
+					<h2 className={cx('title')}>{c.faq.title}</h2>
+				</div>
 				<div className={cx('faq')}>
 					{c.faq.items.map(([question, answer]) => (
 						<details key={question} className={cx('faq-item')}>

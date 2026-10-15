@@ -200,7 +200,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	display: grid;
 	grid-template-columns: 4rem minmax(0, 1fr) minmax(12rem, 16rem);
 	gap: 1.5rem clamp(1.5rem, 3vw, 3rem);
-	padding: clamp(2rem, 4vw, 3rem) 0;
+	padding: clamp(2.75rem, 5vw, 4rem) 0;
 	border-bottom: var(--wpe--border--light);
 
 	// The next section draws its own top rule; avoid a double divider.
@@ -225,21 +225,22 @@ $edge: 1rem; // matches Header and HomeHero side padding
 }
 
 .offer-text {
-	margin: 0.9rem 0 0;
-	max-width: 56ch;
-	line-height: 1.5;
-	color: rgba(255, 255, 255, 0.7);
+	margin: 1rem 0 0;
+	max-width: 52ch;
+	font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+	line-height: 1.45;
+	letter-spacing: -0.01em;
+	color: rgba(255, 255, 255, 0.88);
 }
 
 .points {
 	display: flex;
 	flex-direction: column;
-	gap: 0.4rem;
-	margin: 1.25rem 0 0;
+	gap: 0.5rem;
+	margin: 1.5rem 0 0;
 	padding: 0;
 	list-style: none;
-	font-weight: fw(medium);
-	color: rgba(255, 255, 255, 0.85);
+	color: rgba(255, 255, 255, 0.62);
 
 	li::before {
 		content: '→ ';
@@ -280,14 +281,6 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	list-style: none;
 }
 
-.steps {
-	grid-template-columns: repeat(3, 1fr);
-}
-
-.why {
-	grid-template-columns: repeat(3, 1fr);
-}
-
 .quotes {
 	grid-template-columns: repeat(2, 1fr);
 }
@@ -300,14 +293,43 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.85);
 }
 
+.testimonial {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	height: 100%;
+	margin: 0;
+}
+
+.quote-caption {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+	margin-top: auto;
+}
+
+.avatar {
+	display: grid;
+	flex-shrink: 0;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 50%;
+	background-color: color-mix(in srgb, #{$c-accent} 14%, transparent);
+	box-shadow: inset 0 0 0 1px $c-accent;
+	font-weight: fw(bold);
+	color: $c-accent;
+}
+
 .quote-author {
-	margin: 1.25rem 0 0;
+	display: block;
 	font-weight: fw(semibold);
 	color: $c-base;
 }
 
 .quote-role {
-	font-weight: fw(medium);
+	display: block;
+	font-size: fs(sm);
 	color: rgba(255, 255, 255, 0.6);
 }
 
@@ -317,7 +339,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 .step-index {
 	display: block;
-	margin-bottom: 1.25rem;
+	margin: 1.25rem 0 0.4rem;
 	font-family: var(--font-geist-mono), monospace;
 	font-size: fs(sm);
 	color: $c-accent;
@@ -339,27 +361,35 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.7);
 }
 
-// FAQ: native <details>, no JS.
-.faq {
-	margin-top: clamp(2.5rem, 5vw, 4rem);
-	border-top: var(--wpe--border--light);
+// FAQ: heading on the left, native <details> accordion on the right (no JS).
+.faq-section {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	gap: 2rem clamp(2rem, 6vw, 6rem);
+}
+
+.faq-head {
+	align-self: start;
+	position: sticky;
+	top: 6rem;
 }
 
 .faq-item {
 	border-bottom: var(--wpe--border--light);
 
-	&:last-child {
-		border-bottom: 0;
+	&:first-child {
+		border-top: var(--wpe--border--light);
 	}
 
 	summary {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
-		padding: 1.5rem 0;
+		gap: 1.5rem;
+		padding: 1.4rem 0;
 		cursor: pointer;
 		list-style: none;
-		font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+		font-size: clamp(1.05rem, 1.6vw, 1.3rem);
 		font-weight: fw(medium);
 		letter-spacing: -0.01em;
 		color: $c-base;
@@ -370,21 +400,41 @@ $edge: 1rem; // matches Header and HomeHero side padding
 
 		&::after {
 			content: '+';
+			display: grid;
+			flex-shrink: 0;
+			place-items: center;
+			width: 1.9rem;
+			height: 1.9rem;
+			border: 1px solid rgba(255, 255, 255, 0.25);
+			border-radius: 50%;
 			font-family: var(--font-geist-mono), monospace;
+			line-height: 1;
 			color: $c-accent;
+			transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
 		}
+
+		&:hover::after,
+		&:focus-visible::after {
+			border-color: $c-accent;
+		}
+	}
+
+	&[open] summary {
+		color: $c-accent;
 	}
 
 	&[open] summary::after {
 		content: '−';
+		background-color: color-mix(in srgb, #{$c-accent} 14%, transparent);
+		border-color: $c-accent;
 	}
 
 	p {
 		margin: 0;
-		padding: 0 0 1.75rem;
+		padding: 0 3.4rem 1.6rem 0;
 		max-width: 62ch;
-		line-height: 1.55;
-		color: rgba(255, 255, 255, 0.7);
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.72);
 	}
 }
 
@@ -402,15 +452,199 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: $c-base;
 }
 
+// Offer tags ("Under the hood"): quiet pills instead of a mono sentence.
+.tech {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem 0.9rem;
+	margin-top: 1.5rem;
+}
+
+.tech-label {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(xs);
+	text-transform: lowercase;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		padding: 0.25rem 0.7rem;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 100px;
+		font-family: var(--font-geist-mono), monospace;
+		font-size: fs(xs);
+		color: rgba(255, 255, 255, 0.55);
+	}
+}
+
+// Process: horizontal stepper. Icon nodes joined by a dashed connector + arrowhead.
+.stepper {
+	--node: 3.5rem;
+	--step-gap: clamp(2rem, 4vw, 3rem);
+
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--step-gap);
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.step {
+	position: relative;
+
+	&:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		top: calc(var(--node) / 2);
+		left: calc(var(--node) + 0.75rem);
+		right: calc(0px - var(--step-gap) + 0.75rem);
+		height: 1px;
+		background: repeating-linear-gradient(
+			90deg,
+			color-mix(in srgb, #{$c-accent} 60%, transparent) 0 6px,
+			transparent 6px 12px
+		);
+	}
+
+	&:not(:last-child)::before {
+		content: '';
+		position: absolute;
+		top: calc(var(--node) / 2 - 4px);
+		right: calc(0px - var(--step-gap) + 0.75rem);
+		width: 8px;
+		height: 8px;
+		border-top: 1px solid $c-accent;
+		border-right: 1px solid $c-accent;
+		transform: rotate(45deg);
+	}
+}
+
+.step-node {
+	display: grid;
+	place-items: center;
+	width: var(--node);
+	height: var(--node);
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 1px $c-accent;
+	background-color: color-mix(in srgb, #{$c-accent} 10%, transparent);
+	color: $c-accent;
+}
+
+// Peace of mind: three tinted guarantee cards, one icon each.
+.cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: clamp(1rem, 2vw, 1.5rem);
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.card {
+	padding: clamp(1.5rem, 3vw, 2.25rem);
+	border: 1px solid color-mix(in srgb, #{$c-accent} 25%, transparent);
+	border-radius: 1.25rem;
+	background-color: color-mix(in srgb, #{$c-accent} 5%, transparent);
+}
+
+.card-icon {
+	display: inline-grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	margin-bottom: 1.25rem;
+	color: $c-accent;
+}
+
+// Why me: spec-sheet rows (title | text), no cards, no icons.
+.spec {
+	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+	border-top: var(--wpe--border--light);
+}
+
+.spec-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	gap: 0.75rem clamp(2rem, 6vw, 6rem);
+	padding: clamp(1.5rem, 3vw, 2.25rem) 0;
+	border-bottom: var(--wpe--border--light);
+
+	dt {
+		font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+		line-height: 1.15;
+		letter-spacing: -0.02em;
+		font-weight: fw(bold);
+		color: $c-base;
+	}
+
+	dd {
+		margin: 0;
+		max-width: 52ch;
+		font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+		line-height: 1.5;
+		color: rgba(255, 255, 255, 0.72);
+	}
+}
+
 @media (width <= 48rem) {
 	.offer {
 		grid-template-columns: 1fr;
 	}
 
-	.steps,
-	.why,
-	.quotes {
+	.quotes,
+	.cards,
+	.spec-row,
+	.faq-section {
 		grid-template-columns: 1fr;
+	}
+
+	.faq-head {
+		position: static;
+	}
+
+	// Stepper turns vertical: icon column with a dashed line running down it.
+	.stepper {
+		grid-template-columns: 1fr;
+		gap: 2.5rem;
+	}
+
+	.step {
+		padding-left: calc(var(--node) + 1.25rem);
+
+		.step-node {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		.step-index {
+			margin-top: 0;
+		}
+
+		&:not(:last-child)::before {
+			display: none;
+		}
+
+		&:not(:last-child)::after {
+			inset: calc(var(--node) + 0.5rem) auto calc(0px - 2.5rem + 0.5rem) calc(var(--node) / 2);
+			width: 1px;
+			height: auto;
+			background: repeating-linear-gradient(
+				180deg,
+				color-mix(in srgb, #{$c-accent} 60%, transparent) 0 6px,
+				transparent 6px 12px
+			);
+		}
 	}
 
 	.primary {
@@ -438,15 +672,3 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: rgba(255, 255, 255, 0.5);
 }
 
-.tech {
-	margin: 1rem 0 0;
-	max-width: 56ch;
-	font-family: var(--font-geist-mono), monospace;
-	font-size: fs(sm);
-	line-height: 1.5;
-	color: rgba(255, 255, 255, 0.4);
-
-	span {
-		color: rgba(255, 255, 255, 0.55);
-	}
-}
