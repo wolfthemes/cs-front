@@ -44,7 +44,7 @@
     "stylelint-config-standard-scss": "^13.1.0"
   },
   "engines": {
-    "node": ">=20.9",
+    "node": "22.x",
     "npm": ">=8"
   }
 }
