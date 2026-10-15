@@ -202,6 +202,8 @@ $solid: #151515;
 
 // Availability panel in the hero: the screening facts at a glance.
 .panel {
+	justify-self: end;
+	max-width: 500px;
 	padding: clamp(1.5rem, 3vw, 2.25rem);
 	border: 1px solid rgba(255, 255, 255, 0.12);
 	border-radius: 1.25rem;
@@ -383,6 +385,10 @@ $solid: #151515;
 @media (width <= 48rem) {
 	.hero {
 		grid-template-columns: 1fr;
+	}
+
+	.panel {
+		justify-self: stretch;
 	}
 
 	.flow {
