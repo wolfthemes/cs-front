@@ -9,14 +9,15 @@ $edge: clamp(1rem, 5vw, 5rem);
 .component {
 	max-width: var(--wpe--container--max-width);
 	margin: 0 auto;
-	padding: 0 $edge;
 }
 
 .hero {
+	margin-inline: $edge;
 	padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 6rem);
 }
 
 .section {
+	margin-inline: $edge;
 	padding: clamp(4rem, 9vw, 8rem) 0;
 	border-top: var(--wpe--border--light);
 	opacity: 0;
