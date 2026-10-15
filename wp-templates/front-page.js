@@ -12,7 +12,7 @@ import {
 	GalleryBanner,
 	Statement,
 	CaseStudies,
-	Playground,
+	Paths,
 	Contact,
 	SEO,
 	TrailBackground,
@@ -75,7 +75,7 @@ export default function Component() {
 				<GalleryBanner />
 				<Statement />
 				<CaseStudies />
-				<Playground />
+				<Paths />
 				<Contact />
 			</Main>
 			<Footer title={siteTitle} menuItems={footerMenu} />

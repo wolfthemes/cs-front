@@ -33,3 +33,4 @@ export { SEO } from './SEO';
 export { Services } from './Services';
 export { ContactForm } from './ContactForm';
 export { Engineering } from './Engineering';
+export { Paths } from './Paths';

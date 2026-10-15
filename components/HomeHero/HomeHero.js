@@ -101,7 +101,7 @@ function Stat({ value, decimals, suffix, label, started }) {
 }
 
 export default function HomeHero() {
-	const { hero, cv } = useCopy();
+	const { hero } = useCopy();
 	const statsRef = useRef(null);
 	// One observer for the whole stats row: `started` triggers all three counters,
 	// `statsDone` (below) gates the "engineering" shuffle after they land.
@@ -223,15 +223,13 @@ export default function HomeHero() {
 								/>
 							</svg>
 						</Link>
-						<a
+						<Link
 							className={cx('cta-button', 'cta-secondary')}
-							href={cv}
-							target="_blank"
-							rel="noopener noreferrer"
-							onClick={() => track('cv_download', { location: 'hero' })}
+							href="/engineering"
+							onClick={() => track('cta_click', { location: 'hero', target: 'engineering' })}
 						>
-							<span className={cx('cta-label')}>{hero.cv}</span>
-						</a>
+							<span className={cx('cta-label')}>{hero.pro}</span>
+						</Link>
 					</div>
 					<p className={cx('hire')}>
 						{hero.hire}{' '}

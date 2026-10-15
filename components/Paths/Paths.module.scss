@@ -1,0 +1,79 @@
+@import 'styles/breakpoints';
+@import 'styles/tokens';
+
+$edge: clamp(1rem, 5vw, 5rem);
+
+.component {
+	max-width: var(--wpe--container--max-width);
+	margin: 0 auto;
+	padding: clamp(4rem, 9vw, 8rem) $edge;
+}
+
+.eyebrow {
+	margin: 0 0 1.25rem;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	text-transform: lowercase;
+	color: $c-accent;
+}
+
+.title {
+	margin: 0;
+	font-size: clamp(2rem, 5vw, 3.75rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	font-weight: fw(bold);
+	color: $c-base;
+}
+
+.cards {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: clamp(1rem, 2vw, 1.5rem);
+	margin: clamp(2rem, 4vw, 3rem) 0 0;
+	padding: 0;
+	list-style: none;
+
+	@media (width <= 48rem) {
+		grid-template-columns: 1fr;
+	}
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+	height: 100%;
+	padding: clamp(1.5rem, 3vw, 2.5rem);
+	border: var(--wpe--border--light);
+	border-radius: 1rem;
+	background: rgba(0, 0, 0, 0.35);
+	color: $c-base;
+	text-decoration: none;
+	transition: border-color 0.2s, background 0.2s;
+
+	&:hover,
+	&:focus-visible {
+		border-color: $c-accent;
+		background: rgba(0, 0, 0, 0.55);
+	}
+}
+
+.card-title {
+	margin: 0;
+	font-size: clamp(1.4rem, 2.6vw, 2rem);
+	letter-spacing: -0.02em;
+	font-weight: fw(bold);
+}
+
+.card-text {
+	margin: 0;
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.card-cta {
+	margin-top: auto;
+	font-weight: fw(medium);
+	color: $c-accent;
+}
