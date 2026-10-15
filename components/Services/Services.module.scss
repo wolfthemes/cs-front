@@ -278,7 +278,7 @@ $solid: #151515;
 
 .quote-card {
 	position: relative;
-	padding: clamp(1.5rem, 3vw, 2.25rem);
+	padding: clamp(2rem, 4vw, 3.25rem);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 1.25rem;
 	background-color: rgba(255, 255, 255, 0.04);
@@ -294,8 +294,8 @@ $solid: #151515;
 	&::before {
 		content: '“';
 		position: absolute;
-		top: 0.4rem;
-		right: 1.5rem;
+		top: 0.75rem;
+		right: 2rem;
 		font-size: 5rem;
 		line-height: 1;
 		color: color-mix(in srgb, #{$c-accent} 35%, transparent);
@@ -388,6 +388,7 @@ $solid: #151515;
 
 // FAQ: heading on the left, native <details> accordion on the right (no JS).
 .faq-section {
+	border-top: 0; // the marquee above draws the full-width rule
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
 	gap: 2rem clamp(2rem, 6vw, 6rem);
@@ -678,7 +679,7 @@ $solid: #151515;
 }
 
 .band-value {
-	font-size: clamp(3.5rem, 11vw, 9.5rem);
+	font-size: clamp(2.75rem, 7.5vw, 6.5rem);
 	line-height: 0.95;
 	letter-spacing: -0.05em;
 	font-weight: fw(bold);

@@ -112,162 +112,164 @@ export default function Services() {
 	};
 
 	return (
-		<div ref={rootRef} className={cx('component')}>
-			<section id="services" className={cx('hero')}>
-				<p className={cx('eyebrow')}>{c.hero.eyebrow}</p>
-				<h1 className={cx('hero-title')}>{c.hero.title}</h1>
-				<p className={cx('hero-lead')}>{c.hero.lead}</p>
-				<p className={cx('audience')}>{c.audience}</p>
-				<div className={cx('actions')}>
-					<Link
-						className={cx('primary')}
-						href={contactHref(c.hero.subject)}
-						onClick={() => track('cta_click', { location: 'services_hero' })}
-					>
-						<span>{c.hero.cta}</span>
-						<Arrow />
-					</Link>
-					<a className={cx('secondary')} href="#offers" onClick={goToOffers}>
-						{c.hero.secondary} ↓
-					</a>
-				</div>
-				<p className={cx('note')}>{c.hero.note}</p>
-			</section>
+		<div ref={rootRef}>
+			<div className={cx('component')}>
+				<section id="services" className={cx('hero')}>
+					<p className={cx('eyebrow')}>{c.hero.eyebrow}</p>
+					<h1 className={cx('hero-title')}>{c.hero.title}</h1>
+					<p className={cx('hero-lead')}>{c.hero.lead}</p>
+					<p className={cx('audience')}>{c.audience}</p>
+					<div className={cx('actions')}>
+						<Link
+							className={cx('primary')}
+							href={contactHref(c.hero.subject)}
+							onClick={() => track('cta_click', { location: 'services_hero' })}
+						>
+							<span>{c.hero.cta}</span>
+							<Arrow />
+						</Link>
+						<a className={cx('secondary')} href="#offers" onClick={goToOffers}>
+							{c.hero.secondary} ↓
+						</a>
+					</div>
+					<p className={cx('note')}>{c.hero.note}</p>
+				</section>
 
-			<WorkStrip />
+				<WorkStrip />
 
-			<StatBand />
+				<StatBand />
 
-			<section id="offers" className={cx('section', 'solid')} data-reveal>
-				<p className={cx('eyebrow')}>{c.offers.eyebrow}</p>
-				<h2 className={cx('title')}>{c.offers.title}</h2>
-				<p className={cx('lead')}>{c.offers.lead}</p>
-				<ul className={cx('offers')}>
-					{c.offers.items.map((item, i) => (
-						<li key={item.title} className={cx('offer')}>
-							<span className={cx('offer-index')}>{String(i + 1).padStart(2, '0')}</span>
-							<div className={cx('offer-main')}>
-								<h3 className={cx('offer-title')}>{item.title}</h3>
-								<p className={cx('offer-text')}>{item.text}</p>
-								<ul className={cx('points')}>
-									{item.points.map((point) => (
-										<li key={point}>{point}</li>
-									))}
-								</ul>
-								{item.tech && (
-									<div className={cx('tech')}>
-										<span className={cx('tech-label')}>{c.offers.under}</span>
-										<ul className={cx('tags')}>
-											{item.tech.split(', ').map((tag) => (
-												<li key={tag}>{tag}</li>
-											))}
-										</ul>
-									</div>
-								)}
-							</div>
-							<div className={cx('offer-side')}>
-								{item.price ? (
-									<p className={cx('price')}>
-										<span className={cx('price-from')}>{c.offers.from}</span> {item.price}
-									</p>
-								) : (
-									<p className={cx('price', 'price-free')}>{c.offers.free}</p>
-								)}
-								<Link
-									className={cx('ghost')}
-									href={contactHref(`${c.offers.subject} — ${item.title}`)}
-									onClick={() => track('offer_click', { offer: item.title })}
-								>
-									<span>{item.cta ?? c.offers.cta}</span>
-									<Arrow />
-								</Link>
-							</div>
-						</li>
-					))}
-				</ul>
-			</section>
-
-			<section className={cx('section')} data-reveal>
-				<p className={cx('eyebrow')}>{c.proof.eyebrow}</p>
-				<h2 className={cx('title')}>{c.proof.title}</h2>
-				<ul className={cx('grid', 'quotes')}>
-					{TESTIMONIALS.map((t, i) => (
-						<li key={t.author} className={cx('quote-card')} style={{ '--i': i }}>
-							<figure className={cx('testimonial')}>
-								<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
-								<figcaption className={cx('quote-caption')}>
-									<span className={cx('avatar')} aria-hidden="true">
-										{t.author[0]}
-									</span>
-									<span>
-										<span className={cx('quote-author')}>{t.author}</span>
-										{t.role && <span className={cx('quote-role')}>{t.role[lang]}</span>}
-									</span>
-								</figcaption>
-							</figure>
-						</li>
-					))}
-				</ul>
-			</section>
-
-			<section className={cx('section', 'centered', 'solid')} data-reveal>
-				<p className={cx('eyebrow')}>{c.process.eyebrow}</p>
-				<h2 className={cx('title')}>{c.process.title}</h2>
-				<ol className={cx('stepper')}>
-					{c.process.steps.map(([title, text], i) => {
-						const Icon = STEP_ICONS[i];
-						return (
-							<li key={title} className={cx('step')}>
-								<span className={cx('step-node')}>
-									<Icon />
-								</span>
-								<span className={cx('step-index')}>{String(i + 1).padStart(2, '0')}</span>
-								<h3 className={cx('item-title')}>{title}</h3>
-								<p className={cx('item-text')}>{text}</p>
+				<section id="offers" className={cx('section', 'solid')} data-reveal>
+					<p className={cx('eyebrow')}>{c.offers.eyebrow}</p>
+					<h2 className={cx('title')}>{c.offers.title}</h2>
+					<p className={cx('lead')}>{c.offers.lead}</p>
+					<ul className={cx('offers')}>
+						{c.offers.items.map((item, i) => (
+							<li key={item.title} className={cx('offer')}>
+								<span className={cx('offer-index')}>{String(i + 1).padStart(2, '0')}</span>
+								<div className={cx('offer-main')}>
+									<h3 className={cx('offer-title')}>{item.title}</h3>
+									<p className={cx('offer-text')}>{item.text}</p>
+									<ul className={cx('points')}>
+										{item.points.map((point) => (
+											<li key={point}>{point}</li>
+										))}
+									</ul>
+									{item.tech && (
+										<div className={cx('tech')}>
+											<span className={cx('tech-label')}>{c.offers.under}</span>
+											<ul className={cx('tags')}>
+												{item.tech.split(', ').map((tag) => (
+													<li key={tag}>{tag}</li>
+												))}
+											</ul>
+										</div>
+									)}
+								</div>
+								<div className={cx('offer-side')}>
+									{item.price ? (
+										<p className={cx('price')}>
+											<span className={cx('price-from')}>{c.offers.from}</span> {item.price}
+										</p>
+									) : (
+										<p className={cx('price', 'price-free')}>{c.offers.free}</p>
+									)}
+									<Link
+										className={cx('ghost')}
+										href={contactHref(`${c.offers.subject} — ${item.title}`)}
+										onClick={() => track('offer_click', { offer: item.title })}
+									>
+										<span>{item.cta ?? c.offers.cta}</span>
+										<Arrow />
+									</Link>
+								</div>
 							</li>
-						);
-					})}
-				</ol>
-			</section>
+						))}
+					</ul>
+				</section>
 
-			<section className={cx('section')} data-reveal>
-				<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
-				<h2 className={cx('title')}>{c.reassure.title}</h2>
-				<ul className={cx('cards')}>
-					{c.reassure.items.map(([title, text], i) => {
-						const Icon = REASSURE_ICONS[i];
-						return (
-							<li key={title} className={cx('card')}>
-								<span className={cx('card-icon')}>
-									<Icon />
-								</span>
-								<h3 className={cx('item-title')}>{title}</h3>
-								<p className={cx('item-text')}>{text}</p>
+				<section className={cx('section')} data-reveal>
+					<p className={cx('eyebrow')}>{c.proof.eyebrow}</p>
+					<h2 className={cx('title')}>{c.proof.title}</h2>
+					<ul className={cx('grid', 'quotes')}>
+						{TESTIMONIALS.map((t, i) => (
+							<li key={t.author} className={cx('quote-card')} style={{ '--i': i }}>
+								<figure className={cx('testimonial')}>
+									<blockquote className={cx('quote')}>“{t.quote[lang]}”</blockquote>
+									<figcaption className={cx('quote-caption')}>
+										<span className={cx('avatar')} aria-hidden="true">
+											{t.author[0]}
+										</span>
+										<span>
+											<span className={cx('quote-author')}>{t.author}</span>
+											{t.role && <span className={cx('quote-role')}>{t.role[lang]}</span>}
+										</span>
+									</figcaption>
+								</figure>
 							</li>
-						);
-					})}
-				</ul>
-			</section>
+						))}
+					</ul>
+				</section>
 
-			<section className={cx('section')} data-reveal>
-				<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
-				<h2 className={cx('title')}>{c.why.title}</h2>
-				<dl className={cx('spec')}>
-					{c.why.items.map(([title, text, proof]) => (
-						<div key={title} className={cx('spec-row')}>
-							<dt>{title}</dt>
-							<dd>
-								{text}
-								<ul className={cx('tags', 'tags-gold')}>
-									{proof.map((tag) => (
-										<li key={tag}>{tag}</li>
-									))}
-								</ul>
-							</dd>
-						</div>
-					))}
-				</dl>
-			</section>
+				<section className={cx('section', 'centered', 'solid')} data-reveal>
+					<p className={cx('eyebrow')}>{c.process.eyebrow}</p>
+					<h2 className={cx('title')}>{c.process.title}</h2>
+					<ol className={cx('stepper')}>
+						{c.process.steps.map(([title, text], i) => {
+							const Icon = STEP_ICONS[i];
+							return (
+								<li key={title} className={cx('step')}>
+									<span className={cx('step-node')}>
+										<Icon />
+									</span>
+									<span className={cx('step-index')}>{String(i + 1).padStart(2, '0')}</span>
+									<h3 className={cx('item-title')}>{title}</h3>
+									<p className={cx('item-text')}>{text}</p>
+								</li>
+							);
+						})}
+					</ol>
+				</section>
+
+				<section className={cx('section')} data-reveal>
+					<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
+					<h2 className={cx('title')}>{c.reassure.title}</h2>
+					<ul className={cx('cards')}>
+						{c.reassure.items.map(([title, text], i) => {
+							const Icon = REASSURE_ICONS[i];
+							return (
+								<li key={title} className={cx('card')}>
+									<span className={cx('card-icon')}>
+										<Icon />
+									</span>
+									<h3 className={cx('item-title')}>{title}</h3>
+									<p className={cx('item-text')}>{text}</p>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+
+				<section className={cx('section')} data-reveal>
+					<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
+					<h2 className={cx('title')}>{c.why.title}</h2>
+					<dl className={cx('spec')}>
+						{c.why.items.map(([title, text, proof]) => (
+							<div key={title} className={cx('spec-row')}>
+								<dt>{title}</dt>
+								<dd>
+									{text}
+									<ul className={cx('tags', 'tags-gold')}>
+										{proof.map((tag) => (
+											<li key={tag}>{tag}</li>
+										))}
+									</ul>
+								</dd>
+							</div>
+						))}
+					</dl>
+				</section>
+			</div>
 
 			<div className={cx('marquee')} aria-hidden="true">
 				<div className={cx('marquee-track')}>
@@ -281,48 +283,50 @@ export default function Services() {
 				</div>
 			</div>
 
-			<section className={cx('section', 'faq-section')} data-reveal>
-				<div className={cx('faq-head')}>
-					<p className={cx('eyebrow')}>{c.faq.eyebrow}</p>
-					<h2 className={cx('title')}>{c.faq.title}</h2>
-				</div>
-				<div className={cx('faq')}>
-					{c.faq.items.map(([question, answer]) => (
-						<details key={question} className={cx('faq-item')}>
-							<summary>{question}</summary>
-							<p>{answer}</p>
-						</details>
-					))}
-				</div>
-			</section>
+			<div className={cx('component')}>
+				<section className={cx('section', 'faq-section')} data-reveal>
+					<div className={cx('faq-head')}>
+						<p className={cx('eyebrow')}>{c.faq.eyebrow}</p>
+						<h2 className={cx('title')}>{c.faq.title}</h2>
+					</div>
+					<div className={cx('faq')}>
+						{c.faq.items.map(([question, answer]) => (
+							<details key={question} className={cx('faq-item')}>
+								<summary>{question}</summary>
+								<p>{answer}</p>
+							</details>
+						))}
+					</div>
+				</section>
 
-			<section id="contact" className={cx('section', 'final')} data-reveal>
-				<p className={cx('eyebrow')}>{c.final.eyebrow}</p>
-				<h2 className={cx('final-title')}>{c.final.title}</h2>
-				<p className={cx('lead')}>{c.final.lead}</p>
-				<div className={cx('actions')}>
-					<Link
-						className={cx('primary')}
-						href={contactHref(c.final.subject)}
-						onClick={() => track('cta_click', { location: 'services_final' })}
-					>
-						<span>{c.final.cta}</span>
-						<Arrow />
-					</Link>
-				</div>
-				<p className={cx('note')}>
-					{c.final.hire}{' '}
-					<Link
-						className={cx('email')}
-						href="/engineering"
-						onClick={() =>
-							track('cta_click', { location: 'services_final', target: 'engineering' })
-						}
-					>
-						{c.final.hireCta} →
-					</Link>
-				</p>
-			</section>
+				<section id="contact" className={cx('section', 'final')} data-reveal>
+					<p className={cx('eyebrow')}>{c.final.eyebrow}</p>
+					<h2 className={cx('final-title')}>{c.final.title}</h2>
+					<p className={cx('lead')}>{c.final.lead}</p>
+					<div className={cx('actions')}>
+						<Link
+							className={cx('primary')}
+							href={contactHref(c.final.subject)}
+							onClick={() => track('cta_click', { location: 'services_final' })}
+						>
+							<span>{c.final.cta}</span>
+							<Arrow />
+						</Link>
+					</div>
+					<p className={cx('note')}>
+						{c.final.hire}{' '}
+						<Link
+							className={cx('email')}
+							href="/engineering"
+							onClick={() =>
+								track('cta_click', { location: 'services_final', target: 'engineering' })
+							}
+						>
+							{c.final.hireCta} →
+						</Link>
+					</p>
+				</section>
+			</div>
 		</div>
 	);
 }
