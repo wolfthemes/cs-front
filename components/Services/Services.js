@@ -85,7 +85,7 @@ function Arrow() {
 // pre-filled contact form link), process, differentiators, FAQ, closing CTA. No video
 // backdrop; sections fade up once on scroll (CSS handles reduced motion).
 export default function Services() {
-	const { services: c, cv } = useCopy();
+	const { services: c } = useCopy();
 	const lang = useRouter().locale === 'fr' ? 'fr' : 'en';
 	const rootRef = useRef(null);
 
@@ -117,6 +117,7 @@ export default function Services() {
 				<p className={cx('eyebrow')}>{c.hero.eyebrow}</p>
 				<h1 className={cx('hero-title')}>{c.hero.title}</h1>
 				<p className={cx('hero-lead')}>{c.hero.lead}</p>
+				<p className={cx('audience')}>{c.audience}</p>
 				<div className={cx('actions')}>
 					<Link
 						className={cx('primary')}
@@ -160,6 +161,11 @@ export default function Services() {
 										<li key={point}>{point}</li>
 									))}
 								</ul>
+								{item.tech && (
+									<p className={cx('tech')}>
+										<span>{c.offers.under}:</span> {item.tech}
+									</p>
+								)}
 							</div>
 							<div className={cx('offer-side')}>
 								{item.price ? (
@@ -214,6 +220,19 @@ export default function Services() {
 			</section>
 
 			<section className={cx('section')} data-reveal>
+				<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
+				<h2 className={cx('title')}>{c.reassure.title}</h2>
+				<ul className={cx('grid', 'steps')}>
+					{c.reassure.items.map(([title, text]) => (
+						<li key={title}>
+							<h3 className={cx('item-title')}>{title}</h3>
+							<p className={cx('item-text')}>{text}</p>
+						</li>
+					))}
+				</ul>
+			</section>
+
+			<section className={cx('section')} data-reveal>
 				<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
 				<h2 className={cx('title')}>{c.why.title}</h2>
 				<ul className={cx('grid', 'why')}>
@@ -255,15 +274,13 @@ export default function Services() {
 				</div>
 				<p className={cx('note')}>
 					{c.final.hire}{' '}
-					<a
+					<Link
 						className={cx('email')}
-						href={cv}
-						target="_blank"
-						rel="noopener noreferrer"
-						onClick={() => track('cv_download', { location: 'services' })}
+						href="/engineering"
+						onClick={() => track('cta_click', { location: 'services_final', target: 'engineering' })}
 					>
-						{c.final.hireCta}
-					</a>
+						{c.final.hireCta} →
+					</Link>
 				</p>
 			</section>
 		</div>

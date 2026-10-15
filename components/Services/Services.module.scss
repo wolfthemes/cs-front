@@ -285,7 +285,7 @@ $edge: clamp(1rem, 5vw, 5rem);
 }
 
 .why {
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .quotes {
@@ -428,5 +428,25 @@ $edge: clamp(1rem, 5vw, 5rem);
 
 	.arrow {
 		transition: none;
+	}
+}
+
+.audience {
+	margin: 1rem 0 0;
+	max-width: 52ch;
+	font-size: fs(sm);
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.tech {
+	margin: 1rem 0 0;
+	max-width: 56ch;
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.4);
+
+	span {
+		color: rgba(255, 255, 255, 0.55);
 	}
 }
