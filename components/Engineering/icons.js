@@ -41,3 +41,22 @@ export const PackageIcon = () => (
 		<path d="m4 7 8 4 8-4M12 11v10" />
 	</svg>
 );
+
+export const ArrowIcon = ({ className }) => (
+	<svg
+		className={className}
+		width="16"
+		height="16"
+		viewBox="0 0 16 16"
+		fill="none"
+		aria-hidden="true"
+	>
+		<path
+			d="M3.5 8h9M8.5 4l4 4-4 4"
+			stroke="currentColor"
+			strokeWidth="1.5"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
+	</svg>
+);

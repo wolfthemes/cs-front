@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './Engineering.module.scss';
 import { Playground } from '../Playground';
 import { StatBand } from '../StatBand';
-import { LayersIcon, GaugeIcon, PipelineIcon, PackageIcon } from './icons';
+import { LayersIcon, GaugeIcon, PipelineIcon, PackageIcon, ArrowIcon } from './icons';
 import { useCopy } from '../../lib/i18n';
 import { track } from '../../lib/track';
 
@@ -132,7 +132,7 @@ export default function Engineering() {
 				<p className={cx('lead')}>{c.architecture.text}</p>
 			</section>
 
-			<section className={cx('section', 'solid', 'final')} data-reveal>
+			<section className={cx('section', 'final')} data-reveal>
 				<h2 className={cx('title')}>{c.final.title}</h2>
 				<p className={cx('lead')}>{c.final.lead}</p>
 				<div className={cx('actions')}>
@@ -141,7 +141,8 @@ export default function Engineering() {
 						href={contactHref(c.hero.topic)}
 						onClick={() => track('cta_click', { location: 'engineering_final', target: 'hiring' })}
 					>
-						{c.final.cta}
+						<span>{c.final.cta}</span>
+						<ArrowIcon className={cx('arrow')} />
 					</Link>
 				</div>
 				<p className={cx('note')}>

@@ -96,6 +96,7 @@ $edge: 1rem; // matches Header and HomeHero side padding
 .primary {
 	display: inline-flex;
 	align-items: center;
+	gap: 0.5rem;
 	padding: 0.95rem 1.75rem;
 	border-radius: 999px;
 	background: $c-base;
@@ -104,9 +105,19 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	text-decoration: none;
 	transition: opacity 0.2s;
 
-	&:hover {
+	&:hover,
+	&:focus-visible {
 		opacity: 0.85;
+
+		.arrow {
+			transform: translateX(0.25rem);
+		}
 	}
+}
+
+.arrow {
+	flex-shrink: 0;
+	transition: transform 0.2s ease-out;
 }
 
 .secondary,
@@ -114,6 +125,15 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	color: $c-base;
 	text-decoration: underline;
 	text-underline-offset: 0.25em;
+	transition:
+		color 0.2s ease-out,
+		text-underline-offset 0.2s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		color: $c-accent;
+		text-underline-offset: 0.45em;
+	}
 }
 
 .note {
@@ -236,11 +256,15 @@ $solid: #151515;
 // Principles: four quiet cards, one line icon each.
 .cards {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 	gap: clamp(1rem, 2vw, 1.5rem);
 	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
 	padding: 0;
 	list-style: none;
+
+	@media (width <= 64rem) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
 	@media (width <= 48rem) {
 		grid-template-columns: 1fr;
@@ -273,9 +297,11 @@ $solid: #151515;
 
 // Architecture flow: WordPress -> WPGraphQL -> Next.js -> Vercel.
 .flow {
+	--flow-gap: 3rem;
+
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	gap: 1.5rem;
+	gap: var(--flow-gap);
 	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
 	padding: 0;
 	list-style: none;
@@ -286,7 +312,7 @@ $solid: #151515;
 	display: flex;
 	flex-direction: column;
 	gap: 0.35rem;
-	padding: 1.25rem 1.5rem;
+	padding: 1.75rem 2rem;
 	border: 1px solid color-mix(in srgb, #{$c-accent} 35%, transparent);
 	border-radius: 1rem;
 	background-color: color-mix(in srgb, #{$c-accent} 6%, transparent);
@@ -296,7 +322,7 @@ $solid: #151515;
 		content: '→';
 		position: absolute;
 		top: 50%;
-		right: -1.2rem;
+		right: calc(var(--flow-gap) / -2);
 		transform: translate(50%, -50%);
 		font-family: var(--font-geist-mono), monospace;
 		color: $c-accent;
@@ -305,7 +331,7 @@ $solid: #151515;
 	@media (width <= 48rem) {
 		&:not(:last-child)::after {
 			content: '↓';
-			inset: auto auto -1.2rem 50%;
+			inset: auto auto calc(var(--flow-gap) / -2) 50%;
 			transform: translate(-50%, 50%);
 		}
 	}
@@ -333,8 +359,9 @@ $solid: #151515;
 	}
 
 	.flow {
+		--flow-gap: 2.5rem;
+
 		grid-template-columns: 1fr;
-		gap: 2rem;
 	}
 
 	.fact {
@@ -343,6 +370,10 @@ $solid: #151515;
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.arrow {
+		transition: none;
+	}
+
 	.dot {
 		animation: none;
 	}
