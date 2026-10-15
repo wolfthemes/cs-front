@@ -587,32 +587,6 @@ $solid: #151515;
 	color: $c-accent;
 }
 
-// Peace of mind: three tinted guarantee cards, one icon each.
-.cards {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: clamp(1rem, 2vw, 1.5rem);
-	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
-	padding: 0;
-	list-style: none;
-}
-
-.card {
-	padding: clamp(1.5rem, 3vw, 2.25rem);
-	border: 1px solid color-mix(in srgb, #{$c-accent} 25%, transparent);
-	border-radius: 1.25rem;
-	background-color: color-mix(in srgb, #{$c-accent} 5%, transparent);
-}
-
-.card-icon {
-	display: inline-grid;
-	place-items: center;
-	width: 2.75rem;
-	height: 2.75rem;
-	margin-bottom: 1.25rem;
-	color: $c-accent;
-}
-
 // Why me: spec-sheet rows (title | text), no cards, no icons.
 .spec {
 	margin: clamp(2.5rem, 5vw, 4rem) 0 0;
@@ -760,7 +734,6 @@ $solid: #151515;
 	}
 
 	.quotes,
-	.cards,
 	.spec-row,
 	.faq-section {
 		grid-template-columns: 1fr;

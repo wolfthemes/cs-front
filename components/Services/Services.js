@@ -8,7 +8,7 @@ import { scrollTo } from '../../lib/scroll';
 import { track } from '../../lib/track';
 import { WorkStrip } from '../WorkStrip';
 import StatBand from './StatBand';
-import { MailIcon, QuoteIcon, RocketIcon, ShieldIcon, SlidersIcon, KeyIcon } from './icons';
+import { MailIcon, QuoteIcon, RocketIcon } from './icons';
 
 let cx = classNames.bind(styles);
 
@@ -55,7 +55,6 @@ const TESTIMONIALS = [
 ];
 
 const STEP_ICONS = [MailIcon, QuoteIcon, RocketIcon];
-const REASSURE_ICONS = [ShieldIcon, SlidersIcon, KeyIcon];
 
 // CTAs open the contact form with the topic pre-filled.
 const contactHref = (topic) => ({ pathname: '/contact', query: { topic, for: 'client' } });
@@ -230,27 +229,6 @@ export default function Services() {
 						})}
 					</ol>
 				</section>
-
-				{/* Peace of mind: parked while we test the page without it (copy: c.reassure).
-				<section className={cx('section', 'centered')} data-reveal>
-					<p className={cx('eyebrow')}>{c.reassure.eyebrow}</p>
-					<h2 className={cx('title')}>{c.reassure.title}</h2>
-					<ul className={cx('cards')}>
-						{c.reassure.items.map(([title, text], i) => {
-							const Icon = REASSURE_ICONS[i];
-							return (
-								<li key={title} className={cx('card')}>
-									<span className={cx('card-icon')}>
-										<Icon />
-									</span>
-									<h3 className={cx('item-title')}>{title}</h3>
-									<p className={cx('item-text')}>{text}</p>
-								</li>
-							);
-						})}
-					</ul>
-				</section>
-				*/}
 
 				<section className={cx('section')} data-reveal>
 					<p className={cx('eyebrow')}>{c.why.eyebrow}</p>
