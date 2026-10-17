@@ -14,7 +14,7 @@
 	text-align: left;
 }
 
-// Bottom band: subheading + CTA on the left, stats on the right.
+// Bottom band: proof stats + CTAs.
 .top {
 	// Title with the intro right beneath it, centred vertically in the space above
 	// the CTA / stats row (auto margins absorb the free space on both sides).
@@ -151,6 +151,7 @@
 	top: -2px;
 	vertical-align: -0.06em;
 	color: $c-base;
+	text-decoration: none;
 }
 
 .engineering {
@@ -178,7 +179,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	gap: clamp(1rem, 2vw, 1rem);
+	gap: clamp(1rem, 2vw, 1.25rem);
 	text-align: right;
 	opacity: 0;
 	animation: fade-in-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -191,13 +192,13 @@
 	display: flex;
 	flex-direction: row;
 	align-items: baseline;
-	gap: 0.4rem;
+	gap: 0.6rem;
 }
 
 .stat-value {
-	font-size: fs(md);
-	font-weight: fw(medium);
-	letter-spacing: 0.01em;
+	font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+	font-weight: fw(bold);
+	letter-spacing: -0.02em;
 	color: $c-base;
 
 	// Tabular figures so the width doesn't jitter while counting.
@@ -206,21 +207,27 @@
 }
 
 .stat-num {
-	// Fixed width (set as a CSS variable per stat) + right alignment so the number grows
-	// into reserved space instead of pushing the suffix as digits are added.
-	display: inline-block;
-	min-width: var(--stat-num-width);
-	text-align: right;
+	// Ghost + live number share one grid cell: the cell is as wide as the final
+	// value, with no min-width guess that leaves a gap after narrow glyphs ("4.5").
+	display: inline-grid;
+	justify-items: end;
+
+	> * {
+		grid-area: 1 / 1;
+	}
+}
+
+.stat-num-ghost {
+	visibility: hidden;
 }
 
 .stat-suffix {
-	// color: var(--wpe--color--accent);
 	opacity: 0.5;
 }
 
 .stat-label {
-	font-size: fs(sm);
-	color: rgba(255, 255, 255, 0.5);
+	font-size: fs(md);
+	color: rgba(255, 255, 255, 0.55);
 	letter-spacing: 0.01em;
 }
 
@@ -329,22 +336,13 @@
 
 	.stat {
 		display: grid;
-		grid-template-columns: 6.25rem minmax(0, 1fr);
+		grid-template-columns: 7rem minmax(0, 1fr);
 		gap: 0.75rem;
 		align-items: baseline;
 	}
 
-	.stat-value {
-		text-align: left;
-	}
-
 	.stat-num {
-		min-width: 0;
-		text-align: left;
-	}
-
-	.stat-label {
-		min-width: 0;
+		justify-items: start;
 	}
 }
 

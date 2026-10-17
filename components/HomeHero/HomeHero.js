@@ -25,9 +25,9 @@ const LINE_STAGGER = 0.12; // seconds between lines
 // animates to; `decimals` keeps the display stable (e.g. 4.5), `suffix` is the
 // static accent unit that never animates.
 const STATS = [
-	{ value: 15, decimals: 0, suffix: 'y' },
-	{ value: 36, decimals: 0, suffix: 'k+' },
-	{ value: 4.5, decimals: 1, suffix: '/5' },
+	{ value: 15, decimals: 0, suffix: 'y', label: 0 },
+	{ value: 36, decimals: 0, suffix: 'k+', label: 1 },
+	{ value: 4.5, decimals: 1, suffix: '/5', label: 2 },
 ];
 
 const COUNT_DURATION = 1400; // ms
@@ -85,13 +85,13 @@ function Stat({ value, decimals, suffix, label, started }) {
 	return (
 		<div className={cx('stat')}>
 			<span className={cx('stat-value')}>
-				{/* Reserve the final value's width so the digit count growing
-				    (e.g. 0 -> 15) can't shift the suffix during the count-up. */}
-				<span
-					className={cx('stat-num')}
-					style={{ '--stat-num-width': `${value.toFixed(decimals).length}ch` }}
-				>
-					{display}
+				{/* The invisible ghost holds the final value's exact width so the digit
+				    count growing (e.g. 0 -> 15) can't shift the suffix mid count-up. */}
+				<span className={cx('stat-num')}>
+					<span className={cx('stat-num-ghost')} aria-hidden="true">
+						{value.toFixed(decimals)}
+					</span>
+					<span>{display}</span>
 				</span>
 				<span className={cx('stat-suffix')}>{suffix}</span>
 			</span>
@@ -130,6 +130,25 @@ export default function HomeHero() {
 				<span className={cx('engineering')}>
 					<ShuffleText text={word.text} play={statsDone} />
 				</span>
+			);
+		}
+
+		if (word.classKey === 'wolfthemes') {
+			// Link the name only; trailing punctuation stays outside the anchor.
+			const [, name, punct] = word.text.match(/^(.*?)([,.;:]*)$/);
+			return (
+				<>
+					<a
+						className={cx('wolfthemes')}
+						href="https://wolfthemes.com"
+						target="_blank"
+						rel="noopener"
+						onClick={() => track('cta_click', { location: 'hero', target: 'wolfthemes' })}
+					>
+						{name}
+					</a>
+					{punct}
+				</>
 			);
 		}
 
@@ -241,7 +260,7 @@ export default function HomeHero() {
 
 				<div className={cx('stats')} ref={statsRef}>
 					{STATS.map((stat, i) => (
-						<Stat key={i} {...stat} label={hero.stats[i]} started={started} />
+						<Stat key={i} {...stat} label={hero.stats[stat.label]} started={started} />
 					))}
 				</div>
 			</div>

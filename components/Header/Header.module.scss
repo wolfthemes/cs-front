@@ -8,6 +8,7 @@
 	// out while scrolling down and back in on scroll up (see Header.js).
 	position: sticky;
 	top: 0;
+	will-change: transform; // own compositing layer: avoids a 1px seam under the header when the grain overlay (mix-blend-mode) blends over it
 	z-index: 2147483002; // Above the gallery banner (2147483001) and grain, so it never slides under them.
 	transition:
 		transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
