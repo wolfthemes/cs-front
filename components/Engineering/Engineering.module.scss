@@ -20,6 +20,10 @@ $edge: 1rem; // matches Header and HomeHero side padding
 	padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 6rem);
 }
 
+.work {
+	margin-inline: $edge;
+}
+
 .section {
 	margin-inline: $edge;
 	padding: clamp(4rem, 9vw, 8rem) 0;

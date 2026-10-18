@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './Engineering.module.scss';
 import { Playground } from '../Playground';
 import { StatBand } from '../StatBand';
+import { WorkStrip } from '../WorkStrip';
 import { LayersIcon, GaugeIcon, PipelineIcon, PackageIcon, SparklesIcon, ArrowIcon } from './icons';
 import { useCopy } from '../../lib/i18n';
 import { track } from '../../lib/track';
@@ -106,6 +107,10 @@ export default function Engineering() {
 					})}
 				</ul>
 			</section>
+
+			<div className={cx('work')}>
+				<WorkStrip details location="engineering_work" />
+			</div>
 
 			<Playground />
 

@@ -66,6 +66,36 @@
 	}
 }
 
+.excerpt {
+	font-size: fs(sm);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.7);
+
+	p {
+		margin: 0;
+	}
+}
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tag {
+	font-family: var(--font-geist-mono), monospace;
+	font-size: fs(sm);
+	letter-spacing: 0.01em;
+	line-height: 1;
+	padding: 0.35em 0.6em;
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	border-radius: 999px;
+	color: rgba(255, 255, 255, 0.7);
+}
+
 .card:hover img,
 .card:focus-visible img {
 	transform: scale(1.05);
